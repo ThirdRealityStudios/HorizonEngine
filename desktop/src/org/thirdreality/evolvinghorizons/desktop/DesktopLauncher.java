@@ -22,6 +22,8 @@ public class DesktopLauncher {
 		CONFIG.height = Settings.SCREEN_SIZE.height;
 
 		CONFIG.resizable = false;
+		CONFIG.fullscreen = false;
+		CONFIG.title = "Evolving Horizons (Alpha version)";
 
 		APP = new LwjglApplication(new Main(), CONFIG);
 	}

@@ -25,6 +25,8 @@ public class Main extends Game {
 		loadingScreen = new LoadingScreen();
 
 		setScreen(loadingScreen);
+
+		org.thirdreality.evolvinghorizons.guinness.sample.Main.main(null);
 	}
 
 	@Override
