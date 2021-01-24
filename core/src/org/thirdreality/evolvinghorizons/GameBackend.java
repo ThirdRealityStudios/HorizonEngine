@@ -1,9 +1,6 @@
 package org.thirdreality.evolvinghorizons;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -60,7 +57,7 @@ public class GameBackend extends Game
 
 	private Design design;
 
-	private org.thirdreality.evolvinghorizons.guinness.gui.font.Font biggerFont = new org.thirdreality.evolvinghorizons.guinness.gui.font.Font("biggerFont", org.thirdreality.evolvinghorizons.guinness.gui.font.Font.getDefaultFilepath(), 25), smallerFont = new org.thirdreality.evolvinghorizons.guinness.gui.font.Font("smallerFont", Font.getDefaultFilepath());
+	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
 
 	private Viewport primaryViewport;
 
@@ -74,6 +71,8 @@ public class GameBackend extends Game
 	private CopyOnWriteArrayList<Viewport> viewports;
 
 	private Screen gameScreen;
+
+	private boolean exitGame = false;
 
 	@Override
 	public void create()
@@ -140,10 +139,19 @@ public class GameBackend extends Game
 
 			}
 
+			float totalDelta = 0;
+
 			@Override
 			public void render(float delta)
 			{
+				totalDelta += delta;
+
 				displayContext.render(delta);
+
+				if(totalDelta >= 5)
+				{
+					exitGame = true;
+				}
 			}
 
 			@Override
@@ -186,6 +194,11 @@ public class GameBackend extends Game
 		// Renders the screens with the superclass method.
 		super.render();
 
+		if(exitGame)
+		{
+			setScreen(null);
+			Gdx.app.exit();
+		}
 		//System.out.println("Equals? " + (displayContext.getViewport() == primaryViewport));
 		//System.out.println("Component count: " + displayContext.getViewport().sizeOfComponentOutput());
 

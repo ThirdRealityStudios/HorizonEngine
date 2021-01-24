@@ -5,10 +5,10 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.style.property;
 public class GBorderProperty
 {
 	// For specific component types, such as GRectangle, you can define the thickness of the border.
-	private int borderThicknessPx = 0;
+	private int borderThicknessPx = 1;
 
 	// For specific component types, such as GRectangle, you can define a border-radius (just like in CSS).
-	private int borderRadiusPx = 0;
+	private int borderRadiusPx = 3;
 
 	/*
 	 *  Defines various border radiuses in pixels.

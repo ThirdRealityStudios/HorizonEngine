@@ -13,8 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.thirdreality.evolvinghorizons.guinness.draw.DrawToolkit;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIDimension;
@@ -34,6 +33,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescri
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.design.Design;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.w3c.dom.css.Rect;
 
 public class DisplayDrawAdapter
 {
@@ -79,14 +79,14 @@ public class DisplayDrawAdapter
 		{
 			case "polybutton":
 			{
-				drawPolyButton(c);
+				//drawPolyButton(c);
 
 				break;
 			}
 
 			case "description":
 			{
-				drawDescription(c);
+				//drawDescription(c);
 		
 				break;
 			}
@@ -100,7 +100,7 @@ public class DisplayDrawAdapter
 
 			case "path":
 			{
-				drawPath(c);
+				//drawPath(c);
 
 				break;
 			}
@@ -114,14 +114,14 @@ public class DisplayDrawAdapter
 
 			case "checkbox":
 			{
-				drawCheckbox(c);
+				//drawCheckbox(c);
 
 				break;
 			}
 
 			case "selectionbox":
 			{
-				drawSelectionBox(c);
+				//drawSelectionBox(c);
 
 				break;
 			}
@@ -135,14 +135,14 @@ public class DisplayDrawAdapter
 
 			case "button":
 			{
-				drawButton(c);
+				//drawButton(c);
 
 				break;
 			}
 
 			case "window":
 			{
-				drawWindow(c);
+				//drawWindow(c);
 			}
 
 			default:
@@ -151,13 +151,17 @@ public class DisplayDrawAdapter
 			}
 		}
 
-		//batch.draw(t, 0, 0);
 		batch.end();
 	}
+
+	Pixmap rectanglePixmap;
+	Sprite rectangleSprite;
 
 	@Deprecated
 	private void drawRectangle(GComponent c)
 	{
+		Color fillColor = c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor();
+
 		// A GRectangle can do more than a usual GComponent.
 		// You can define border-radiuses and more.
 		if(c.getType().contentEquals("rectangle"))
@@ -167,8 +171,6 @@ public class DisplayDrawAdapter
 			// Polygon rectangle = ShapeMaker.createRectangle(rect.getStyle().getLook().getBounds().getLocation(), rect.getStyle().getLook().getBounds().getSize());
 			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderProperties());
 
-			displayDrawContent.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
-
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 			
@@ -176,16 +178,23 @@ public class DisplayDrawAdapter
 
 			if(rectangle.getBounds() != null)
 			{
-				// Replace method!
-				//p.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc));
+				// Work on having rounded borders!
+				Polygon p = ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc);
+
+				rectanglePixmap = new Pixmap(p.getBounds().width, p.getBounds().height, Pixmap.Format.RGBA8888);
+				rectanglePixmap.fill();
+
+				rectangleSprite = new Sprite(new Texture(rectanglePixmap));
+				rectangleSprite.setColor(fillColor);
+
+				// Render the sprite
+				rectangleSprite.draw(batch);
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
 		else if(c.getStyle().getPrimaryLook() != null)
 		{
 			Rectangle shape = c.getStyle().getPrimaryLook().getBounds();
-
-			displayDrawContent.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
 			
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
@@ -194,7 +203,16 @@ public class DisplayDrawAdapter
 			
 			if(shape != null)
 			{
-				displayDrawContent.fillRectangle(rectLoc.x, rectLoc.y, (int) (shape.width * scale), (int) (shape.height * scale));
+				rectanglePixmap = new Pixmap((int) (shape.width * scale), (int) (shape.height * scale), Pixmap.Format.RGBA8888);
+				rectanglePixmap.fill();
+
+				rectangleSprite = new Sprite(new Texture(rectanglePixmap));
+				rectangleSprite.setX(rectLoc.x);
+				rectangleSprite.setY(rectLoc.y);
+				rectangleSprite.setColor(fillColor);
+
+				// Render the sprite without rounded borders (see first if-case above).
+				rectangleSprite.draw(batch);
 			}
 		}
 	}
@@ -216,7 +234,6 @@ public class DisplayDrawAdapter
 		// DrawToolkit.drawString(p, description.getTitle(), descLoc, scaledFont);
 	}
 
-	@Deprecated
 	private void drawImage(GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
@@ -228,11 +245,8 @@ public class DisplayDrawAdapter
 		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
 
 		batch.draw(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale));
-
-		// Work on this!
-		//p.drawImage(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
 	}
-	
+
 	// Needs to be updated with offset and scale ability from the Viewports settings.
 	// Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
 	@Deprecated
@@ -272,22 +286,35 @@ public class DisplayDrawAdapter
 		Point locOuter = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 		Point locInner = new GIPoint(locOuter).add(getDesign().getBorderProperty().getBorderThicknessPx()).toPoint();
 		
-		
-		
 		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
 		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 
-		displayDrawContent.setColor(getDesign().getDesignColor().getBorderColor());
 
-		displayDrawContent.fillRectangle(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
 
-		displayDrawContent.setColor(Color.WHITE);
+		Pixmap pixmapBg = new Pixmap(outerSizeScaled.width, outerSizeScaled.width, Pixmap.Format.RGBA8888);
+		Texture textureBg = new Texture(pixmapBg);
+		Sprite spriteBg = new Sprite(textureBg);
 
-		displayDrawContent.fillRectangle(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
-		
+		spriteBg.setColor(getDesign().getDesignColor().getBorderColor());
+		pixmapBg.fillRectangle(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
+
+
+
+		Pixmap pixmapFg = new Pixmap(innerSizeScaled.width, innerSizeScaled.width, Pixmap.Format.RGBA8888);
+		Texture textureFg = new Texture(pixmapFg);
+		Sprite spriteFg = new Sprite(textureFg);
+
+		spriteFg.setColor(Color.WHITE);
+		pixmapFg.fillRectangle(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
+
+		spriteBg.draw(batch);
+		spriteFg.draw(batch);
+
+
+
 		if(checkbox.isChecked())
 		{
 			Texture checkSymbol = c.getStyle().getImage();
@@ -438,45 +465,65 @@ public class DisplayDrawAdapter
 		drawGeneralField(textfield, value, textfield.getValueManager().getMaxLength());
 	}
 
+	Pixmap fieldPixmap0;
+	Sprite fieldSprite0;
+
+	Pixmap fieldPixmap1;
+	Sprite fieldSprite1;
+
+	@Deprecated
 	// WOrk on this ! ! !
 	protected void drawGeneralField(GComponent c, String value, int maxLength)
 	{
-		Polygon background = c.getStyle().getPrimaryLook();
+		// Ignore border-radius here..
+
+		//Polygon background = c.getStyle().getPrimaryLook();
 		
-		Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
+		//Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 
-		background = ShapeTransform.movePolygonTo(background, backgroundLoc);
+		//background = ShapeTransform.movePolygonTo(background, backgroundLoc);
 
+		/*
 		if(c.getStyle().isScalableForViewport())
 		{
 			background = ShapeTransform.scalePolygon(background, getScale());
 		}
+		 */
 
-		displayDrawContent.setColor(getDesign().getDesignColor().getBorderColor());
+		Rectangle background = c.getStyle().getPrimaryLook().getBounds();
+		background.setLocation(new GIPoint(background.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint());
 
-		// WOrk on this ! ! !
-		//g.fillPolygon(background);
+		fieldPixmap0 = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+		fieldPixmap0.setColor(getDesign().getDesignColor().getBorderColor());
+		fieldPixmap0.fillRectangle(background.getBounds().x, background.getBounds().y, background.getBounds().width, background.getBounds().height);
 
+		fieldSprite0 = new Sprite(new Texture(fieldPixmap0));
 
-
-		Dimension frontDimension = new GIDimension(maxLength * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
-
-		Rectangle frontRectangle = new Rectangle(new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).toPoint(), frontDimension);
-
-		Polygon front = ShapeMaker.createRectangleFrom(frontRectangle, c.getStyle().getBorderProperties());
-
-		front = ShapeTransform.scalePolygon(front, c.getStyle().isScalableForViewport() ? getScale() : 1f);
-
-		displayDrawContent.setColor(c.getStyle().getPrimaryColor());
-
-		// WOrk on this ! ! !
-		//g.fillPolygon(front);
+		// Make this draw a polygon / rectangle with circles for rounded borders!
+		fieldSprite0.draw(batch);
 
 
+		//Dimension frontDimension = new GIDimension(maxLength * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
 
-		Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		final int borderThicknessPx = getDesign().getBorderProperty().getBorderThicknessPx();
 
-		DrawToolkit.drawString(value, text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
+		//Polygon front = ShapeMaker.createRectangleFrom(frontRectangle, c.getStyle().getBorderProperties());
+
+		//front = ShapeTransform.scalePolygon(front, c.getStyle().isScalableForViewport() ? getScale() : 1f);
+
+		fieldPixmap1 = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+		fieldPixmap1.setColor(c.getStyle().getPrimaryColor());
+		fieldPixmap1.fillRectangle(background.getBounds().x + borderThicknessPx, background.getBounds().y + borderThicknessPx, background.getBounds().width - 2*borderThicknessPx, background.getBounds().height - 2*borderThicknessPx);
+
+		fieldSprite1 = new Sprite(new Texture(fieldPixmap1));
+
+		// Make this draw a polygon / rectangle with circles for rounded borders!
+		fieldSprite1.draw(batch);
+
+
+		//Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+
+		//DrawToolkit.drawString(value, text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
 	}
 
 	@Deprecated
