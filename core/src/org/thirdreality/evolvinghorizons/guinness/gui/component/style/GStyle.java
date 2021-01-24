@@ -1,11 +1,12 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.style;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.IssueTracker;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
@@ -73,10 +74,10 @@ public abstract class GStyle implements Serializable
 	// If you want the GComponent to be rendered as an image,
 	// you need to clarify it in the variable "type" above (String value needs to be
 	// "image" then).
-	private Image img;
+	private Texture t;
 
 	// The same as above but can be used as a buffer to things in between when needed..
-	private Image imgBuffered;
+	private Texture tBuffered;
 
 	public GStyle()
 	{
@@ -190,24 +191,24 @@ public abstract class GStyle implements Serializable
 	// Sets the location and also transforms the corresponding look / polygon to that location.
 	public abstract void setLocation(Point location);
 
-	public Image getImage()
+	public Texture getImage()
 	{
-		return img;
+		return t;
 	}
 
-	public void setImage(Image img)
+	public void setImage(Texture t)
 	{
-		this.img = img;
+		this.t = t;
 	}
 
-	public Image getBufferedImage()
+	public Texture getBufferedImage()
 	{
-		return imgBuffered;
+		return tBuffered;
 	}
 
-	public void setBufferedImage(Image imgBuffered)
+	public void setBufferedImage(Texture tBuffered)
 	{
-		this.imgBuffered = imgBuffered;
+		this.tBuffered = tBuffered;
 	}
 	
 	public GBorderProperty getBorderProperties()
@@ -252,9 +253,9 @@ public abstract class GStyle implements Serializable
 		{
 			int maxRGB = 255;
 			
-			float r = (float) getPrimaryColor().getRed() / maxRGB;
-			float g = (float) getPrimaryColor().getGreen() / maxRGB;
-			float b = (float) getPrimaryColor().getBlue() / maxRGB;
+			float r = (float) getPrimaryColor().r / maxRGB;
+			float g = (float) getPrimaryColor().g / maxRGB;
+			float b = (float) getPrimaryColor().b / maxRGB;
 			
 			Color rgba = new Color(r, g, b, opacity);
 			

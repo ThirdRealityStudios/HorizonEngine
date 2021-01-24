@@ -1,8 +1,8 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.window;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 
+import com.badlogic.gdx.graphics.Color;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
@@ -31,8 +31,8 @@ public class GWindowButton extends GComponent
 		getStyle().setPrimaryColor(background);
 		getStyle().setOpacity(opacity);
 
-		clickColor = getStyle().getPrimaryColor().darker().darker();
-		defaultColor = getStyle().getPrimaryColor().darker();
+		clickColor = getStyle().getPrimaryColor().mul(0.8f).mul(0.8f);
+		defaultColor = getStyle().getPrimaryColor().mul(0.8f);
 		hoverColor = getStyle().getPrimaryColor();
 
 		getStyle().setPrimaryColor(defaultColor);

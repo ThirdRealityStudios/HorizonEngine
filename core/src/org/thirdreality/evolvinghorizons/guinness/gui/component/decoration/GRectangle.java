@@ -1,8 +1,8 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.decoration;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
+import com.badlogic.gdx.graphics.Color;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;

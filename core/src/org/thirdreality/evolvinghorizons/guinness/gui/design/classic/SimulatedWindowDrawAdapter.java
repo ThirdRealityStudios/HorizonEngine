@@ -3,6 +3,7 @@ package org.thirdreality.evolvinghorizons.guinness.gui.design.classic;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
@@ -20,11 +21,11 @@ public class SimulatedWindowDrawAdapter
 	
 	// Draws the content for windows (for type GWindow).
 	// This is a safe method, meaning it checks the components type for a GWindow.
-	public void drawSimulatedContext(Graphics g, GComponent c)
+	public void drawSimulatedContext(GComponent c)
 	{
 		if(c.getType().contentEquals("window"))
 		{
-			drawSimulatedViewport(g, (GWindow) c);
+			drawSimulatedViewport((GWindow) c);
 		}
 	}
 	
@@ -39,7 +40,7 @@ public class SimulatedWindowDrawAdapter
 		target.getViewport().setOrigin(originRecalculated);
 	}
 
-	private void drawSimulatedViewport(Graphics context, GWindow target)
+	private void drawSimulatedViewport(GWindow target)
 	{
 		if(target.hasViewport())
 		{
@@ -47,12 +48,12 @@ public class SimulatedWindowDrawAdapter
 			updateOriginOfSimulatedViewport(displayViewport, target);
 
 			// Now render here all components of the Viewport at the given origin (location),
-			renderEachComponent(context, target.getViewport());
+			renderEachComponent(target.getViewport());
 		}
 	}
 
-	private void renderEachComponent(Graphics context, Viewport source)
+	private void renderEachComponent(Viewport source)
 	{
-		source.drawComponents(context);
+		source.render(source.getComponentOutput());
 	}
 }

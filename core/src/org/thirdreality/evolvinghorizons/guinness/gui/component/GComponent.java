@@ -8,7 +8,7 @@ import java.io.Serializable;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
-import org.thirdreality.evolvinghorizons.guinness.gui.Display;
+import org.thirdreality.evolvinghorizons.guinness.gui.DisplayContext;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.design.Sample;
@@ -39,7 +39,7 @@ public abstract class GComponent implements Serializable
 	private boolean movable = true;
 
 	// The main reference to all major functions of this whole program.
-	private Display display;
+	private DisplayContext displayContext;
 	
 	private GStyle style;
 	
@@ -130,14 +130,14 @@ public abstract class GComponent implements Serializable
 				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
 	}
 
-	public Display getDisplay()
+	public DisplayContext getDisplay()
 	{
-		return display;
+		return displayContext;
 	}
 
-	public void setDisplay(Display display)
+	public void setDisplay(DisplayContext displayContext)
 	{
-		this.display = display;
+		this.displayContext = displayContext;
 	}
 	
 	

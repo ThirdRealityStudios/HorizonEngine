@@ -1,12 +1,10 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
@@ -94,8 +92,8 @@ public class GWindow extends GComponent
 			}
 		});
 
-		frameColor = Color.decode("#656bff");
-		frameColor = new Color(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), 160);
+		frameColor = Color.valueOf("#656bff");
+		frameColor = new Color(frameColor.r, frameColor.g, frameColor.b, 160f/255f);
 
 		getStyle().setBorderProperties(borderProperties);
 
@@ -170,7 +168,7 @@ public class GWindow extends GComponent
 		minimizeBorderStyle.setLowerRightBorderRadiusPx(0);
 		minimizeBorderStyle.setUpperRightBorderRadiusPx(0);
 
-		minimizeButton = new GWindowButton(minimizeButtonRect, Color.decode("#606060"), 0.9f, minimizeBorderStyle, null);
+		minimizeButton = new GWindowButton(minimizeButtonRect, Color.valueOf("#606060"), 0.9f, minimizeBorderStyle, null);
 	}
 	
 	public Color getFrameColor()

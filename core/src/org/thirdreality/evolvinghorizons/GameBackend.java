@@ -1,13 +1,11 @@
-package org.thirdreality.evolvinghorizons.guinness.sample;
+package org.thirdreality.evolvinghorizons;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.io.File;
-import java.util.ArrayList;
-
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
@@ -32,47 +30,172 @@ import org.thirdreality.evolvinghorizons.guinness.gui.design.DesignColor;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
 
-public class Main
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class GameBackend extends Game
 {
-	public DisplayContext displayContext;
-	
 	private GRectangle rect;
 
 	private GButton moveButton, increaseScale, exit;
 
 	private GTextfield input1, input2, input3;
-	
+
 	private GImage img0;
-	
+
 	private GDescription description;
-	
+
 	private GCheckbox checkbox1;
-	
+
 	// Some sample options for the selection box below.
 	private ArrayList<GSelectionOption> options;
-	
+
 	private GSelectionBox gSB;
-	
+
 	private GWindow window0, window1;
 
 	private GLayer layer0, layer1, layer2_shared, layer3, layer4;
 
 	private Design design;
-	
-	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
 
-	private Viewport viewport;
-	
+	private org.thirdreality.evolvinghorizons.guinness.gui.font.Font biggerFont = new org.thirdreality.evolvinghorizons.guinness.gui.font.Font("biggerFont", org.thirdreality.evolvinghorizons.guinness.gui.font.Font.getDefaultFilepath(), 25), smallerFont = new org.thirdreality.evolvinghorizons.guinness.gui.font.Font("smallerFont", Font.getDefaultFilepath());
+
+	private Viewport primaryViewport;
+
 	// For simulating on a GWindow.
 	private Viewport viewportGWindow0;
 
-	public static void main(String[] args)
-	{
-		Main m = new Main();
+	private DisplayContext displayContext;
 
-		m.init();
-		m.run();
+	private InputProcessor input;
+
+	private CopyOnWriteArrayList<Viewport> viewports;
+
+	private Screen gameScreen;
+
+	@Override
+	public void create()
+	{
+		// You always need to have at least one input processor active currently..
+		this.input = new InputProcessor()
+		{
+			@Override
+			public boolean keyDown(int keycode) {
+				return false;
+			}
+
+			@Override
+			public boolean keyUp(int keycode) {
+				return false;
+			}
+
+			@Override
+			public boolean keyTyped(char character) {
+				return false;
+			}
+
+			@Override
+			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+				return false;
+			}
+
+			@Override
+			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+				return false;
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				return false;
+			}
+
+			@Override
+			public boolean mouseMoved(int screenX, int screenY) {
+				return false;
+			}
+
+			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				return false;
+			}
+		};
+
+		initViewport();
+
+		this.displayContext = new DisplayContext(input);
+		this.displayContext.setViewport(primaryViewport);
+
+		initDesign();
+		initComponents();
+
+		postInit();
+
+		gameScreen = new Screen()
+		{
+			@Override
+			public void show()
+			{
+
+			}
+
+			@Override
+			public void render(float delta)
+			{
+				displayContext.render(delta);
+			}
+
+			@Override
+			public void resize(int width, int height)
+			{
+
+			}
+
+			@Override
+			public void pause()
+			{
+
+			}
+
+			@Override
+			public void resume()
+			{
+
+			}
+
+			@Override
+			public void hide()
+			{
+
+			}
+
+			@Override
+			public void dispose()
+			{
+
+			}
+		};
+
+		setScreen(gameScreen);
 	}
+
+	@Override
+	public void render()
+	{
+		// Renders the screens with the superclass method.
+		super.render();
+
+		//System.out.println("Equals? " + (displayContext.getViewport() == primaryViewport));
+		//System.out.println("Component count: " + displayContext.getViewport().sizeOfComponentOutput());
+
+		//getScreen().render(Gdx.graphics.getDeltaTime());
+
+		//displayContext.render();
+	}
+	
+	@Override
+	public void dispose(){}
 
 	private GPolyButton getPolyButton0()
 	{
@@ -95,95 +218,94 @@ public class Main
 
 			}
 
-
 			@Override
 			public void onClick()
 			{
 				System.out.println("Clicked GPolyButton!");
 			}
 		});
-		
+
 		gPolyButton.getStyle().setOpacity(0.7f);
 		gPolyButton.getStyle().setTextAlign(1);
-		
+
 		return gPolyButton;
 	}
-	
+
 	private GPolyButton getPolyButton1()
 	{
 		Polygon poly = new Polygon();
-		
+
 		poly.addPoint(0, 0);
 		poly.addPoint(100, 0);
 		poly.addPoint(150, 50);
 		poly.addPoint(150, 100);
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
-		
+
 		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", smallerFont, poly);
-		
+
 		gPolyButton.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				
+
 			}
-			
+
 			@Override
 			public void onClick()
 			{
 				System.out.println("Clicked GPolyButton!");
 			}
 		});
-		
-		gPolyButton.getStyle().setPrimaryColor(Color.RED);
+
+		gPolyButton.getStyle().setPrimaryColor(com.badlogic.gdx.graphics.Color.RED);
 		gPolyButton.getStyle().setTextAlign(1);
 		gPolyButton.getStyle().setTextTransition(new Point(0, -40));
-		
+
 		return gPolyButton;
 	}
-	
+
 	private void initComponents()
 	{
 		Rectangle windowRepresentation = new Rectangle(new Point(400, 0), new Dimension(600, 400));
-		
+
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
-		
+
 		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
 		viewportGWindow0 = new Viewport(true);
-		
+
 		window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
 		window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
-		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
+		rect = new GRectangle(0, -50, new Dimension(800, 136), com.badlogic.gdx.graphics.Color.RED, 0.5f);
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
-		
+
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
-		
+
 		options = new ArrayList<GSelectionOption>();
-		
+
 		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true), option2 = new GSelectionOption("Loose your vibes", false);
-		
-		option0.getStyle().setPaddingBottom(10);		
+
+		option0.getStyle().setPaddingBottom(10);
 		option1.getStyle().setPaddingBottom(10);
 		option2.getStyle().setPaddingBottom(10);
-		
+
 		option1.getStyle().setPaddingTop(10);
 		option2.getStyle().setPaddingTop(10);
-		
+
 		options.add(option0);
 		options.add(option1);
 		options.add(option2);
-		
+
 		// The first option should have a different background color.
-		option0.getStyle().setPrimaryColor(new Color(0f, 1f, 0f, 1f));
-		
+		option0.getStyle().setPrimaryColor(new com.badlogic.gdx.graphics.Color(0f, 1f, 0f, 1f));
+
 		gSB = new GSelectionBox(new Point(200, 150), options);
-		
+
 		checkbox1 = new GCheckbox(new Point(20, 200), true, 20);
-		
+
 		checkbox1.setActionListener(new GActionListener()
 		{
 			@Override
@@ -195,12 +317,12 @@ public class Main
 			@Override
 			public void onHover()
 			{
-				
+
 			}
 		});
-		
+
 		moveButton = new GButton(new Point(150, 75), "Move Viewport right", smallerFont);
-		
+
 		moveButton.setActionListener(new GActionListener()
 		{
 			@Override
@@ -212,7 +334,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				viewport.getOffset().translate(1, 0);
+				primaryViewport.getOffset().translate(1, 0);
 			}
 		});
 
@@ -223,19 +345,19 @@ public class Main
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
 		increaseScale = new GButton(new Point(150, 100), "increase scale", smallerFont);
-		
+
 		increaseScale.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				
+
 			}
 
 			@Override
 			public void onClick()
 			{
-				viewport.setScale(viewport.getScale() + 0.0001f);
+				primaryViewport.setScale(primaryViewport.getScale() + 0.0001f);
 			}
 		});
 
@@ -247,15 +369,15 @@ public class Main
 			increaseScale.getStyle().setMovableForViewport(false);
 			increaseScale.getStyle().setScalableForViewport(false);
 		}
-		
+
 		exit = new GButton(new Point(20, 150), "EXIT", biggerFont);
-		
+
 		exit.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				
+
 			}
 
 			@Override
@@ -270,19 +392,19 @@ public class Main
 		exit.getLogic().setActionOnClick(true);
 
 		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, smallerFont);
-		
+
 		input1.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onClick(){}
-			
+
 			@Override
 			public void onHover()
 			{
 				System.out.println("Hover");
 			}
 		});
-		
+
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
@@ -296,27 +418,24 @@ public class Main
 		img0.getLogic().setActionOnHover(false);
 	}
 
-	public void init()
+	public void initDesign()
 	{
-		biggerFont.setFontColor(Color.RED);
+		biggerFont.setFontColor(com.badlogic.gdx.graphics.Color.RED);
 
-		DesignColor designColor = new DesignColor(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK);
+		DesignColor designColor = new DesignColor(com.badlogic.gdx.graphics.Color.BLACK, com.badlogic.gdx.graphics.Color.LIGHT_GRAY, com.badlogic.gdx.graphics.Color.DARK_GRAY, com.badlogic.gdx.graphics.Color.GRAY, Color.BLACK);
 
 		GBorderProperty borderProperty = new GBorderProperty(0, 1);
-		
+
 		GPaddingProperty paddingProperty = new GPaddingProperty(5);
 
 		design = new Classic(designColor, borderProperty, paddingProperty);
+	}
 
-		//display = new Display(1280, 640);
-
-		viewport = new Viewport(false);
-		viewport.setOffset(new Point(0, 75));
-		viewport.setScale(1f);
-
-		displayContext.setViewport(viewport);
-
-		initComponents();
+	public void initViewport()
+	{
+		primaryViewport = new Viewport(false);
+		primaryViewport.setOffset(new Point(0, 75));
+		primaryViewport.setScale(1f);
 	}
 
 	public void setupDisplayLayers()
@@ -345,7 +464,7 @@ public class Main
 		displayContext.getViewport().getWindowManager().addWindow(window1);
 		displayContext.getViewport().getWindowManager().addWindow(window0);
 	}
-	
+
 	public void setupGWindow0()
 	{
 		GLayer layer5 = new GLayer(0, true);
@@ -363,7 +482,7 @@ public class Main
 		window0.setViewport(viewportGWindow0);
 	}
 
-	public void run()
+	public void postInit()
 	{
 		layer0 = new GLayer(10, true);
 		layer1 = new GLayer(11, true);

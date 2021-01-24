@@ -1,14 +1,13 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list;
 
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
+import org.thirdreality.evolvinghorizons.guinness.feature.container.SizedTexture;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
@@ -27,9 +26,9 @@ public class GSelectionBox extends GComponent
 	private int index = -1;
 	
 	private boolean defaultOptionActive = false;
-	
+
 	// Keeps two different icons which illustrate two possible states of an option (selected / unselected).
-	private Image[] icon;
+	private SizedTexture[] icon;
 
 	public GSelectionBox(Point location, ArrayList<GSelectionOption> options)
 	{
@@ -65,10 +64,10 @@ public class GSelectionBox extends GComponent
 	// Only there to load the images for the icons..
 	public void initIcon()
 	{
-		icon = new Image[2];
+		icon = new SizedTexture[2];
 		
-		icon[0] = ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "radio_unselected.png");
-		icon[1] = ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "radio_selected.png");
+		icon[0] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_unselected.png"), null);
+		icon[1] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_selected.png"), null);
 	}
 	
 	public ArrayList<GSelectionOption> getOptions()
@@ -181,8 +180,8 @@ public class GSelectionBox extends GComponent
 				
 				// Apply the symbol size (reference "optionSymbolShape") to the icons (which will be the corresponding symbol for the "unselected" and "selected" state).
 				// This way, it is guaranteed the icons are displayed correctly later depending on the font size.
-				icon[0] = icon[0].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
-				icon[1] = icon[1].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
+				icon[0].setSize(new Dimension(optionSymbolShape.width, optionSymbolShape.height));
+				icon[1].setSize(new Dimension(optionSymbolShape.width, optionSymbolShape.height));
 				
 				optionShapes[1] = ShapeMaker.createRectangleFrom(optionSeparationWidth);
 				
@@ -200,7 +199,7 @@ public class GSelectionBox extends GComponent
 		}
 	}
 	
-	public Image[] getIcons()
+	public SizedTexture[] getIcons()
 	{
 		return icon;
 	}

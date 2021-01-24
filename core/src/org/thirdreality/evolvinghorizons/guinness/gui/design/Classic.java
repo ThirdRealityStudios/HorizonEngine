@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
@@ -40,17 +41,17 @@ public class Classic extends Design
 		displayDrawAdapter = new DisplayDrawAdapter(this);
 	}
 	
-	public void drawContext(Graphics g, Viewport displayViewport, GComponent c, Point origin, Point offset, float scale)
+	public void drawContext(Viewport displayViewport, GComponent c, Point origin, Point offset, float scale)
 	{
 		if(windowDrawAdapter == null && displayViewport != null)
 		{
 			windowDrawAdapter = new SimulatedWindowDrawAdapter(displayViewport);
 		}
 		
-		displayDrawAdapter.drawContext(g, displayViewport, c, origin, offset, scale);
+		displayDrawAdapter.drawContext(displayViewport, c, origin, offset, scale);
 		
 		// Draws the content for windows (GWindows)
-		windowDrawAdapter.drawSimulatedContext(g, c);
+		windowDrawAdapter.drawSimulatedContext(c);
 	}
 
 	// Returns a determined shape which uses the design defined in this class.

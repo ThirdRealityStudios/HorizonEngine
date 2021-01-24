@@ -1,6 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.design;
 
-import java.awt.Color;
+import com.badlogic.gdx.graphics.Color;
 
 public class DesignColor
 {

@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
@@ -13,14 +14,14 @@ public class GImage extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GImage(Point location, Image content)
+	public GImage(Point location, Texture content)
 	{
 		super("image");
 
 		getStyle().setLocation(location);
 
-		int width = content.getWidth(null);
-		int height = content.getHeight(null);
+		int width = content.getWidth();
+		int height = content.getHeight();
 
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, width, height);
 		getStyle().setPrimaryLook(rectangle);
@@ -28,14 +29,14 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, float scale, Image content)
+	public GImage(Point location, float scale, Texture content)
 	{
 		super("image");
 		
 		getStyle().setLocation(location);
 		
-		int scaledWidth = (int) (scale * content.getWidth(null));
-		int scaledHeight = (int) (scale * content.getHeight(null));
+		int scaledWidth = (int) (scale * content.getWidth());
+		int scaledHeight = (int) (scale * content.getHeight());
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
 		getStyle().setPrimaryLook(rectangle);
@@ -43,7 +44,7 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, Dimension size, Image content)
+	public GImage(Point location, Dimension size, Texture content)
 	{
 		super("image");
 		
@@ -54,12 +55,12 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, int size, boolean useAsWidth, Image content)
+	public GImage(Point location, int size, boolean useAsWidth, Texture content)
 	{
 		super("image");
 
-		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight(null)) * content.getWidth(null));
-		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth(null)) * content.getHeight(null)) : size;
+		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight()) * content.getWidth());
+		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth()) * content.getHeight()) : size;
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
 		getStyle().setPrimaryLook(rectangle);

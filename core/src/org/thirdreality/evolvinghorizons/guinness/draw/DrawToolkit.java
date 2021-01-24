@@ -6,6 +6,9 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.FontLoader;
@@ -13,10 +16,11 @@ import org.thirdreality.evolvinghorizons.guinness.gui.font.FontLoader;
 public class DrawToolkit
 {
 	private static FontLoader fontLoader = new FontLoader();
-	
+
+	@Deprecated
 	// Displays a letter from the delivered alphabet pattern on the specified
 	// graphics object.
-	public static void drawChar(Graphics g, char letter, int xPos, int yPos, Font font)
+	public static void drawChar(char letter, int xPos, int yPos, Font font)
 	{
 		// This will determine the correct index for the symbol.
 		// The index is later used to calculate the correct position in the font image file (PNG).
@@ -37,11 +41,13 @@ public class DrawToolkit
 			// The first pixel is just a kind of border (read description above for 'x').
 			int y = 1;
 
-			BufferedImage img = font.getImage().getSubimage(x, y, dim, dim);
+			// Work here on loading sub-images from a texture ! (by using texture packs)
 
-			Image colorized = ImageToolkit.colorize(img, font.getFontColor()).getScaledInstance(font.getFontSize(), font.getFontSize(), Image.SCALE_SMOOTH);
+			// Has no function / no real use.
+			Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
 
-			g.drawImage(colorized, xPos, yPos, null);
+			// Draws the colorized symbol directly at the given position.
+			ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
 		}
 		else
 		{
@@ -49,17 +55,21 @@ public class DrawToolkit
 
 			int xSymbolNotFound = (indexSymbolNotFound - 1) * 30 + indexSymbolNotFound, ySymbolNotFound = 1;
 
-			BufferedImage img = font.getImage().getSubimage(xSymbolNotFound, ySymbolNotFound, dim, dim);
+			// BufferedImage img = font.getImage().getSubimage(xSymbolNotFound, ySymbolNotFound, dim, dim);
 
-			Image colorized = ImageToolkit.colorize(img, font.getFontColor()).getScaledInstance(font.getFontSize(), font.getFontSize(), Image.SCALE_SMOOTH);
+			// Work here on loading sub-images from a texture ! (by using texture packs)
 
-			g.drawImage(colorized, xPos, yPos, null);
+			// Has no function / no real use.
+			Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
+
+			// Draws the colorized symbol directly at the given position.
+			ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
 		}
 	}
 
 	// Displays a whole string (only alphabetic letters) and scales it according to
 	// the specified font size.
-	public static Dimension drawString(Graphics g, String text, Point pos, Font font)
+	public static Dimension drawString(String text, Point pos, Font font)
 	{
 		char[] converted = text.toCharArray();
 
@@ -67,7 +77,7 @@ public class DrawToolkit
 
 		for (char c : converted)
 		{
-			drawChar(g, c, pos.x + font.getFontSize() * offset, pos.y, font);
+			drawChar(c, pos.x + font.getFontSize() * offset, pos.y, font);
 
 			offset++;
 		}

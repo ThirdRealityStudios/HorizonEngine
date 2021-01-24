@@ -2,40 +2,28 @@ package org.thirdreality.evolvinghorizons.guinness.gui.adapter;
 
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-import org.thirdreality.evolvinghorizons.guinness.exec.LoopedThread;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
-import org.thirdreality.evolvinghorizons.guinness.feature.Timer;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
-import org.thirdreality.evolvinghorizons.guinness.gui.Display;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
 
-public class MouseAdapter extends LoopedThread implements MouseMotionListener, MouseListener
+public class MouseUtility
 {
-	/*
-	 *  'context' is the variable to use
-	 *  for calculating mouse movement and additional data.
-	 *  The data related to the given Display can then be used in real-time.
-	 *  To do so,
-	 *  you can use the given methods below.
-	 */
-	private Display context;
-	
 	// The variable is used to calculate the mouse speed below.
-	private Point cursorLast = null;
+	private Point initialCursorLocation = null;
+
+	private boolean measureDistanceMoved = true;
 	
 	// Keeps the current relative location of the Viewport from the cursor.
 	// Assumed to be at (0|0) in the beginning but is refreshed afterwards.
-	private Point cursorLocation = new Point(0, 0);
+	private Point cursorLocation;
 	
-	// Self-explaining: the mouse speed related to pixels per cycle.
-	private volatile double mouseSpeed = 0f;
+	// Self-explaining: the mouse distance moved / delta time (px/ms).
+	private volatile double mouseSpeed = 0d;
 	
 	/* 
 	 * The 'action' variable below tells how the user interacts with the components on the Display.
@@ -48,29 +36,46 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	 */
 	private Boolean action = null;
 
-	public MouseAdapter(Display context)
+	// The total delta time (see updateMouseVelocity) to measure the mouses velocity.
+	float deltaTimer;
+
+	double totalDistance;
+
+	float maximumDeltaTime = 1/1000*20; // 20ms
+
+	public MouseUtility()
 	{
-		this.context = context;
-		
-		/*
-		 *  'context' is the variable to use
-		 *  for calculating mouse movement and additional data.
-		 *  The data related to the given Display can then be used in real-time.
-		 *  To do so,
-		 *  you can use the given methods below.
-		 */
+		cursorLocation = getCurrentCursorLocation();
 	}
-	
-	// Calculates the mouse speed with a delay of 10ms to have a difference.
-	private double calcMouseSpeed()
+
+	@Deprecated
+	// Calculates the mouse-related data with a delay of 10ms to have a difference,
+	// e.g. the
+	public void updateMouseData(float delta)
 	{
-		cursorLast = getCursorLocation();
-		
-		Timer.pauseMillisecond(10);
-		
-		double distance = cursorLast.distance(getCursorLocation());
-		
-		return distance;
+		cursorLocation = getCurrentCursorLocation();
+
+		deltaTimer += delta;
+
+		if(measureDistanceMoved)
+		{
+			initialCursorLocation = cursorLocation;
+
+			measureDistanceMoved = false;
+		}
+		else if(deltaTimer >= maximumDeltaTime)
+		{
+			double mouseDistanceMoved = initialCursorLocation.distance(cursorLocation);
+
+			mouseSpeed = mouseDistanceMoved / delta;
+
+			// Reset timer.
+			deltaTimer = 0;
+
+			measureDistanceMoved = true;
+		}
+
+
 	}
 	
 	// Returns the general and current mouse speed on screen.
@@ -79,106 +84,11 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	{
 		return mouseSpeed;
 	}
-	
-	// Tells when the mouse is active, so doing something,
-	// like moving the cursor etc.
-	private boolean isActive()
-	{	
-		return isClicking() || mouseSpeed > 0;
-	}
 
-	// Tells when the mouse is inactive, so doing nothing.
-	public boolean isInactive()
-	{		
-		return !isActive();
-	}
-
-	@Override
-	public void loop()
-	{
-		mouseSpeed = calcMouseSpeed();
-		
-		if(!isActive())
-		{
-			action = null;
-		}
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent mouseEvent)
-	{
-		// The cursor was generally just dragged (still recognized as a click action) somewhere on the frame (true).
-		action = true;
-
-		// Update the current cursor location relative to the Viewport.
-		// The boundaries of the Display (JFrame) are disregarded in this retrieved location.
-		cursorLocation = mouseEvent.getPoint();
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent mouseEvent)
-	{
-		// The cursor was generally just moved somewhere on the frame (false).
-		action = false;
-
-		// Update the current cursor location relative to the Viewport.
-		// The boundaries of the Display (JFrame) are disregarded in this retrieved location.
-		cursorLocation = mouseEvent.getPoint();
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent mouseEvent)
-	{
-		// Not used.
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-		// A general click was performed somewhere on the frame (true).
-		action = true;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-		action = false;
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-		// When the cursor enter the area of the Display.
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
-		// When the cursor exits the area of the Display.
-	}
-	
-	// Returns the current action.
-	public Boolean getAction()
-	{
-		return action;
-	}
-	
-	// Tells whether the mouse cursor is moving.
-	public boolean isMoving()
-	{
-		return getAction() != null && getAction() == false;
-	}
-	
-	// Tells whether the mouse is being clicked.
-	public Boolean isClicking()
-	{
-		return (getAction() != null) ? getAction() : false;
-	}
-	
 	// Returns the absolute current cursor location.
-	public Point getCursorLocation()
+	public Point getCurrentCursorLocation()
 	{
-		return new Point(cursorLocation);
+		return new Point(Gdx.input.getX(), Gdx.input.getY());
 	}
 	
 	// Tests if the cursor is on the position of a component.
@@ -208,7 +118,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		
 		if(source.isSimulated())
 		{
-			return originApplied.contains(getCursorLocation());
+			return originApplied.contains(getCurrentCursorLocation());
 		}
 		else
 		{
@@ -220,11 +130,11 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 				{
 					Polygon scaleApplied = ShapeTransform.scalePolygon(offsetApplied, source.getScale());
 					
-					return scaleApplied.contains(getCursorLocation());
+					return scaleApplied.contains(getCurrentCursorLocation());
 				}
 				else
 				{
-					return offsetApplied.contains(getCursorLocation());
+					return offsetApplied.contains(getCurrentCursorLocation());
 				}
 			}
 			else
@@ -233,20 +143,26 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 				{
 					Polygon scaleApplied = ShapeTransform.scalePolygon(originApplied, source.getScale());
 					
-					return scaleApplied.contains(getCursorLocation());
+					return scaleApplied.contains(getCurrentCursorLocation());
 				}
 				else
 				{
-					return originApplied.contains(getCursorLocation());
+					return originApplied.contains(getCurrentCursorLocation());
 				}
 			}
 		}
 	}
-	
-	// Tests if the user is clicking a component.
-	public boolean isClicking(Viewport source, GComponent component)
+
+	public boolean isClickingLeft()
 	{
-		return isFocusing(source, component) && isClicking();
+		return Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
+	}
+
+	@Deprecated
+	// Tests if the user is clicking a component.
+	public boolean isClickingLeft(Viewport source, GComponent component)
+	{
+		return isFocusing(source, component) && isClickingLeft();
 	}
 	
 	// Returns the first component which is focused by the cursor.

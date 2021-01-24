@@ -1,11 +1,10 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.design;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
 
-import org.thirdreality.evolvinghorizons.guinness.gui.Display;
+import com.badlogic.gdx.graphics.Pixmap;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
@@ -66,7 +65,7 @@ public abstract class Design implements Serializable
 		return fL;
 	}
 	
-	public abstract void drawContext(Graphics g, Viewport displayViewport, GComponent c, Point origin, Point offset, float scale);
+	public abstract void drawContext(Viewport displayViewport, GComponent c, Point origin, Point offset, float scale);
 	
 	public abstract Polygon generateDefaultShape(GComponent c);
 	

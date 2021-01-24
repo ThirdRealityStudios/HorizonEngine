@@ -1,23 +1,20 @@
 package org.thirdreality.evolvinghorizons.guinness.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.JPanel;
 
+import com.badlogic.gdx.Gdx;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.guinness.handler.EventHandler;
 
-public class Viewport extends JPanel
+public class Viewport
 {
 	private static final long serialVersionUID = 1L;
 
@@ -31,8 +28,6 @@ public class Viewport extends JPanel
 	// After all components have been added all components are added from 'compBuffer' above.
 	// This ensures that no errors can appear while adding new layers and reduces "performance waste".
 	private GComponent[] compOutput;
-
-	private EventHandler eventHandler;
 
 	private int layerModifications = 0;
 
@@ -74,13 +69,9 @@ public class Viewport extends JPanel
 	
 	private GWindowManager windowManager;
 
-	public Viewport(EventHandler eventHandler, boolean isSimulated)
+	public Viewport(boolean isSimulated)
 	{
-		this.eventHandler = eventHandler;
-
 		this.isSimulated = isSimulated;
-
-		addMouseDetection();
 
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
 		compOutput = new GComponent[0];
@@ -98,53 +89,22 @@ public class Viewport extends JPanel
 		}
 	}
 
-	// The most important method for displaying all components and graphics.
-	// This is the main (recursive) loop for rendering.
-	@Override
-	public void paintComponent(Graphics g)
-	{
-		drawBackground(g);
-		drawComponents(g);
-
-		repaint();
-	}
-
-	// In the beginning this will just draw a background color which will erase the content of the last draw cycle.
-	private void drawBackground(Graphics g)
-	{
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-	}
-
 	// Draws all components from the output list 'compOutput'.
 	// When adding new layers, they are not yet added to the output directly.
 	// First, it is being waited until all (new and old) components have been read (again (for old components yet stored)).
 	// Only then the components are directly outputed by just changing the reference.
-	public void drawComponents(Graphics g)
-	{
-		drawComponentsByArray(g, compOutput);
-	}
-
-	public void drawComponentsByArray(Graphics g, GComponent[] components)
+	public void render(GComponent[] components)
 	{
 		// Render all GUInness components.
 		for(int i = components.length - 1; i >= 0; i--)
 		{
 			GComponent component = components[i];
-			
+
 			if(isContained(component) && component.getStyle().isVisible())
 			{
-				component.getStyle().getDesign().drawContext(g, this, component, getOrigin(), getOffset(), getScale());
+				component.getStyle().getDesign().drawContext(this, component, getOrigin(), getOffset(), getScale());
 			}
 		}
-	}
-
-	// Adds the MouseAdapter as a Mouse(Motion)Listener in order to work with the Viewport when mouse actions have to be evaluated.
-	private void addMouseDetection()
-	{
-		addMouseListener(eventHandler.getMouseAdapter());
-
-		addMouseMotionListener(eventHandler.getMouseAdapter());
 	}
 
 	// Erases the internal buffer.

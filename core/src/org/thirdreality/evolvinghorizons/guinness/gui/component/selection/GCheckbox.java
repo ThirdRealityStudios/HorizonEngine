@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
@@ -31,6 +33,7 @@ public class GCheckbox extends GComponent
 		init(checked);
 	}
 
+	@Deprecated
 	// Just some values to be set which are equally set in both constructors.
 	private void init(boolean checked)
 	{
@@ -39,8 +42,9 @@ public class GCheckbox extends GComponent
 		getStyle().setImage(ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "check_sign.png"));
 		
 		int size_scaled = getStyle().getPrimaryLook().getBounds().width - 4*getStyle().getDesign().getBorderProperty().getBorderThicknessPx();
-		
-		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
+
+		// Draw by size in render loop.. (access from primary look)
+		getStyle().getPrimaryLook().getBounds().setSize(size_scaled, size_scaled);
 	}
 	
 	public boolean isChecked()

@@ -1,7 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.design;
 
-import java.awt.Color;
-
+import com.badlogic.gdx.graphics.Color;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GPaddingProperty;
 

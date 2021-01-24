@@ -1,19 +1,22 @@
 package org.thirdreality.evolvinghorizons.guinness.handler;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.thirdreality.evolvinghorizons.guinness.exec.LoopedThread;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Cursor;
 import org.thirdreality.evolvinghorizons.guinness.exec.ThreadManager;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.Timer;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
-import org.thirdreality.evolvinghorizons.guinness.gui.Display;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
+import org.thirdreality.evolvinghorizons.guinness.gui.adapter.KeyUtility;
+import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindow;
@@ -24,19 +27,10 @@ import org.thirdreality.evolvinghorizons.guinness.handler.componenthandler.Compo
 
 public class ComponentHandler
 {
-	// The 'handler'-thread is used to make all components working by checking the
-	// state, make evaluations and then decide what to do next, e.g. when a user
-	// clicked a button.
-	// Because of that, the 'handler'-thread has a high priority.
-	// It actually needs to run as fast as possible in order not to miss user
-	// interactions etc.
-	private LoopedThread handler = null;
+	private ThreadManager hoverTManager, clickTManager;
 
-	private Display display;
-
-	private CopyOnWriteArrayList<Viewport> simulatedViewports;
-
-	private ThreadManager hoverTManager, clickTManager;	
+	private KeyUtility keyUtility;
+	private MouseUtility mouseUtility;
 	
 	// This stores all sessions of necessary components which have their own component handling but want it being managed through one "main thread", meaning this class.
 	// Using sessions can save here the use of too many threads because one thread takes over multiple component sessions.
@@ -44,29 +38,19 @@ public class ComponentHandler
 	// 		   It is responsible for treating all general components of the type GComponent within the main Viewport.
 	private ArrayList<ComponentSession> sessions;
 
-	public ComponentHandler(final Display display)
+	public ComponentHandler(InputProcessor input)
 	{
-		this.display = display;
+		this.keyUtility = new KeyUtility(input);
 
-		this.simulatedViewports = new CopyOnWriteArrayList<Viewport>();
+		// Assigns the modified input processor to the global LibGDX context.
+		Gdx.input.setInputProcessor(input);
+
+		this.mouseUtility = new MouseUtility();
 
 		final int maximumThreads = 2;
 
 		this.hoverTManager = new ThreadManager(maximumThreads);
 		this.clickTManager = new ThreadManager(maximumThreads);
-
-		// Here a thread is created which just serves this class to refresh all
-		// retrievable information on components.
-		handler = new LoopedThread()
-		{
-			@Override
-			public void loop()
-			{
-				updateChangedLayers(display.getViewport());
-
-				triggerComponent(display.getViewport());
-			}
-		};
 		
 		sessions = new ArrayList<ComponentSession>();
 		
@@ -89,13 +73,6 @@ public class ComponentHandler
 				target.outputComponentBuffer();
 			}
 		}
-	}
-
-	// Returns the handling thread, so the thread which frequently handles all
-	// components to make them work.
-	public LoopedThread getHandlingThread()
-	{
-		return handler;
 	}
 
 	private void executeClick(final GComponent execute)
@@ -185,7 +162,7 @@ public class ComponentHandler
 		// for faster execution.
 		if(session.getFocusedTextfield() != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused != null && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
 		{
-			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
+			boolean isDeviceControlCode = keyUtility.isDeviceControlCode(keyStroke);
 
 			if(isDeviceControlCode && !session.getFocusedTextfield().getValueManager().isCursorAtEnd())
 			{
@@ -343,12 +320,14 @@ public class ComponentHandler
 		}
 	}
 
+	@Deprecated
 	private void resetLastFocus(ComponentSession session)
 	{
 		GComponent lastlyFocused = session.getLastlyFocusedComponent();
 
+		// WORK ON THIS !
 		// When hovering over something else the cursor is set to default.
-		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Crosshair);
 
 		switch(lastlyFocused.getType())
 		{		
@@ -433,7 +412,7 @@ public class ComponentHandler
 						focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getDesignColor().getHoverColor());
 
 						// When hovering (once!) over a button the cursor is changed.
-						display.setCursor(new Cursor(Cursor.HAND_CURSOR));
+						Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Hand);
 					}
 
 					break;
@@ -443,7 +422,7 @@ public class ComponentHandler
 					if(!session.isFocusedComponentDoubleHovered())
 					{
 						// When hovering over a text-field the cursor is changed.
-						display.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+						Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Ibeam);
 					}
 
 					break;
@@ -554,15 +533,18 @@ public class ComponentHandler
 		return newlyCreatedSession;
 	}
 
+	@Deprecated
 	// This will trigger the component where the user has performed an action at.
 	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
-	private void triggerComponent(Viewport target)
+	public void triggerComponent(Viewport target)
 	{
 		ComponentSession session = loadSession(target);
 
-		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
+		// WORK ON BOTH BELOW !
 
-		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
+		GComponent focused = mouseUtility.getFocusedComponent(target);
+
+		Point mouseLocation = new Point(Gdx.input.getX(), Gdx.input.getY());
 
 		boolean windowWasMoved = initialLoc != null;
 
@@ -595,7 +577,7 @@ public class ComponentHandler
 
 		preEvaluateEvents(session, focused);
 
-		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
+		boolean clicking = Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
 
 		// This line means if the KeyAdapter is active, then only read the currently
 		// pressed key from it.
@@ -603,7 +585,7 @@ public class ComponentHandler
 		// necessary to save resources on the CPU.
 		// Anyway, in Gaming Mode (see definition of it in LayeredDisplay.java for
 		// reference) the KeyAdapter is always initialized and available.
-		int keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
+		int keyStroke = keyUtility.getKeyTyped();
 
 		triggerGeneralLogic(session, target, focused, clicking, mouseLocation, keyStroke);
 		triggerAnimation(session, target, focused, clicking, mouseLocation);

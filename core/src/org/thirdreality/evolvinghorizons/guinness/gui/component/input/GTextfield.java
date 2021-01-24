@@ -1,8 +1,8 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.input;
 
-import java.awt.Color;
 import java.awt.Point;
 
+import com.badlogic.gdx.graphics.Color;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;

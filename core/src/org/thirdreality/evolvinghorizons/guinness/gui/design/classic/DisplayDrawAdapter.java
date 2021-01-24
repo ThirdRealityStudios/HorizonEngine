@@ -1,6 +1,5 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.design.classic;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,6 +8,13 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.thirdreality.evolvinghorizons.guinness.draw.DrawToolkit;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIDimension;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
@@ -38,9 +44,17 @@ public class DisplayDrawAdapter
 
 	private Design design;
 
+	private Pixmap displayDrawContent = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+
+	private Texture t = new Texture(displayDrawContent);
+
+	private SpriteBatch batch;
+
 	public DisplayDrawAdapter(Design design)
 	{
 		this.design = design;
+
+		batch = new SpriteBatch();
 	}
 
 	// Every design has its own draw method in order to know how to draw each component.
@@ -48,11 +62,13 @@ public class DisplayDrawAdapter
 	// Also note! The Viewport given here is only used in order to check things like, whether the context is drawn in a GWindow etc.
 	// Simulated viewports are hereby very restricted, especially if it's about the ability of whether a component is movable or not.
 	// The draw adapter doesn't care then because this feature is only supported within the Displays Viewport.
-	public void drawContext(Graphics g, Viewport target, GComponent c, Point origin, Point offset, float scale)
+	public void drawContext(Viewport target, GComponent c, Point origin, Point offset, float scale)
 	{
 		this.offset = offset;
 		this.origin = origin;
 		this.scale = scale;
+
+		batch.begin();
 
 		// For the case there is an image supplied to the GComponent object,
 		// it is considered to be rendered.
@@ -62,70 +78,70 @@ public class DisplayDrawAdapter
 		{
 			case "polybutton":
 			{
-				drawPolyButton(g, c);
+				drawPolyButton(c);
 
 				break;
 			}
 
 			case "description":
 			{
-				drawDescription(g, c);
+				drawDescription(c);
 		
 				break;
 			}
 
 			case "image":
 			{				
-				drawImage(g, c);
+				drawImage(c);
 
 				break;
 			}
 
 			case "path":
 			{
-				drawPath(g, c);
+				drawPath(c);
 
 				break;
 			}
 
 			case "textfield":
 			{
-				drawTextfield(g, c);
+				drawTextfield(c);
 
 				break;
 			}
 
 			case "checkbox":
 			{
-				drawCheckbox(g, c);
+				drawCheckbox(c);
 
 				break;
 			}
 
 			case "selectionbox":
 			{
-				drawSelectionBox(g, c);
+				drawSelectionBox(c);
 
 				break;
 			}
 
 			case "rectangle":
 			{
-				drawRectangle(g, c);
+				drawRectangle(c);
 
 				break;
 			}
 
 			case "button":
 			{
-				drawButton(g, c);
+				drawButton(c);
 
 				break;
 			}
 
 			case "window":
 			{
-				drawWindow(g, c);
+				drawWindow(c);
 			}
 
 			default:
@@ -133,9 +149,13 @@ public class DisplayDrawAdapter
 				
 			}
 		}
+
+		//batch.draw(t, 0, 0);
+		batch.end();
 	}
-	
-	private void drawRectangle(Graphics g, GComponent c)
+
+	@Deprecated
+	private void drawRectangle(GComponent c)
 	{
 		// A GRectangle can do more than a usual GComponent.
 		// You can define border-radiuses and more.
@@ -146,7 +166,7 @@ public class DisplayDrawAdapter
 			// Polygon rectangle = ShapeMaker.createRectangle(rect.getStyle().getLook().getBounds().getLocation(), rect.getStyle().getLook().getBounds().getSize());
 			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderProperties());
 
-			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
+			displayDrawContent.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
 
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
@@ -155,15 +175,16 @@ public class DisplayDrawAdapter
 
 			if(rectangle.getBounds() != null)
 			{
-				g.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc));
+				// Replace method!
+				//p.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc));
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
 		else if(c.getStyle().getPrimaryLook() != null)
 		{
 			Rectangle shape = c.getStyle().getPrimaryLook().getBounds();
-			
-			g.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
+
+			displayDrawContent.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
 			
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
@@ -172,12 +193,13 @@ public class DisplayDrawAdapter
 			
 			if(shape != null)
 			{
-				g.fillRect(rectLoc.x, rectLoc.y, (int) (shape.width * scale), (int) (shape.height * scale));
+				displayDrawContent.fillRectangle(rectLoc.x, rectLoc.y, (int) (shape.width * scale), (int) (shape.height * scale));
 			}
 		}
 	}
 
-	private void drawDescription(Graphics g, GComponent c)
+	@Deprecated
+	private void drawDescription(GComponent c)
 	{
 		GDescription description = (GDescription) c;
 		
@@ -188,27 +210,30 @@ public class DisplayDrawAdapter
 		
 		Font original = description.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-		
-		DrawToolkit.drawString(g, description.getTitle(), descLoc, scaledFont);
+
+		// Work on this! ! !
+		// DrawToolkit.drawString(p, description.getTitle(), descLoc, scaledFont);
 	}
 
-	private void drawImage(Graphics g, GComponent c)
+	@Deprecated
+	private void drawImage(GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
-		
+
 		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
-		
+
 		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
 
-		g.drawImage(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
+		// Work on this!
+		//p.drawImage(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
 	}
 	
 	// Needs to be updated with offset and scale ability from the Viewports settings.
 	// Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
 	@Deprecated
-	private void drawPath(Graphics g, GComponent c)
+	private void drawPath(GComponent c)
 	{
 		// Dead code
 		/*
@@ -228,8 +253,9 @@ public class DisplayDrawAdapter
 		}
 		*/
 	}
-	
-	private void drawCheckbox(Graphics g, GComponent c)
+
+	@Deprecated
+	private void drawCheckbox(GComponent c)
 	{
 		GCheckbox checkbox = (GCheckbox) c;
 
@@ -251,22 +277,22 @@ public class DisplayDrawAdapter
 		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 
-		g.setColor(getDesign().getDesignColor().getBorderColor());
+		displayDrawContent.setColor(getDesign().getDesignColor().getBorderColor());
 
-		g.fillRect(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
+		displayDrawContent.fillRectangle(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
 
-		g.setColor(Color.WHITE);
+		displayDrawContent.setColor(Color.WHITE);
 
-		g.fillRect(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
+		displayDrawContent.fillRectangle(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
 		
 		if(checkbox.isChecked())
 		{
-			Image checkSymbol = c.getStyle().getImage();
+			Texture checkSymbol = c.getStyle().getImage();
 
 			// Simply the square size of the image.
 			// The image is saved with square dimensions,
 			// so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
-			int sizePx = (int) (checkSymbol.getWidth(null));
+			int sizePx = (int) (checkSymbol.getWidth());
 
 			if(c.getStyle().isScalableForViewport())
 			{
@@ -275,17 +301,19 @@ public class DisplayDrawAdapter
 
 			Point imgLoc = new GIPoint(locInner).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
-			g.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
+			// Work on this ! ! !
+			// p.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
 	}
-	
+
+	@Deprecated
 	// Work on this (text displaying)!
-	private void drawSelectionBox(Graphics g, GComponent c)
+	private void drawSelectionBox(GComponent c)
 	{		
 		GSelectionBox selectionBox = (GSelectionBox) c;
 
-		drawRectangle(g, selectionBox);
-		
+		drawRectangle(selectionBox);
+
 		ArrayList<Polygon[]> shapeTable = selectionBox.getShapeTable();
 
 		// Draws every single option from the GSelectionBox.
@@ -308,11 +336,13 @@ public class DisplayDrawAdapter
 
 			if(option.isChecked())
 			{
-				g.drawImage(selectionBox.getIcons()[1], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
+				// Work on this ! ! !
+				//g.drawImage(selectionBox.getIcons()[1], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
 			}
 			else
 			{
-				g.drawImage(selectionBox.getIcons()[0], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
+				// Work on this ! ! !
+				//g.drawImage(selectionBox.getIcons()[0], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
 			}
 
 			// Every option can have a background color..
@@ -324,18 +354,20 @@ public class DisplayDrawAdapter
 			// But if there is no background color, then no background will just be drawn..
 			if(optionColor != null)
 			{
-				g.setColor(optionColor);
-				g.fillRect(titleShape.getBounds().x, titleShape.getBounds().y, titleShapeWidth, titleShapeHeight);
+				displayDrawContent.setColor(optionColor);
+				displayDrawContent.fillRectangle(titleShape.getBounds().x, titleShape.getBounds().y, titleShapeWidth, titleShapeHeight);
 			}
 			
 			Font original = c.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-			
-			DrawToolkit.drawString(g, option.getValue(), titleShape.getBounds().getLocation(), scaledFont);
+
+			// Work on this ! ! !
+			// DrawToolkit.drawString(g, option.getValue(), titleShape.getBounds().getLocation(), scaledFont);
 		}
 	}
-	
-	protected void drawPolyButton(Graphics g, GComponent c)
+
+	@Deprecated
+	protected void drawPolyButton(GComponent c)
 	{
 		GPolyButton polyButton = (GPolyButton) c;
 		
@@ -344,13 +376,15 @@ public class DisplayDrawAdapter
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = look.getBounds();
 
-		g.setColor(polyButton.getStyle().getPrimaryColor());
+		displayDrawContent.setColor(polyButton.getStyle().getPrimaryColor());
 
 		Point buttonLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), polyButton.getStyle().isMovableForViewport()).toPoint();
 
 		// Here it is only working with a copy in order not to modify the original object (polygon).
 		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, buttonLoc), scale);
-		g.fillPolygon(transformedCopy);
+
+		// Work on this ! ! !
+		//g.fillPolygon(transformedCopy);
 
 		// If text should be displayed in the center of the component.
 		if(polyButton.getStyle().getTextAlign() == 1)
@@ -365,41 +399,44 @@ public class DisplayDrawAdapter
 			Font original = polyButton.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
 
-			DrawToolkit.drawString(g, polyButton.getTitle(), loc, scaledFont);
+			// Work on this ! ! !
+			//DrawToolkit.drawString(g, polyButton.getTitle(), loc, scaledFont);
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
 			Point loc = new GIPoint(bounds.getLocation()).add(polyButton.getStyle().getTextTransition()).add(getOffset(), polyButton.getStyle().isMovableForViewport()).mul(getScale(), polyButton.getStyle().isScalableForViewport()).toPoint();
-			
-			DrawToolkit.drawString(g, polyButton.getTitle(), loc, polyButton.getStyle().getFont());
+
+			// Work on this ! ! !
+			//DrawToolkit.drawString(g, polyButton.getTitle(), loc, polyButton.getStyle().getFont());
 		}
 	}
 	
-	protected void drawButton(Graphics g, GComponent component)
+	protected void drawButton(GComponent component)
 	{		
 		GButton button = (GButton) component;
 		
 		Color temp = getDesign().getDesignColor().getBorderColor();
 
-		getDesign().getDesignColor().setBorderColor(button.getStyle().getPrimaryColor().darker().darker());
+		getDesign().getDesignColor().setBorderColor(button.getStyle().getPrimaryColor().mul(0.8f).mul(0.8f));
 		
 		String value = button.getTitle();
 		
-		drawGeneralField(g, button, value, value.length());
+		drawGeneralField(button, value, value.length());
 		
 		getDesign().getDesignColor().setBorderColor(temp);
 	}
 	
-	protected void drawTextfield(Graphics g, GComponent component)
+	protected void drawTextfield(GComponent component)
 	{
 		GTextfield textfield = (GTextfield) component;
 		
 		String value = textfield.getInputValue();
 		
-		drawGeneralField(g, textfield, value, textfield.getValueManager().getMaxLength());
+		drawGeneralField(textfield, value, textfield.getValueManager().getMaxLength());
 	}
 
-	protected void drawGeneralField(Graphics g, GComponent c, String value, int maxLength)
+	// WOrk on this ! ! !
+	protected void drawGeneralField(GComponent c, String value, int maxLength)
 	{
 		Polygon background = c.getStyle().getPrimaryLook();
 		
@@ -412,8 +449,10 @@ public class DisplayDrawAdapter
 			background = ShapeTransform.scalePolygon(background, getScale());
 		}
 
-		g.setColor(getDesign().getDesignColor().getBorderColor());
-		g.fillPolygon(background);
+		displayDrawContent.setColor(getDesign().getDesignColor().getBorderColor());
+
+		// WOrk on this ! ! !
+		//g.fillPolygon(background);
 
 
 
@@ -425,17 +464,20 @@ public class DisplayDrawAdapter
 
 		front = ShapeTransform.scalePolygon(front, c.getStyle().isScalableForViewport() ? getScale() : 1f);
 
-		g.setColor(c.getStyle().getPrimaryColor());
-		g.fillPolygon(front);
+		displayDrawContent.setColor(c.getStyle().getPrimaryColor());
+
+		// WOrk on this ! ! !
+		//g.fillPolygon(front);
 
 
 
 		Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
-		DrawToolkit.drawString(g, value, text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
+		DrawToolkit.drawString(value, text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
 	}
-	
-	public void drawWindow(Graphics g, GComponent c)
+
+	@Deprecated
+	public void drawWindow(GComponent c)
 	{
 		GWindow window = (GWindow) c;
 
@@ -445,7 +487,7 @@ public class DisplayDrawAdapter
 		
 		// Draws the outer part of the window, including offset and scale by Viewport of course.
 		{
-			g.setColor(window.getFrameColor());
+			displayDrawContent.setColor(window.getFrameColor());
 
 			Point windowOuterMoved = new GIPoint(c.getStyle().getPrimaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 
@@ -459,18 +501,20 @@ public class DisplayDrawAdapter
 			 * g.fillPolygon(scaledByViewport);
 			 */
 
-			g.fillPolygon(movedByOffset);
+			// Work on this!
+			//g.fillPolygon(movedByOffset);
 		}
 
 		// Draws the inner part of the window, including offset and scale by Viewport of course.
 		{
-			g.setColor(Color.BLACK);
+			displayDrawContent.setColor(Color.BLACK);
 			
 			Point secondaryLookMoved = new GIPoint(c.getStyle().getSecondaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 			
 			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getSecondaryLook(), secondaryLookMoved);
-			
-			g.fillPolygon(movedByOffset);
+
+			// Work on this!
+			// g.fillPolygon(movedByOffset);
 		}
 
 		// Draws the window title
@@ -485,7 +529,7 @@ public class DisplayDrawAdapter
 			
 			// titlePosition.mul(getScale(), window.getStyle().isScalableForViewport());
 			
-			DrawToolkit.drawString(g, window.getTitle(), titlePosition.toPoint(), window.getStyle().getFont());// window.getStyle().isScalableForViewport() ? window.getStyle().getFont().getScaledFont(getScale()) : window.getStyle().getFont());
+			DrawToolkit.drawString(window.getTitle(), titlePosition.toPoint(), window.getStyle().getFont());// window.getStyle().isScalableForViewport() ? window.getStyle().getFont().getScaledFont(getScale()) : window.getStyle().getFont());
 		}
 
 		{
@@ -494,9 +538,11 @@ public class DisplayDrawAdapter
 			Polygon exitButtonMoved = ShapeTransform.movePolygonTo(window.getExitButton().getStyle().getPrimaryLook(), exitButtonMoved_Loc);
 			
 			// Polygon exitButtonScaled = ShapeTransform.scalePolygon(exitButtonMoved, window.getStyle().isScalableForViewport() ? getScale() : 1f);
-			
-			g.setColor(window.getExitButton().getStyle().getPrimaryColor());
-			g.fillPolygon(exitButtonMoved);
+
+			displayDrawContent.setColor(window.getExitButton().getStyle().getPrimaryColor());
+
+			// Work on this!
+			//g.fillPolygon(exitButtonMoved);
 		}
 		
 		{	
@@ -505,9 +551,11 @@ public class DisplayDrawAdapter
 			Polygon minimizeButtonMoved = ShapeTransform.movePolygonTo(window.getMinimizeButton().getStyle().getPrimaryLook(), minimizeButtonMoved_Loc);
 			
 			// Polygon minimizeButtonScaled = ShapeTransform.scalePolygon(minimizeButtonMoved, window.getStyle().isScalableForViewport() ? getScale() : 1f);
-			
-			g.setColor(window.getMinimizeButton().getStyle().getPrimaryColor());
-			g.fillPolygon(minimizeButtonMoved);
+
+			displayDrawContent.setColor(window.getMinimizeButton().getStyle().getPrimaryColor());
+
+			// Work on this!
+			//g.fillPolygon(minimizeButtonMoved);
 		}
 	}
 
