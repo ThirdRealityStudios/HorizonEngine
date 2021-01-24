@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -91,7 +92,7 @@ public class DisplayDrawAdapter
 			}
 
 			case "image":
-			{				
+			{
 				drawImage(c);
 
 				break;
@@ -225,6 +226,8 @@ public class DisplayDrawAdapter
 		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 
 		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
+
+		batch.draw(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale));
 
 		// Work on this!
 		//p.drawImage(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
