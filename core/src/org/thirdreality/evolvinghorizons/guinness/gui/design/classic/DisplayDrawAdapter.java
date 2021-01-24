@@ -114,7 +114,7 @@ public class DisplayDrawAdapter
 
 			case "checkbox":
 			{
-				//drawCheckbox(c);
+				drawCheckbox(c);
 
 				break;
 			}
@@ -128,7 +128,7 @@ public class DisplayDrawAdapter
 
 			case "rectangle":
 			{
-				drawRectangle(c);
+				//drawRectangle(c);
 
 				break;
 			}
@@ -240,11 +240,12 @@ public class DisplayDrawAdapter
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 
 		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
-		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		//float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 
-		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
+		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();//.mul(scale).toPoint();
 
-		batch.draw(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale));
+		//batch.draw(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale));
+		batch.draw(c.getStyle().getImage(), imgLoc.x, imgLoc.y, bounds.width, bounds.height);
 	}
 
 	// Needs to be updated with offset and scale ability from the Viewports settings.
@@ -271,6 +272,9 @@ public class DisplayDrawAdapter
 		*/
 	}
 
+	Pixmap checkboxPixmap;
+	Sprite checkboxSprite;
+
 	@Deprecated
 	private void drawCheckbox(GComponent c)
 	{
@@ -278,42 +282,32 @@ public class DisplayDrawAdapter
 
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
-		
+
+		int borderThicknessPx = getDesign().getBorderProperty().getBorderThicknessPx();
+
 		// It wouldn't matter if you use 'height' or 'width' because both values are the same.
 		Dimension outerSize = new Dimension(bounds.width, bounds.width);
-		Dimension innerSize = new Dimension(outerSize.width - getDesign().getPaddingProperty().getInnerThickness(), outerSize.width - getDesign().getPaddingProperty().getInnerThickness());
+		Dimension innerSize = new Dimension(outerSize.width - 2*borderThicknessPx, outerSize.width - 2*borderThicknessPx);
 		
 		Point locOuter = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
-		Point locInner = new GIPoint(locOuter).add(getDesign().getBorderProperty().getBorderThicknessPx()).toPoint();
-		
-		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
-		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		Point locInner = new GIPoint(locOuter).add(borderThicknessPx).toPoint();
 
-		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), c.getStyle().isScalableForViewport());
-		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), c.getStyle().isScalableForViewport());
+		//Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		//Point locInnerScaled = new GIPoint(locInner).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
-
-
-		Pixmap pixmapBg = new Pixmap(outerSizeScaled.width, outerSizeScaled.width, Pixmap.Format.RGBA8888);
-		Texture textureBg = new Texture(pixmapBg);
-		Sprite spriteBg = new Sprite(textureBg);
-
-		spriteBg.setColor(getDesign().getDesignColor().getBorderColor());
-		pixmapBg.fillRectangle(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
+		//Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), c.getStyle().isScalableForViewport());
+		//Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 
 
+		checkboxPixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
 
-		Pixmap pixmapFg = new Pixmap(innerSizeScaled.width, innerSizeScaled.width, Pixmap.Format.RGBA8888);
-		Texture textureFg = new Texture(pixmapFg);
-		Sprite spriteFg = new Sprite(textureFg);
+		checkboxPixmap.setColor(getDesign().getDesignColor().getBorderColor());
+		checkboxPixmap.fillRectangle(locOuter.x, locOuter.y, outerSize.width, outerSize.width);
 
-		spriteFg.setColor(Color.WHITE);
-		pixmapFg.fillRectangle(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
+		checkboxPixmap.setColor(Color.WHITE);
+		checkboxPixmap.fillRectangle(locInner.x, locInner.y, innerSize.width, innerSize.width);
 
-		spriteBg.draw(batch);
-		spriteFg.draw(batch);
-
-
+		checkboxSprite = new Sprite(new Texture(checkboxPixmap));
 
 		if(checkbox.isChecked())
 		{
@@ -334,6 +328,8 @@ public class DisplayDrawAdapter
 			// Work on this ! ! !
 			// p.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
+
+		checkboxSprite.draw(batch);
 	}
 
 	@Deprecated
@@ -475,50 +471,23 @@ public class DisplayDrawAdapter
 	// WOrk on this ! ! !
 	protected void drawGeneralField(GComponent c, String value, int maxLength)
 	{
-		// Ignore border-radius here..
-
-		//Polygon background = c.getStyle().getPrimaryLook();
-		
-		//Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
-
-		//background = ShapeTransform.movePolygonTo(background, backgroundLoc);
-
-		/*
-		if(c.getStyle().isScalableForViewport())
-		{
-			background = ShapeTransform.scalePolygon(background, getScale());
-		}
-		 */
-
 		Rectangle background = c.getStyle().getPrimaryLook().getBounds();
 		background.setLocation(new GIPoint(background.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint());
 
+		int borderThicknessPx = getDesign().getBorderProperty().getBorderThicknessPx();
+
 		fieldPixmap0 = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+
 		fieldPixmap0.setColor(getDesign().getDesignColor().getBorderColor());
 		fieldPixmap0.fillRectangle(background.getBounds().x, background.getBounds().y, background.getBounds().width, background.getBounds().height);
+
+		fieldPixmap0.setColor(c.getStyle().getPrimaryColor());
+		fieldPixmap0.fillRectangle(background.getBounds().x + borderThicknessPx, background.getBounds().y + borderThicknessPx, background.getBounds().width - 2*borderThicknessPx, background.getBounds().height - 2*borderThicknessPx);
 
 		fieldSprite0 = new Sprite(new Texture(fieldPixmap0));
 
 		// Make this draw a polygon / rectangle with circles for rounded borders!
 		fieldSprite0.draw(batch);
-
-
-		//Dimension frontDimension = new GIDimension(maxLength * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
-
-		final int borderThicknessPx = getDesign().getBorderProperty().getBorderThicknessPx();
-
-		//Polygon front = ShapeMaker.createRectangleFrom(frontRectangle, c.getStyle().getBorderProperties());
-
-		//front = ShapeTransform.scalePolygon(front, c.getStyle().isScalableForViewport() ? getScale() : 1f);
-
-		fieldPixmap1 = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-		fieldPixmap1.setColor(c.getStyle().getPrimaryColor());
-		fieldPixmap1.fillRectangle(background.getBounds().x + borderThicknessPx, background.getBounds().y + borderThicknessPx, background.getBounds().width - 2*borderThicknessPx, background.getBounds().height - 2*borderThicknessPx);
-
-		fieldSprite1 = new Sprite(new Texture(fieldPixmap1));
-
-		// Make this draw a polygon / rectangle with circles for rounded borders!
-		fieldSprite1.draw(batch);
 
 
 		//Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();

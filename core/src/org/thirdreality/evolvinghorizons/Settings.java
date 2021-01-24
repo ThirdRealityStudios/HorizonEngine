@@ -9,5 +9,5 @@ public class Settings {
     // Retrieves the systems screen resolution.
     private static final Dimension SYSTEM_SCREEN = Toolkit.getDefaultToolkit().getScreenSize();
 
-    public static Dimension SCREEN_SIZE = new Dimension(1280, 640);//new Dimension(SYSTEM_SCREEN.width - MARGIN,SYSTEM_SCREEN.height - MARGIN);
+    public static Dimension SCREEN_SIZE = new Dimension(SYSTEM_SCREEN.width - MARGIN,SYSTEM_SCREEN.height - MARGIN);
 }
