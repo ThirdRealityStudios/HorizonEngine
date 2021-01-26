@@ -77,6 +77,13 @@ public class DisplayDrawAdapter
 		// a supplied image will not get in conflict with other settings.
 		switch(c.getType())
 		{
+			case "image":
+			{
+				drawImage(c);
+
+				break;
+			}
+
 			case "polybutton":
 			{
 				//drawPolyButton(c);
@@ -88,13 +95,6 @@ public class DisplayDrawAdapter
 			{
 				//drawDescription(c);
 		
-				break;
-			}
-
-			case "image":
-			{
-				drawImage(c);
-
 				break;
 			}
 
@@ -135,7 +135,7 @@ public class DisplayDrawAdapter
 
 			case "button":
 			{
-				//drawButton(c);
+				drawButton(c);
 
 				break;
 			}
@@ -179,13 +179,15 @@ public class DisplayDrawAdapter
 			if(rectangle.getBounds() != null)
 			{
 				// Work on having rounded borders!
-				Polygon p = ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc);
+				//Polygon p = ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc);
 
-				rectanglePixmap = new Pixmap(p.getBounds().width, p.getBounds().height, Pixmap.Format.RGBA8888);
+				rectanglePixmap = new Pixmap(rectangle.getBounds().width, rectangle.getBounds().height, Pixmap.Format.RGBA8888);
 				rectanglePixmap.fill();
 
 				rectangleSprite = new Sprite(new Texture(rectanglePixmap));
-				rectangleSprite.setColor(fillColor);
+				rectangleSprite.setX(rectLoc.x);
+				rectangleSprite.setY(rectLoc.y);
+				rectangleSprite.setColor(new Color(fillColor));
 
 				// Render the sprite
 				rectangleSprite.draw(batch);
@@ -438,15 +440,15 @@ public class DisplayDrawAdapter
 	}
 	
 	protected void drawButton(GComponent component)
-	{		
+	{
 		GButton button = (GButton) component;
-		
+
+		String value = button.getTitle();
+
 		Color temp = getDesign().getDesignColor().getBorderColor();
 
-		getDesign().getDesignColor().setBorderColor(button.getStyle().getPrimaryColor().mul(0.8f).mul(0.8f));
-		
-		String value = button.getTitle();
-		
+		getDesign().getDesignColor().setBorderColor(new Color(button.getStyle().getPrimaryColor()).mul(0.8f).mul(0.8f));
+
 		drawGeneralField(button, value, value.length());
 		
 		getDesign().getDesignColor().setBorderColor(temp);
