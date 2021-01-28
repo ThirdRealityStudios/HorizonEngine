@@ -1,14 +1,14 @@
 package org.thirdreality.evolvinghorizons.guinness.sample;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
 import org.thirdreality.evolvinghorizons.guinness.gui.DisplayContext;
@@ -26,11 +26,9 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescri
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GPaddingProperty;
-import org.thirdreality.evolvinghorizons.guinness.gui.design.Classic;
-import org.thirdreality.evolvinghorizons.guinness.gui.design.Design;
-import org.thirdreality.evolvinghorizons.guinness.gui.design.DesignColor;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class Main
 {
@@ -57,8 +55,6 @@ public class Main
 
 	private GLayer layer0, layer1, layer2_shared, layer3, layer4;
 
-	private Design design;
-	
 	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
 
 	private Viewport viewport;
@@ -85,7 +81,7 @@ public class Main
 		poly.addPoint(75, 125);
 		poly.addPoint(0, 125);
 
-		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", smallerFont, poly);
+		GPolyButton gPolyButton = new GPolyButton(new Vector2(450, 370), "CLICK ME", FontScheme.defaultFont, poly);
 
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -120,7 +116,7 @@ public class Main
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
 		
-		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", smallerFont, poly);
+		GPolyButton gPolyButton = new GPolyButton(new Vector2(250, 310), "Button", FontScheme.defaultFont, poly);
 		
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -137,16 +133,16 @@ public class Main
 			}
 		});
 		
-		gPolyButton.getStyle().setPrimaryColor(Color.RED);
+		gPolyButton.getStyle().setColor(Color.RED);
 		gPolyButton.getStyle().setTextAlign(1);
-		gPolyButton.getStyle().setTextTransition(new Point(0, -40));
+		gPolyButton.getStyle().setTextTransition(new Vector2(0, -40));
 		
 		return gPolyButton;
 	}
 	
 	private void initComponents()
 	{
-		Rectangle windowRepresentation = new Rectangle(new Point(400, 0), new Dimension(600, 400));
+		Rectangle windowRepresentation = new Rectangle(400f, 0f, 600, 400);
 		
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
 		
@@ -166,23 +162,20 @@ public class Main
 		
 		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true), option2 = new GSelectionOption("Loose your vibes", false);
 		
-		option0.getStyle().setPaddingBottom(10);		
-		option1.getStyle().setPaddingBottom(10);
-		option2.getStyle().setPaddingBottom(10);
-		
-		option1.getStyle().setPaddingTop(10);
-		option2.getStyle().setPaddingTop(10);
+		option0.getStyle().setPadding(10);
+		option1.getStyle().setPadding(10);
+		option2.getStyle().setPadding(10);
 		
 		options.add(option0);
 		options.add(option1);
 		options.add(option2);
 		
 		// The first option should have a different background color.
-		option0.getStyle().setPrimaryColor(new Color(0f, 1f, 0f, 1f));
+		option0.getStyle().setColor(new Color(0f, 1f, 0f, 1f));
 		
-		gSB = new GSelectionBox(new Point(200, 150), options);
+		gSB = new GSelectionBox(new Vector2(200, 150), options);
 		
-		checkbox1 = new GCheckbox(new Point(20, 200), true, 20);
+		checkbox1 = new GCheckbox(new Vector2(20, 200), true, 20);
 		
 		checkbox1.setActionListener(new GActionListener()
 		{
@@ -199,7 +192,7 @@ public class Main
 			}
 		});
 		
-		moveButton = new GButton(new Point(150, 75), "Move Viewport right", smallerFont);
+		moveButton = new GButton(new Vector2(150, 75), "Move Viewport right", FontScheme.defaultFont);
 		
 		moveButton.setActionListener(new GActionListener()
 		{
@@ -212,7 +205,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				viewport.getOffset().translate(1, 0);
+				viewport.getOffset().add(1, 0);
 			}
 		});
 
@@ -222,7 +215,7 @@ public class Main
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		increaseScale = new GButton(new Point(150, 100), "increase scale", smallerFont);
+		increaseScale = new GButton(new Vector2(150, 100), "increase scale", FontScheme.defaultFont);
 		
 		increaseScale.setActionListener(new GActionListener()
 		{
@@ -235,7 +228,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				viewport.setScale(viewport.getScale() + 0.0001f);
+				//viewport.setScale(viewport.getScale() + 0.0001f);
 			}
 		});
 
@@ -245,10 +238,9 @@ public class Main
 		// It prevents the "increase scale button" (+) to be changed by the Viewport when scrolling or zooming in/out (as an example).
 		{
 			increaseScale.getStyle().setMovableForViewport(false);
-			increaseScale.getStyle().setScalableForViewport(false);
 		}
 		
-		exit = new GButton(new Point(20, 150), "EXIT", biggerFont);
+		exit = new GButton(new Vector2(20, 150), "EXIT", FontScheme.defaultFont);
 		
 		exit.setActionListener(new GActionListener()
 		{
@@ -269,7 +261,7 @@ public class Main
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, smallerFont);
+		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, FontScheme.defaultFont);
 		
 		input1.setActionListener(new GActionListener()
 		{
@@ -286,13 +278,12 @@ public class Main
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, smallerFont);
-
-		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, smallerFont);
+		input2 = new GTextfield(new Vector2(20, 375), "DEUTSCH", 10, FontScheme.defaultFont);
+		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, FontScheme.defaultFont);
 
 		Texture t = ImageToolkit.loadImage(Path.USER_DIR + File.separator + "media" + File.separator + "MountainLake.jpg");
 
-		img0 = new GImage(new Point(0, 0), 600, false , t);
+		img0 = new GImage(new Vector2(0, 0), 600, false , t);
 		img0.getLogic().setActionOnHover(false);
 	}
 
@@ -300,19 +291,19 @@ public class Main
 	{
 		biggerFont.setFontColor(Color.RED);
 
-		DesignColor designColor = new DesignColor(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK);
+		//DesignColor designColor = new DesignColor(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK);
 
 		GBorderProperty borderProperty = new GBorderProperty(0, 1);
 		
 		GPaddingProperty paddingProperty = new GPaddingProperty(5);
 
-		design = new Classic(designColor, borderProperty, paddingProperty);
+		//design = new Classic(designColor, borderProperty, paddingProperty);
 
 		//display = new Display(1280, 640);
 
 		viewport = new Viewport(false);
-		viewport.setOffset(new Point(0, 75));
-		viewport.setScale(1f);
+		viewport.setOffset(new Vector2(0, 75));
+		//viewport.setScale(1f);
 
 		displayContext.setViewport(viewport);
 
@@ -321,7 +312,7 @@ public class Main
 
 	public void setupDisplayLayers()
 	{
-		description = new GDescription(new Point(20, 520), "Money here for nothing!", smallerFont);
+		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", FontScheme.defaultFont);
 
 		layer0.add(img0);
 
@@ -342,8 +333,8 @@ public class Main
 		layer2_shared.add(rect);
 
 
-		displayContext.getViewport().getWindowManager().addWindow(window1);
-		displayContext.getViewport().getWindowManager().addWindow(window0);
+		//displayContext.getViewport().getWindowManager().addWindow(window1);
+		//displayContext.getViewport().getWindowManager().addWindow(window0);
 	}
 	
 	public void setupGWindow0()
@@ -352,7 +343,7 @@ public class Main
 
 		Texture imgMountain = ImageToolkit.loadImage(Path.USER_DIR + File.separator + "media" + File.separator + "MountainLake.jpg");
 
-		GImage img0 = new GImage(new Point(), new Dimension(100, 365), imgMountain);
+		GImage img0 = new GImage(new Rectangle(0,0,100, 365), imgMountain);
 
 		layer5.add(img0);
 
@@ -360,7 +351,7 @@ public class Main
 		viewportGWindow0.addLayer(layer2_shared);
 		viewportGWindow0.addLayer(layer1);
 
-		window0.setViewport(viewportGWindow0);
+		//window0.setViewport(viewportGWindow0);
 	}
 
 	public void run()

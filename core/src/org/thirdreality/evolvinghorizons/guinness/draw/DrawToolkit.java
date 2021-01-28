@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.FontLoader;
@@ -44,10 +45,10 @@ public class DrawToolkit
 			// Work here on loading sub-images from a texture ! (by using texture packs)
 
 			// Has no function / no real use.
-			Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
+			//Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
 
 			// Draws the colorized symbol directly at the given position.
-			ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
+			//ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
 		}
 		else
 		{
@@ -60,10 +61,10 @@ public class DrawToolkit
 			// Work here on loading sub-images from a texture ! (by using texture packs)
 
 			// Has no function / no real use.
-			Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
+			//Pixmap charPixmap = new Pixmap(font.getFontSize(), font.getFontSize(), Pixmap.Format.Alpha);
 
 			// Draws the colorized symbol directly at the given position.
-			ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
+			//ImageToolkit.colorize(xPos, yPos, font.getFontSize(), font.getFontSize(), new Texture(charPixmap), font.getFontColor());
 		}
 	}
 
@@ -77,11 +78,11 @@ public class DrawToolkit
 
 		for (char c : converted)
 		{
-			drawChar(c, pos.x + font.getFontSize() * offset, pos.y, font);
+			//drawChar(c, pos.x + font.getFontSize() * offset, pos.y, font);
 
 			offset++;
 		}
 
-		return new Dimension(font.getFontSize() * text.length(), font.getFontSize());
+		return new Dimension((int) font.getFontSize() * text.length(), (int) font.getFontSize());
 	}
 }

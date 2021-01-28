@@ -3,6 +3,9 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.standard;
 import java.awt.Point;
 import java.awt.Polygon;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
@@ -15,14 +18,14 @@ public class GPolyButton extends GComponent
 	private GValueManager valueManager;
 	
 	// Info: The polygon is closed automatically later..
-	public GPolyButton(Point location, String title, Font font, Polygon polygon)
+	public GPolyButton(Vector2 position, String title, BitmapFont font, Polygon polygon)
 	{
-		super("polybutton", location, polygon, font);
+		super("polybutton", new Rectangle(position.x, position.y, polygon.getBounds().width, polygon.getBounds().height), font);
 		
 		// Make sure, the polygon is at the correct position.
 		// This way, you can also independently create polygons regardless of the Viewports measurements.
 		// Anyway, scaling polygons and other transformations are up to the user still..
-		polygon.translate(location.x, location.y);
+		polygon.translate((int) position.x, (int) position.y);
 		
 		valueManager = new GValueManager()
 		{

@@ -2,18 +2,25 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.standard;
 
 import java.awt.Point;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
 	private GValueManager valueManager;
+
+	private GlyphLayout layout;
 	
-	public GButton(Point location, String title, Font font)
+	public GButton(Vector2 position, String title, BitmapFont font)
 	{
 		super("button");
 		
@@ -30,8 +37,6 @@ public class GButton extends GComponent
 				this.value = value;
 
 				setMaxLength(value.length());
-
-				updateDefaultShape();
 			}
 		};
 
@@ -40,11 +45,11 @@ public class GButton extends GComponent
 		getStyle().setFont(font);
 		getStyle().getBorderProperties().setBorderRadiusPx(4);
 
-		// This method is always called after the base values have been set, e.g. font size.
-		updateDefaultShape();
+		int borderThicknessPx = 2;
 
-		// Is always executed after having set the default shape because it transforms it directly to the given location.
-		getStyle().setLocation(location);
+		layout = new GlyphLayout(font, getTitle());
+
+		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
 	}
 	
 	private GValueManager getValueManager()

@@ -1,24 +1,28 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.input;
 
-import java.awt.Point;
-
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GTextfield extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
 	private boolean active = false;
-
-	private Color clicked;
 	
 	private GValueManager valueManager;
 
-	public GTextfield(Point location, String title, int maxInput, Font font)
+	private GlyphLayout layout;
+
+	public GTextfield(Vector2 position, String title, int maxInput, BitmapFont font)
 	{
 		super("textfield");
 		
@@ -33,9 +37,6 @@ public class GTextfield extends GComponent
 				}
 
 				this.value = value;
-
-				// This method is (in general) always called after some base values have changed, e.g. the font size or like here it is the title.
-				updateDefaultShape();
 			}
 		};
 
@@ -55,15 +56,15 @@ public class GTextfield extends GComponent
 			// Will set the title or text which is contained yet.
 			// Will also update the "default shape".
 			getValueManager().setValue(title);
-			
-			// Is always executed after having set the default shape from the setValue(String title)-method above.
-			// The setLocation(...)-method is dependent on a look available in order to transform it to the given location.
-			getStyle().setLocation(location);
-			
-			getStyle().setPrimaryColor(Color.WHITE);
-			getStyle().getBorderProperties().setBorderRadiusPx(3);
 
+			getStyle().setColor(Color.WHITE);
 			getStyle().setFont(font);
+
+			layout = new GlyphLayout(font, getValueManager().getValue());
+
+			getStyle().setPadding((int) (layout.height / 4f));
+
+			getStyle().setBounds(createBoundsAt(position));
 		}
 		else
 		{
@@ -78,49 +79,40 @@ public class GTextfield extends GComponent
 
 	protected void setActive()
 	{
-		if(getStyle().getPrimaryColor() == null)
+		if(getStyle().getColor() == null)
 		{
 			return;
 		}
-		
-		getStyle().setBufferedColor(getStyle().getPrimaryColor());
-		
-		getStyle().setPrimaryColor(getColorClicked());
+
+		getStyle().setColor(ColorScheme.textfieldActive);
 		
 		active = true;
 	}
 	
 	protected void setInactive()
 	{
-		if(getStyle().getBufferedColor() == null)
-		{
-			return;
-		}
-		
-		getStyle().setPrimaryColor(getStyle().getBufferedColor());
-		
-		getStyle().setBufferedColor(null);
+		getStyle().setColor(null);
 		
 		active = false;
 	}
 
-	protected boolean isActive()
+	private boolean isActive()
 	{
 		return active;
 	}
 
-	protected Color getColorClicked()
-	{
-		return clicked;
-	}
-
-	protected void setClicked(Color clicked)
-	{
-		this.clicked = clicked;
-	}
-	
 	public String getInputValue()
 	{
 		return getValueManager().getValue();
+	}
+
+	public Rectangle createBoundsAt(Vector2 position)
+	{
+		return new Rectangle(position.x, position.y, layout.width + 2*getStyle().getPadding(), layout.height + 2*getStyle().getPadding());
+	}
+
+	public GlyphLayout getGlyphLayout()
+	{
+		return layout;
 	}
 }

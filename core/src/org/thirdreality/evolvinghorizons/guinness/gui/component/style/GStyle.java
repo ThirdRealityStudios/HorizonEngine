@@ -1,29 +1,22 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.style;
 
-import java.awt.Point;
-import java.awt.Polygon;
 import java.io.Serializable;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import org.thirdreality.evolvinghorizons.guinness.IssueTracker;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
-import org.thirdreality.evolvinghorizons.guinness.gui.design.Design;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 
-public abstract class GStyle implements Serializable
+public class GStyle implements Serializable
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	// Will tell the render method how to render this component.
-	private Design design;
-
-	// Contains the primary look of the component.
-	private Polygon primaryLook;
-
-	// Contains the secondary look of the component.
-	private Polygon secondaryLook;
+	// Contains the bounds of the component.
+	private Rectangle bounds;
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -36,10 +29,7 @@ public abstract class GStyle implements Serializable
 	
 	// Can the component be moved somewhere else by the Viewport?
 	private boolean isMovable = true;
-	
-	// Can the component be scaled larger or smaller by the Viewport?
-	private boolean isScalable = true;
-	
+
 	/*
 	 * WARNING! This property might not be supported for all components.
 	 * If not supported, it is anyway mostly the case that the upper-left corner is taken by default..
@@ -53,38 +43,30 @@ public abstract class GStyle implements Serializable
 	// you can tell the program to translate or reposition the text by any x and y value.
 	// The translated text is then not recognized later as a component itself.
 	// Translating your text is because of that just for pure decoration purposes.
-	private Point textTransition;
+	private Vector2 textTransition;
+
+	private Vector2 vect;
 	
-	private Font font;
+	private BitmapFont font;
 	
-	private int paddingTop = 0, paddingBottom = 0;
+	private int padding = 0;
 	
 	private float alpha = 1f;
 
-	private Color primaryColor = null, bufferedColor = null;
+	private Color color = Color.BLACK;
 	
 	// If supported by the component, its borders can be modified by the properties stored in GBorder:
 	// e.g. the border thickness and border radiuses in pixels.
 	private GBorderProperty border;
 
-	protected Point location;
+	private Vector2 location;
 
-	// Just contains an image in case it is wanted.
-	// If you want the GComponent to be rendered as an image,
-	// you need to clarify it in the variable "type" above (String value needs to be
-	// "image" then).
-	private Texture t;
-
-	// The same as above but can be used as a buffer to things in between when needed..
-	private Texture tBuffered;
+	private Texture img;
 
 	public GStyle()
 	{
-		primaryLook = new Polygon();
-		secondaryLook = new Polygon();
-		
-		textTransition = new Point();
-		location = new Point();
+		textTransition = new Vector2();
+		location = new Vector2();
 		border = new GBorderProperty();
 	}
 
@@ -94,52 +76,16 @@ public abstract class GStyle implements Serializable
 	public GStyle(GStyle style)
 	{
 		border = style.getBorderProperties().copy();
-		
-		setBufferedColor(style.getBufferedColor());
-		setBufferedImage(style.getBufferedImage());
-		setDesign(style.getDesign());
+
 		setFont(style.getFont());
 		setImage(style.getImage());
-		setLocation(style.getLocation());
 		setAlpha(style.getAlpha());
-		setPaddingBottom(style.getPaddingBottom());
-		setPaddingTop(style.getPaddingTop());
-		setPrimaryColor(style.getPrimaryColor());
-		setPrimaryLook(style.getPrimaryLook());
-		setSecondaryLook(style.getSecondaryLook());
+		setPadding(style.getPadding());
+		setColor(style.getColor());
 		setTextAlign(style.getTextAlign());
 		setTextTransition(style.getTextTransition());
 		setVisible(style.isVisible());
-	}
-
-	public Design getDesign()
-	{
-		return design;
-	}
-
-	public void setDesign(Design d)
-	{
-		this.design = d;
-	}
-
-	public Polygon getPrimaryLook()
-	{
-		return primaryLook;
-	}
-
-	public void setPrimaryLook(Polygon primaryLook)
-	{
-		this.primaryLook = primaryLook;
-	}
-
-	public Polygon getSecondaryLook()
-	{
-		return secondaryLook;
-	}
-
-	public void setSecondaryLook(Polygon secondaryLook)
-	{
-		this.secondaryLook = secondaryLook;
+		setBounds(style.getBounds());
 	}
 
 	public Boolean isVisible()
@@ -152,64 +98,41 @@ public abstract class GStyle implements Serializable
 		this.visible = visible;
 	}
 
-	public Font getFont()
+	public BitmapFont getFont()
 	{
 		return font;
 	}
 
-	public void setFont(Font font)
+	public void setFont(BitmapFont font)
 	{
 		this.font = font;
 	}
 
-	public Color getPrimaryColor()
+	public Color getColor()
 	{
-		return primaryColor;
+		return color;
 	}
 
-	public void setPrimaryColor(Color primaryColor)
+	public void setColor(Color color)
 	{
-		this.primaryColor = primaryColor;
+		this.color = color;
 	}
 
-	public Color getBufferedColor()
+	public Vector2 getPosition()
 	{
-		return bufferedColor;
+		return new Vector2(bounds.x, bounds.y);
 	}
-
-	public void setBufferedColor(Color bufferedColor)
-	{
-		this.bufferedColor = bufferedColor;
-	}
-
-	public Point getLocation()
-	{
-		return location;
-	}
-
-	// Sets the location and also transforms the corresponding look / polygon to that location.
-	public abstract void setLocation(Point location);
 
 	public Texture getImage()
 	{
-		return t;
+		return img;
 	}
 
-	public void setImage(Texture t)
+	public void setImage(Texture img)
 	{
-		this.t = t;
+		this.img = img;
 	}
 
-	public Texture getBufferedImage()
-	{
-		return tBuffered;
-	}
-
-	public void setBufferedImage(Texture tBuffered)
-	{
-		this.tBuffered = tBuffered;
-	}
-	
 	public GBorderProperty getBorderProperties()
 	{
 		return border;
@@ -220,24 +143,14 @@ public abstract class GStyle implements Serializable
 		border = borderProperties;
 	}
 
-	public int getPaddingTop()
+	public int getPadding()
 	{
-		return paddingTop;
+		return padding;
 	}
 
-	public void setPaddingTop(int paddingTop)
+	public void setPadding(int padding)
 	{
-		this.paddingTop = paddingTop;
-	}
-
-	public int getPaddingBottom()
-	{
-		return paddingBottom;
-	}
-
-	public void setPaddingBottom(int paddingBottom)
-	{
-		this.paddingBottom = paddingBottom;
+		this.padding = padding;
 	}
 
 	public float getAlpha()
@@ -248,11 +161,11 @@ public abstract class GStyle implements Serializable
 	// Applies the given alpha value to the primary color.
 	public void setAlpha(float alpha)
 	{
-		float r = getPrimaryColor().r;
-		float g = getPrimaryColor().g;
-		float b = getPrimaryColor().b;
+		float r = getColor().r;
+		float g = getColor().g;
+		float b = getColor().b;
 
-		getPrimaryColor().set(r, g, b, alpha);
+		getColor().set(r, g, b, alpha);
 	}
 
 	public int getTextAlign()
@@ -265,12 +178,12 @@ public abstract class GStyle implements Serializable
 		this.textAlign = textAlign;
 	}
 
-	public Point getTextTransition()
+	public Vector2 getTextTransition()
 	{
 		return textTransition;
 	}
 
-	public void setTextTransition(Point textAlignTransition)
+	public void setTextTransition(Vector2 textAlignTransition)
 	{
 		this.textTransition = textAlignTransition;
 	}
@@ -285,25 +198,13 @@ public abstract class GStyle implements Serializable
 		this.isMovable = isMovable;
 	}
 
-	public boolean isScalableForViewport()
+	public Rectangle getBounds()
 	{
-		return isScalable;
+		return bounds;
 	}
 
-	public void setScalableForViewport(boolean isScalable)
+	public void setBounds(Rectangle bounds)
 	{
-		this.isScalable = isScalable;
-	}
-	
-	public GStyle copy()
-	{
-		return new GStyle(this)
-		{
-			@Override
-			public void setLocation(Point location)
-			{
-				System.err.println(IssueTracker.COPIED_ABSTRACT_CLASS_WARNING + "\nAffected methods: GStyle.setLocation(Point location)");
-			}
-		};
+		this.bounds = bounds;
 	}
 }

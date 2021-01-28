@@ -1,15 +1,14 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.container.SizedTexture;
-import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 
 public class GSelectionBox extends GComponent
@@ -21,7 +20,7 @@ public class GSelectionBox extends GComponent
 	// This list contains all shapes related to an option.
 	// This makes it easier for the rendering progress to just access the data more easily.
 	// Also it will prevent all shapes from being calculated too frequently which enhances the performance actually.
-	private ArrayList<Polygon[]> updateShapeTable;
+	private ArrayList<Rectangle[]> updateShapeTable;
 	
 	private int index = -1;
 	
@@ -30,11 +29,11 @@ public class GSelectionBox extends GComponent
 	// Keeps two different icons which illustrate two possible states of an option (selected / unselected).
 	private SizedTexture[] icon;
 
-	public GSelectionBox(Point location, ArrayList<GSelectionOption> options)
+	public GSelectionBox(Vector2 position, ArrayList<GSelectionOption> options)
 	{
 		super("selectionbox");
 		
-		updateShapeTable = new ArrayList<Polygon[]>();
+		updateShapeTable = new ArrayList<Rectangle[]>();
 		
 		initIcon();
 		
@@ -52,13 +51,13 @@ public class GSelectionBox extends GComponent
 		
 		// This will actually calculate a grid for every single option you add to this GSelectionBox.
 		// Also, do not change order as the grid is important for the next method to determine the shape of the whole GSelectionBox.
-		updateShapeTable(location);
+		updateShapeTable(position);
 		
 		// Make sure, the current shape is updated with the correct size with the new options added.
-		updateSelectionBoxShape(location);
+		updateSelectionBoxShape(position);
 		
 		// Is always executed after having set the box shape because it transforms it directly to the given location.
-		getStyle().setLocation(location);
+		getStyle().getBounds().setPosition(position);
 	}
 	
 	// Only there to load the images for the icons..
@@ -66,8 +65,8 @@ public class GSelectionBox extends GComponent
 	{
 		icon = new SizedTexture[2];
 		
-		icon[0] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_unselected.png"), null);
-		icon[1] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_selected.png"), null);
+		icon[0] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_unselected.png"),0,0);
+		icon[1] = new SizedTexture(new Texture(Path.ICON_FOLDER + File.separator + "radio_selected.png"),0,0);
 	}
 	
 	public ArrayList<GSelectionOption> getOptions()
@@ -75,7 +74,7 @@ public class GSelectionBox extends GComponent
 		return options;
 	}
 	
-	public ArrayList<Polygon[]> getShapeTable()
+	public ArrayList<Rectangle[]> getShapeTable()
 	{
 		return updateShapeTable;
 	}
@@ -107,29 +106,29 @@ public class GSelectionBox extends GComponent
 	}
 	
 	// Makes sure, the current shape is updated with the correct size with new options added or removed.
-	private void updateSelectionBoxShape(Point origin)
+	private void updateSelectionBoxShape(Vector2 origin)
 	{
-		int maxWidth = 0;
+		float maxWidth = 0;
 		
-		int sumHeight = 0;
+		float sumHeight = 0;
 		
 		for(int i = 0; i < getShapeTable().size(); i++)
 		{
-			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].getBounds().width + getShapeTable().get(i)[1].getBounds().width + getShapeTable().get(i)[2].getBounds().width));
+			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].width + getShapeTable().get(i)[1].width + getShapeTable().get(i)[2].width));
 		}
 
-		Polygon lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
+		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
 		
-		sumHeight = (lastShape.getBounds().y + lastShape.getBounds().height) - origin.y;
+		sumHeight = (lastShape.y + lastShape.height) - origin.y;
 		
-		getStyle().setPrimaryLook(ShapeMaker.createRectangle(origin.x, origin.y, maxWidth, sumHeight));
+		getStyle().setBounds(new Rectangle(origin.x, origin.y, maxWidth, sumHeight));
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
 	// It will to simplify the rendering process by not having to calculate these values frequently.
 	// It can directly the draw method all necessary measurements of the symbol and title text of an option added.
 	// Because of this, the "shape table" steadily needs to be updated when it is changed or just at the beginning.
-	private void updateShapeTable(Point origin)
+	private void updateShapeTable(Vector2 origin)
 	{
 		int lastHeights = 0;
 
@@ -138,57 +137,59 @@ public class GSelectionBox extends GComponent
 			// Stores the current option.
 			GSelectionOption option = getOptions().get(i);
 
-			int fontSize = option.getStyle().getFont().getFontSize();
+			float iconSize = option.getLayout().height;
 
 			Rectangle optionSymbolShape = null, optionSeparationWidth = null, optionTitleShape = null, optionPaddingTop = null, optionPaddingBottom = null;
 
 			// The location of this GSelectionBox.
-			Point location = new Point(origin.x, origin.y + lastHeights);
+			Vector2 location = new Vector2(origin.x, origin.y + lastHeights);
 
 			// Sizes (just dimensions) calculated here..
 			{
-				optionSymbolShape = new Rectangle(fontSize, fontSize);
+				optionSymbolShape = new Rectangle(0,0,iconSize, iconSize);
 				
-				optionSeparationWidth = new Rectangle(fontSize / 2, fontSize);
+				optionSeparationWidth = new Rectangle(0,0,iconSize / 2, iconSize);
 				
-				optionTitleShape = new Rectangle(fontSize * option.getValue().length(), fontSize);
+				optionTitleShape = new Rectangle(0,0,option.getLayout().width, option.getLayout().height);
 				
-				optionPaddingBottom = new Rectangle(optionSymbolShape.width + optionSeparationWidth.width + optionTitleShape.width, option.getStyle().getPaddingBottom());
+				optionPaddingBottom = new Rectangle(0,0,optionSymbolShape.width + optionSeparationWidth.width + optionTitleShape.width, option.getStyle().getPadding());
 				
-				optionPaddingTop = new Rectangle(optionPaddingBottom.width, option.getStyle().getPaddingTop());
+				optionPaddingTop = new Rectangle(0,0,optionPaddingBottom.width, option.getStyle().getPadding());
 			}
 			
 			// Positions additionally applied here..
 			{
-				optionPaddingBottom.setLocation(location);
+				optionPaddingBottom.setPosition(location);
 				
-				optionSymbolShape.setLocation(location.x, optionPaddingBottom.y + optionPaddingBottom.height);
+				optionSymbolShape.setPosition(location.x, optionPaddingBottom.y + optionPaddingBottom.height);
 				
-				optionSeparationWidth.setLocation(optionSymbolShape.x + optionSymbolShape.width, optionSymbolShape.y);
+				optionSeparationWidth.setPosition(optionSymbolShape.x + optionSymbolShape.width, optionSymbolShape.y);
 				
-				optionTitleShape.setLocation(optionSeparationWidth.x + optionSeparationWidth.width, optionSeparationWidth.y);
+				optionTitleShape.setPosition(optionSeparationWidth.x + optionSeparationWidth.width, optionSeparationWidth.y);
 				
-				optionPaddingTop.setLocation(location.x, optionTitleShape.y + optionTitleShape.height);
+				optionPaddingTop.setPosition(location.x, optionTitleShape.y + optionTitleShape.height);
 			}
 			
 			// Creates an array of shapes for each option and adds it to the list.
 			// This will give every option a set of shapes.
 			{
-				Polygon[] optionShapes = new Polygon[5];
+				Rectangle[] optionShapes = new Rectangle[5];
 				
-				optionShapes[0] = ShapeMaker.createRectangleFrom(optionSymbolShape);
+				optionShapes[0] = new Rectangle(optionSymbolShape);
 				
 				// Apply the symbol size (reference "optionSymbolShape") to the icons (which will be the corresponding symbol for the "unselected" and "selected" state).
 				// This way, it is guaranteed the icons are displayed correctly later depending on the font size.
-				icon[0].setSize(new Dimension(optionSymbolShape.width, optionSymbolShape.height));
-				icon[1].setSize(new Dimension(optionSymbolShape.width, optionSymbolShape.height));
+				icon[0].setWidth(optionSymbolShape.width);
+				icon[0].setHeight(optionSymbolShape.height);
+				icon[1].setWidth(optionSymbolShape.width);
+				icon[1].setHeight(optionSymbolShape.height);
 				
-				optionShapes[1] = ShapeMaker.createRectangleFrom(optionSeparationWidth);
+				optionShapes[1] = new Rectangle(optionSeparationWidth);
 				
-				optionShapes[2] = ShapeMaker.createRectangleFrom(optionTitleShape);
+				optionShapes[2] = new Rectangle(optionTitleShape);
 				
-				optionShapes[3] = ShapeMaker.createRectangleFrom(optionPaddingBottom);
-				optionShapes[4] = ShapeMaker.createRectangleFrom(optionPaddingTop);
+				optionShapes[3] = new Rectangle(optionPaddingBottom);
+				optionShapes[4] = new Rectangle(optionPaddingTop);
 				
 				updateShapeTable.add(optionShapes);
 			}
@@ -258,8 +259,8 @@ public class GSelectionBox extends GComponent
 			index = options.size() - 1;
 		}
 		
-		updateShapeTable(getStyle().getLocation());
-		updateSelectionBoxShape(getStyle().getLocation());
+		updateShapeTable(getStyle().getPosition());
+		updateSelectionBoxShape(getStyle().getPosition());
 	}
 	
 	private void unselectCompletelyAt(int index)

@@ -4,12 +4,14 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.exec.ThreadManager;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.Timer;
@@ -24,6 +26,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.wind
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.evolvinghorizons.guinness.handler.componenthandler.ComponentSession;
+import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
 public class ComponentHandler
 {
@@ -134,7 +137,7 @@ public class ComponentHandler
 	private Point initialLoc = null;
 
 	// Is responsible for firing the implemented functions by the component.
-	private void triggerGeneralLogic(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
+	private void triggerGeneralLogic(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Vector2 mouseLocation, int keyStroke)
 	{
 		if(clicking)
 		{
@@ -200,19 +203,21 @@ public class ComponentHandler
 				// Interactions which do not regard whether it is double clicked
 				switch(focused.getType())
 				{
+					/*
 					case "window":
 					{
 						GWindow window = (GWindow) focused;
 
-						/*
-						 * The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
-						 */
+						//The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
 
-						GIPoint offset = window.getStyle().isMovableForViewport() ? new GIPoint(source.getOffset()) : new GIPoint();
+						Vector2 offset = window.getStyle().isMovableForViewport() ? new Vector2(source.getOffset()) : new Vector2();
 
-						Polygon outerArea = window.getStyle().getPrimaryLook();
+						Rectangle background = new Rectangle(window.getStyle().getBounds());
 
-						outerArea = ShapeTransform.movePolygonTo(outerArea, offset.copy().add(outerArea.getBounds().getLocation()).toPoint());
+						Vector2 bgPosition = new Vector2(background.x, background.y);
+						bgPosition.add(offset);
+
+						if()
 
 						Polygon innerArea = window.getStyle().getSecondaryLook();
 
@@ -239,7 +244,7 @@ public class ComponentHandler
 						{
 							GIPoint cursorDiff = new GIPoint(mouseLocation).sub(initialLoc);
 
-							GIPoint moved = new GIPoint(window.getStyle().getLocation()).add(cursorDiff);//.div(target.getScale(), window.getStyle().isScalableForViewport());
+							GIPoint moved = new GIPoint(window.getStyle().getPosition()).add(cursorDiff);//.div(target.getScale(), window.getStyle().isScalableForViewport());
 
 							window.getStyle().setLocation(moved.toPoint());
 
@@ -248,6 +253,7 @@ public class ComponentHandler
 
 						break;
 					}
+					*/
 				}
 
 				boolean isDoubleClickingWanted = !session.isFocusedComponentDoubleClicked() || focused.getLogic().isDoubleClickingAllowed();
@@ -273,30 +279,23 @@ public class ComponentHandler
 						{
 							GSelectionBox selectionbox = (GSelectionBox) focused;
 
-							ArrayList<Polygon[]> shapeTable = selectionbox.getShapeTable();
+							ArrayList<Rectangle[]> shapeTable = selectionbox.getShapeTable();
 
 							for(int i = 0; i < shapeTable.size(); i++)
 							{
-								Point offset = source != null ? source.getOffset() : new Point();
-								
-								Point viewportRelative = new GIPoint(offset).add(source.getOrigin()).toPoint();
-								
-								Polygon rect0 = shapeTable.get(i)[0];
-								Polygon rect2 = shapeTable.get(i)[2];
-								
-								Point pos0 = new GIPoint(rect0.getBounds().getLocation()).add(viewportRelative).toPoint();
+								Vector2 offset = source != null ? source.getOffset() : new Vector2();
 
-								Point pos2 = new GIPoint(rect2.getBounds().getLocation()).add(viewportRelative).toPoint();
+								Vector2 viewportRelative = new Vector2(offset).add(source.getOrigin());
+								
+								Rectangle rect0 = shapeTable.get(i)[0];
+								Rectangle rect2 = shapeTable.get(i)[2];
+
+								Vector2 pos0 = new Vector2(rect0.x, rect0.y).add(viewportRelative);
+								Vector2 pos2 = new Vector2(rect2.x, rect2.y).add(viewportRelative);
 								
 								boolean isViewportAvailable = source != null;
-								
-								float scale = isViewportAvailable && focused.getStyle().isScalableForViewport() ? source.getScale() : 1f;
 
-								// Creates two moved and scaled copies (by the global offset and scale factor).
-								Polygon transformed0 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect0, pos0), scale);
-								Polygon transformed2 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect2, pos2), scale);
-								
-								if(transformed0.contains(mouseLocation) || transformed2.contains(mouseLocation))
+								if(rect0.contains(mouseLocation) || rect2.contains(mouseLocation))
 								{
 									selectionbox.selectOptionAt(i);
 								}
@@ -333,17 +332,19 @@ public class ComponentHandler
 		{		
 			case "button":
 			{
-				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getDesignColor().getBackgroundColor());
+				lastlyFocused.getStyle().setColor(ColorScheme.buttonFg);
 
 				break;
 			}
 
 			case "window":
 			{
+				/*
 				GWindow window = (GWindow) lastlyFocused;
 
-				window.getExitButton().getStyle().setPrimaryColor(window.getExitButton().getDefaultColor());
-				window.getMinimizeButton().getStyle().setPrimaryColor(window.getMinimizeButton().getDefaultColor());
+				window.getExitButton().getStyle().setColor(window.getExitButton().getDefaultColor());
+				window.getMinimizeButton().getStyle().setColor(window.getMinimizeButton().getDefaultColor());
+				 */
 
 				break;
 			}
@@ -355,12 +356,13 @@ public class ComponentHandler
 		}
 	}
 
+	/*
 	private void triggerWindowButtonColor(Viewport source, GWindowButton windowButton, Point mouseLocation, boolean clicking)
 	{
-		boolean activeColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getClickColor());
-		boolean hoverColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getHoverColor());
+		boolean activeColorIsSame = windowButton.getStyle().getColor().equals(windowButton.getClickColor());
+		boolean hoverColorIsSame = windowButton.getStyle().getColor().equals(windowButton.getHoverColor());
 
-		Point windowButtonLocation = new GIPoint(windowButton.getStyle().getLocation()).add(source.getOrigin()).add(source.getOffset()).toPoint();
+		Point windowButtonLocation = new GIPoint(windowButton.getStyle().getPosition()).add(source.getOrigin()).add(source.getOffset()).toPoint();
 		
 		// Asking for
 		if(ShapeTransform.movePolygonTo(windowButton.getStyle().getPrimaryLook(), windowButtonLocation).contains(mouseLocation))
@@ -369,21 +371,22 @@ public class ComponentHandler
 			{
 				if(!activeColorIsSame)
 				{
-					windowButton.getStyle().setPrimaryColor(windowButton.getClickColor());
+					windowButton.getStyle().setColor(windowButton.getClickColor());
 				}
 			}
 			else if(!hoverColorIsSame)
 			{
-				windowButton.getStyle().setPrimaryColor(windowButton.getHoverColor());
+				windowButton.getStyle().setColor(windowButton.getHoverColor());
 			}
 		}
 		else
 		{
-			windowButton.getStyle().setPrimaryColor(windowButton.getDefaultColor());
+			windowButton.getStyle().setColor(windowButton.getDefaultColor());
 		}
 	}
+	 */
 
-	private void triggerAnimation(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Point mouseLocation)
+	private void triggerAnimation(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Vector2 mouseLocation)
 	{
 		GComponent lastlyFocused = session.getLastlyFocusedComponent();
 		
@@ -397,19 +400,19 @@ public class ComponentHandler
 				{
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
-					boolean activeColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getDesignColor().getActiveColor());
-					boolean hoverColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getDesignColor().getHoverColor());
+					boolean activeColorIsSame = focused.getStyle().getColor().equals(ColorScheme.buttonClicked);
+					boolean hoverColorIsSame = focused.getStyle().getColor().equals(ColorScheme.buttonHovered);
 					
 					if(clicking)
 					{
 						if(!activeColorIsSame)
 						{
-							focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getDesignColor().getActiveColor());
+							focused.getStyle().setColor(ColorScheme.buttonClicked);
 						}
 					}
 					else if(!hoverColorIsSame)
 					{
-						focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getDesignColor().getHoverColor());
+						focused.getStyle().setColor(ColorScheme.buttonHovered);
 
 						// When hovering (once!) over a button the cursor is changed.
 						Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Hand);
@@ -431,7 +434,8 @@ public class ComponentHandler
 				case "window":
 				{
 					GWindow window = (GWindow) focused;
-					
+
+					/*
 					// Will update the window content every time the user focuses the window.
 					// This will also reduce the CPU usage because it is event driven then.
 					// Anyway, this might be changed in future so the window content is always changed.
@@ -440,8 +444,9 @@ public class ComponentHandler
 						updateChangedLayers(window.getViewport());
 					}
 					
-					triggerWindowButtonColor(source, window.getExitButton(), mouseLocation, clicking);
-					triggerWindowButtonColor(source, window.getMinimizeButton(), mouseLocation, clicking);
+					//triggerWindowButtonColor(source, window.getExitButton(), mouseLocation, clicking);
+					//triggerWindowButtonColor(source, window.getMinimizeButton(), mouseLocation, clicking);
+					 */
 
 					break;
 				}
@@ -544,7 +549,7 @@ public class ComponentHandler
 
 		GComponent focused = mouseUtility.getFocusedComponent(target);
 
-		Point mouseLocation = new Point(Gdx.input.getX(), Gdx.input.getY());
+		Vector2 mouseLocation = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
 		boolean windowWasMoved = initialLoc != null;
 
@@ -611,6 +616,7 @@ public class ComponentHandler
 		{
 			GWindow window = (GWindow) possibleWindow;
 
+			/*
 			if(window.hasViewport())
 			{
 				// Evaluate all components within the GWindow..
@@ -625,6 +631,7 @@ public class ComponentHandler
 					}
 				}
 			}
+			 */
 		}
 	}
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
@@ -14,13 +16,13 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 public class MouseUtility
 {
 	// The variable is used to calculate the mouse speed below.
-	private Point initialCursorLocation = null;
+	private Vector2 initialCursorLocation = null;
 
 	private boolean measureDistanceMoved = true;
 	
 	// Keeps the current relative location of the Viewport from the cursor.
 	// Assumed to be at (0|0) in the beginning but is refreshed afterwards.
-	private Point cursorLocation;
+	private Vector2 cursorLocation;
 	
 	// Self-explaining: the mouse distance moved / delta time (px/ms).
 	private volatile double mouseSpeed = 0d;
@@ -65,7 +67,7 @@ public class MouseUtility
 		}
 		else if(deltaTimer >= maximumDeltaTime)
 		{
-			double mouseDistanceMoved = initialCursorLocation.distance(cursorLocation);
+			double mouseDistanceMoved = initialCursorLocation.dst(cursorLocation);
 
 			mouseSpeed = mouseDistanceMoved / delta;
 
@@ -86,9 +88,9 @@ public class MouseUtility
 	}
 
 	// Returns the absolute current cursor location.
-	public Point getCurrentCursorLocation()
+	public Vector2 getCurrentCursorLocation()
 	{
-		return new Point(Gdx.input.getX(), Gdx.input.getY());
+		return new Vector2(Gdx.input.getX(), Gdx.input.getY());
 	}
 	
 	// Tests if the cursor is on the position of a component.
@@ -111,10 +113,11 @@ public class MouseUtility
 		 * 	If you wouldn't regard these aspects / values,
 		 *  there would be a huge difference between the real components position and what is displayed on screen.
 		 */
-		
-		GIPoint originAppliedLoc = new GIPoint(target.getStyle().getPrimaryLook().getBounds().getLocation()).add(source.getOrigin());
 
-		Polygon originApplied = ShapeTransform.movePolygonTo(target.getStyle().getPrimaryLook(), originAppliedLoc.toPoint());
+		Vector2 originAppliedLoc = new Vector2(target.getStyle().getBounds().x, target.getStyle().getBounds().y).add(source.getOrigin());
+
+		Rectangle originApplied = new Rectangle(target.getStyle().getBounds());
+		originApplied.setPosition(originAppliedLoc);
 		
 		if(source.isSimulated())
 		{
@@ -124,31 +127,15 @@ public class MouseUtility
 		{
 			if(target.getStyle().isMovableForViewport())
 			{				
-				Polygon offsetApplied = ShapeTransform.movePolygonTo(originApplied, originAppliedLoc.add(source.getOffset()).toPoint());
-				
-				if(target.getStyle().isScalableForViewport())
-				{
-					Polygon scaleApplied = ShapeTransform.scalePolygon(offsetApplied, source.getScale());
-					
-					return scaleApplied.contains(getCurrentCursorLocation());
-				}
-				else
-				{
-					return offsetApplied.contains(getCurrentCursorLocation());
-				}
+				Rectangle offsetApplied = new Rectangle(originApplied);
+
+				Vector2 offsetAppliedPosition = new Vector2(offsetApplied.x, offsetApplied.y).add(source.getOffset());
+
+				return offsetApplied.contains(getCurrentCursorLocation());
 			}
 			else
 			{
-				if(target.getStyle().isScalableForViewport())
-				{
-					Polygon scaleApplied = ShapeTransform.scalePolygon(originApplied, source.getScale());
-					
-					return scaleApplied.contains(getCurrentCursorLocation());
-				}
-				else
-				{
-					return originApplied.contains(getCurrentCursorLocation());
-				}
+				return originApplied.contains(getCurrentCursorLocation());
 			}
 		}
 	}

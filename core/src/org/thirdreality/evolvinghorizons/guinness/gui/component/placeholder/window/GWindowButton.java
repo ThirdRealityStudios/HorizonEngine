@@ -1,8 +1,7 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.window;
 
-import java.awt.Rectangle;
-
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
@@ -24,17 +23,17 @@ public class GWindowButton extends GComponent
 
 		getStyle().setBorderProperties(borderProperties);
 
-		getStyle().setPrimaryLook(ShapeMaker.createRectangleFrom(new Rectangle(rect.getSize()), getStyle().getBorderProperties()));
-		getStyle().setLocation(new GIPoint(rect.getLocation()).toPoint());
+		getStyle().setBounds(new Rectangle(rect));//, getStyle().getBorderProperties()));
+		//getStyle().setLocation(new GIPoint(rect.getLocation()).toPoint());
 
-		getStyle().setPrimaryColor(background);
+		getStyle().setColor(background);
 		getStyle().setAlpha(opacity);
 
-		clickColor = getStyle().getPrimaryColor().mul(0.8f).mul(0.8f);
-		defaultColor = getStyle().getPrimaryColor().mul(0.8f);
-		hoverColor = getStyle().getPrimaryColor();
+		clickColor = getStyle().getColor().mul(0.8f).mul(0.8f);
+		defaultColor = getStyle().getColor().mul(0.8f);
+		hoverColor = getStyle().getColor();
 
-		getStyle().setPrimaryColor(defaultColor);
+		getStyle().setColor(defaultColor);
 
 		this.icon = icon;
 	}

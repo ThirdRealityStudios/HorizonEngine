@@ -1,10 +1,11 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
@@ -37,7 +38,7 @@ public class GWindow extends GComponent
 	// In order to make it work, you would need to calculate the offset for the new location of the window.
 	// To calculate it, you first you have remember the point when the window started to be re-moved,
 	// and this is where you go here... :
-	private Point movementOrigin = null;
+	private Vector2 movementOrigin = null;
 
 	// This is the simulated viewport which you can apply per method setViewport(...).
 	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
@@ -63,17 +64,18 @@ public class GWindow extends GComponent
 	private void initFrameStyle(String title, Rectangle window, GBorderProperty borderProperties)
 	{
 		// Here, the buttons are created, e.g. exit and minimize buttons for the window.
-		createWindowButtons(window, borderProperties);
+		//createWindowButtons(window, borderProperties);
 
 		initStyle(window, borderProperties);
 
-		movementOrigin = getStyle().getPrimaryLook().getBounds().getLocation();
+		movementOrigin = new Vector2(getStyle().getBounds().x, getStyle().getBounds().y);
 
-		setTitle(title);
+		//setTitle(title);
 	}
 
 	private void initStyle(Rectangle window, final GBorderProperty borderProperties)
 	{
+		/*
 		setStyle(new GStyle()
 		{
 			private static final long serialVersionUID = Meta.serialVersionUID;
@@ -84,20 +86,22 @@ public class GWindow extends GComponent
 				setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
 
 				Point movedInnerArea = new Point(location.x + borderProperties.getBorderThicknessPx(), location.y + borderProperties.getBorderThicknessPx() + titleAreaHeightPx);
-				setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), movedInnerArea));				
+				setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), movedInnerArea));
 
 				updateWindowButtons(getStyle().getPrimaryLook().getBounds());
 
 				this.location = location;
 			}
 		});
+		 */
 
 		frameColor = Color.valueOf("#656bff");
 		frameColor = new Color(frameColor.r, frameColor.g, frameColor.b, 160f/255f);
 
 		getStyle().setBorderProperties(borderProperties);
 
-		getStyle().setPrimaryLook(ShapeMaker.createRectangleFrom(window, getStyle().getBorderProperties()));
+		/*
+		getStyle().setBounds(new Rectangle(window, getStyle().getBorderProperties()));
 
 		// The font which is used for the window title.
 		getStyle().setFont(new Font("GWindow.title", Path.FONT_FOLDER + File.separator + "StandardFont.png", 17));
@@ -114,15 +118,10 @@ public class GWindow extends GComponent
 		getStyle().setSecondaryLook(ShapeMaker.createRectangleFrom(innerArea, innerAreaBorders));
 
 		getStyle().setLocation(window.getLocation());
-
-		/*
-		 *  The scaling feature is disabled here too.
-		 *  Anyway, if you enable it again, it has no real effect because it is disabled everywhere internally for GWindows.
-		 *  It will only influence the mouse dragging negatively for windows so it's best to leave it turned off.
 		 */
-		getStyle().setScalableForViewport(false);
 	}
 
+	/*
 	// Updates the window buttons when something has changed, e.g. the location of the GWindow or its dimensions (re-sized or scaled).
 	private void updateWindowButtons(Rectangle window)
 	{
@@ -246,4 +245,5 @@ public class GWindow extends GComponent
 	{
 		return obj.hashCode() == this.hashCode();
 	}
+	 */
 }

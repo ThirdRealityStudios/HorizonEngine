@@ -8,11 +8,6 @@ public abstract class GValueManager
 
 	private volatile String bufferedValue = null;
 
-	public GValueManager()
-	{
-		
-	}
-
 	// Will write add a new char in the variable 'value' of type String.
 	// It will save the value before in the buffer.
 	public void write(char key)

@@ -1,18 +1,17 @@
 package org.thirdreality.evolvinghorizons.guinness.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.Gdx;
-import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
+import org.thirdreality.evolvinghorizons.guinness.render.Renderer;
 
 public class Viewport
 {
@@ -31,10 +30,8 @@ public class Viewport
 
 	private int layerModifications = 0;
 
-	private Point offset = new Point();
+	private Vector2 offset = new Vector2();
 
-	private float scale = 1f;
-	
 	public int key = 0;
 	
 	// This will tell you whether this Viewport is used in a GWindow context (simulated) or in a Display context (real).
@@ -52,7 +49,7 @@ public class Viewport
 	 * By default, the origin is at (0|0) relative to the upper-left Display corner (also at (0|0) by nature).
 	 * Anyway, the origin is at the position of the GWindow content frame when it is used for "simulated" GUI environments..
 	 */
-	private Point origin = new Point();
+	private Vector2 origin = new Vector2();
 	
 	// You can define with this variable a so called "clipping area".
 	// This will prevent components beyond these borders from being rendered and recognized.
@@ -102,7 +99,7 @@ public class Viewport
 
 			if(isContained(component) && component.getStyle().isVisible())
 			{
-				component.getStyle().getDesign().drawContext(this, component, getOrigin(), getOffset(), getScale());
+				Renderer.drawContext(this, component);
 			}
 		}
 	}
@@ -253,44 +250,28 @@ public class Viewport
 	// Returns the current offset, regardless of any Viewport scaling (!).
 	// If you want to consider the Viewport scaling in your application and more precision,
 	// use the getRelativeOffset()-method below please.
-	public Point getOffset()
+	public Vector2 getOffset()
 	{
 		return offset;
 	}
 
 	// Returns the exact offset relative to the current Viewport scale.
 	// This method is definitely recommended when you need high precision,
-	// though its frequent execution could cause a worse impact on the performance (remind floating point calculations and object creation).
-	public Point.Float getRelativeOffset()
+	// though its frequent execution could cause a worse impact on the performance (remind floating Vector2 calculations and object creation).
+	public Vector2 getRelativeOffset()
 	{
-		return new Point.Float(getScale() * getOffset().x, getScale() * getOffset().y);
+		return new Vector2(getOffset().x, getOffset().y);
 	}
 
-	public void setOffset(Point offset)
+	public void setOffset(Vector2 offset)
 	{
 		this.offset = offset;
 	}
 
-	public float getScale()
-	{
-		return scale;
-	}
-
-	public void setScale(float scale)
-	{
-		this.scale = scale;
-	}
-
-	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
-	public Polygon getPolygonRelativeToViewport(Polygon p)
-	{
-		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(getOffset()).toPoint()), getScale());
-	}
-
 	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.
-	public Point getLocationRelativeToViewport(Point location)
+	public Vector2 getLocationRelativeToViewport(Vector2 location)
 	{
-		return new Point((int) ((location.x + offset.x) * scale), (int) ((location.y + offset.y) * scale));
+		return new Vector2(location.x + offset.x, location.y + offset.y);
 	}
 
 	public boolean isSimulated()
@@ -298,12 +279,12 @@ public class Viewport
 		return isSimulated;
 	}
 
-	public Point getOrigin()
+	public Vector2 getOrigin()
 	{
 		return origin;
 	}
 
-	public void setOrigin(Point origin)
+	public void setOrigin(Vector2 origin)
 	{
 		this.origin = origin;
 	}
@@ -337,15 +318,15 @@ public class Viewport
 
 	private void createClippingRectangle()
 	{
-		clippingRectangle = new Rectangle(getOrigin(), getClippingArea());
+		clippingRectangle = new Rectangle(getOrigin().x, getOrigin().y, getClippingArea().width, getClippingArea().height);
 	}
 
 	private void updateClippingRectangle(Dimension clippingArea)
 	{
 		setClippingArea(clippingArea);
 
-		clippingRectangle.setSize(clippingArea);
-		clippingRectangle.setLocation(getOrigin());
+		clippingRectangle.setSize(clippingArea.width, clippingArea.height);
+		clippingRectangle.setPosition(getOrigin());
 	}
 
 	// Tells you whether a component can be rendered or recognized by IO, depending on an area which defines this (see 'clippingArea' and 'clippingRectangle' on top).
@@ -356,11 +337,13 @@ public class Viewport
 		
 		if(isSimulated())
 		{
-			clippingRectangle.setLocation(getOrigin());
+			clippingRectangle.setPosition(getOrigin());
 
-			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
+			Rectangle componentBounds = component.getStyle().getBounds();
 
-			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());
+			Vector2 location = new Vector2(getOrigin()).add(getOffset()).add(componentBounds.x, componentBounds.y);
+
+			Rectangle componentBoundsRelative = new Rectangle(location.x, location.y, componentBounds.width, componentBounds.height);
 
 			isContained &= clippingRectangle.contains(componentBoundsRelative);
 			

@@ -9,12 +9,13 @@ public class SizedTexture
 {
     private Texture containedTexture;
 
-    private Dimension size;
+    private float width, height;
 
-    public SizedTexture(Texture containedTexture, Dimension size)
+    public SizedTexture(Texture containedTexture, float width, float height)
     {
         this.containedTexture = containedTexture;
-        this.size = size;
+        this.width = width;
+        this.height = height;
     }
 
     public Texture getContainedTexture()
@@ -27,13 +28,23 @@ public class SizedTexture
         this.containedTexture = containedTexture;
     }
 
-    public Dimension getSize()
+    public float getWidth()
     {
-        return size;
+        return width;
     }
 
-    public void setSize(Dimension size)
+    public float getHeight()
     {
-        this.size = size;
+        return height;
+    }
+
+    public void setWidth(float width)
+    {
+        this.width = width;
+    }
+
+    public void setHeight(float height)
+    {
+        this.height = height;
     }
 }

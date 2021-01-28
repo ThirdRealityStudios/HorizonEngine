@@ -6,68 +6,65 @@ import java.awt.Point;
 import java.awt.Polygon;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
+import org.w3c.dom.css.Rect;
 
 public class GImage extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GImage(Point location, Texture content)
+	public GImage(Vector2 location, Texture content)
 	{
 		super("image");
-
-		getStyle().setLocation(location);
 
 		int width = content.getWidth();
 		int height = content.getHeight();
 
-		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, width, height);
-		getStyle().setPrimaryLook(rectangle);
+		Rectangle rectangle = new Rectangle(location.x, location.y, width, height);
+		getStyle().setBounds(rectangle);
 
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, float scale, Texture content)
+	public GImage(Vector2 position, float scale, Texture content)
 	{
 		super("image");
-		
-		getStyle().setLocation(location);
-		
+
 		int scaledWidth = (int) (scale * content.getWidth());
 		int scaledHeight = (int) (scale * content.getHeight());
 		
-		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
-		getStyle().setPrimaryLook(rectangle);
+		Rectangle rectangle = new Rectangle(position.x, position.y, scaledWidth, scaledHeight);
+		getStyle().setBounds(rectangle);
 		
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, Dimension size, Texture content)
+	public GImage(Rectangle img, Texture content)
 	{
 		super("image");
-		
-		getStyle().setLocation(location);
-		
-		getStyle().setPrimaryLook(ShapeMaker.createRectangle(location.x, location.y, size.width, size.height));
-		
+
+		getStyle().setBounds(img);
+
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, int size, boolean useAsWidth, Texture content)
+	public GImage(Vector2 position, int size, boolean useAsWidth, Texture content)
 	{
 		super("image");
 
 		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight()) * content.getWidth());
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth()) * content.getHeight()) : size;
-		
-		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
-		getStyle().setPrimaryLook(rectangle);
-		
+
+		Rectangle rectangle = new Rectangle(position.x, position.y, scaledWidth, scaledHeight);
+		getStyle().setBounds(rectangle);
+
 		// Is always executed after having set the primary look because it transforms it directly to the given location.
-		getStyle().setLocation(location);
-		
+		getStyle().setBounds(rectangle);
+
 		getStyle().setImage(content);
 	}
 }

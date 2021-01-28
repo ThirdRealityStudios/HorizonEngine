@@ -22,7 +22,7 @@ public class Font
 	private Color fontColor = Color.BLACK;
 	
 	// This is the font size in pixels.
-	private int fontSize = 17;
+	private float fontSize = 17f;
 
 	public Font(String name, String filepath) throws NullPointerException, IllegalArgumentException
 	{
@@ -64,7 +64,7 @@ public class Font
 		}
 	}
 	
-	public Font(String name, String filepath, int fontSize) throws NullPointerException, IllegalArgumentException
+	public Font(String name, String filepath, float fontSize) throws NullPointerException, IllegalArgumentException
 	{
 		this(name, filepath);
 		
@@ -98,12 +98,12 @@ public class Font
 		}
 	}
 	
-	public int getFontSize()
+	public float getFontSize()
 	{
 		return fontSize;
 	}
 
-	public void setFontSize(int fontSize)
+	public void setFontSize(float fontSize)
 	{
 		this.fontSize = fontSize;
 	}

@@ -5,14 +5,21 @@ import java.awt.Polygon;
 import java.io.File;
 import java.io.Serializable;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.Settings;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.DisplayContext;
+import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
-import org.thirdreality.evolvinghorizons.guinness.gui.design.Sample;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public abstract class GComponent implements Serializable
 {
@@ -32,15 +39,12 @@ public abstract class GComponent implements Serializable
 	 * A layer would otherwise just overwrite the already set value with default values.
 	 */
 	private Boolean enabled = null;
-	
-	private boolean scalable = true;
-	
+
 	// Relates to the offset.
 	private boolean movable = true;
 
-	// The main reference to all major functions of this whole program.
-	private DisplayContext displayContext;
-	
+	private Vector2 origin, offset;
+
 	private GStyle style;
 	
 	private GLogic logic;
@@ -50,61 +54,22 @@ public abstract class GComponent implements Serializable
 
 	public GComponent(String type)
 	{
-		style = new GStyle()
-		{
-			@Override
-			public void setLocation(Point location)
-			{
-				this.location = location;
-				
-				setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
-			}
-		};
-		
+		style = new GStyle();
 		logic = new GLogic();
 		
 		setType(type);
-		
+
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
-
-		// When created apply the default design first.
-		this.getStyle().setDesign(Sample.classic);
- 
-		getStyle().setPrimaryColor(getStyle().getDesign().getDesignColor().getBackgroundColor());
+		getStyle().setFont(FontScheme.defaultFont);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
 	}
 	
-	public GComponent(String type, Point location, Polygon look, Font font)
+	public GComponent(String type, Rectangle bounds, BitmapFont font)
 	{
 		this(type);
 		
-		getStyle().setPrimaryLook(look);
-		
-		// Is always executed after having set the look because it transforms the shape directly to the given location.
-		getStyle().setLocation(location);
+		getStyle().setBounds(bounds);
 		
 		getStyle().setFont(font);
-	}
-	
-	public GComponent(String type, Polygon look, Font font)
-	{
-		this(type, new Point(look.getBounds().getLocation()), look, font);
-	}
-	
-	public GComponent(String type, Point location, Polygon look, String val, Font font)
-	{
-		this(type);
-
-		getStyle().setPrimaryLook(look);
-		
-		// Is always executed after having set the look because it transforms the shape directly to the given location.
-		getStyle().setLocation(location);
-		
-		getStyle().setFont(font);
-
-		// Set all important attributes below:
-		// getStyle().setLength(val.length());
-		// setValue(val);
 	}
 
 	public String getType()
@@ -126,21 +91,10 @@ public abstract class GComponent implements Serializable
 	public String toString()
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
-				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getPrimaryLook() + "\nlength = "
+				+ "\"):\nshape = " + getStyle().getBounds() + "\nlength = "
 				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
 	}
 
-	public DisplayContext getDisplay()
-	{
-		return displayContext;
-	}
-
-	public void setDisplay(DisplayContext displayContext)
-	{
-		this.displayContext = displayContext;
-	}
-	
-	
 	public Boolean isEnabled()
 	{
 		return enabled;
@@ -186,14 +140,23 @@ public abstract class GComponent implements Serializable
 		return actions != null;
 	}
 
-	// Updates the shape if possible,
-	// meaning if a design available already.
-	// Otherwise the component needs to be updated internally with one.
-	protected void updateDefaultShape()
+	public Vector2 getOrigin()
 	{
-		if(getStyle().getDesign() != null)
-		{
-			getStyle().getDesign().updateDefaultShape(this);
-		}
+		return origin;
+	}
+
+	public void setOrigin(Viewport viewport)
+	{
+		this.origin = viewport.getOrigin();
+	}
+
+	public Vector2 getOffset()
+	{
+		return offset;
+	}
+
+	public void setOffset(Viewport viewport)
+	{
+		this.offset = viewport.getOffset();
 	}
 }

@@ -2,10 +2,16 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.standard;
 
 import java.awt.Point;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GDescription extends GComponent
 {
@@ -14,8 +20,10 @@ public class GDescription extends GComponent
 	private boolean interaction = true;
 	
 	private GValueManager valueManager;
-	
-	public GDescription(Point location, String title, Font font)
+
+	private GlyphLayout layout;
+
+	public GDescription(Vector2 position, String title, BitmapFont font)
 	{
 		super("description");
 		
@@ -30,8 +38,6 @@ public class GDescription extends GComponent
 				}
 
 				this.value = value;
-				
-				updateDefaultShape();
 			}
 		};
 		
@@ -40,10 +46,14 @@ public class GDescription extends GComponent
 		getValueManager().setMaxLength(title.length());
 		
 		getStyle().setFont(font);
-		
-		updateDefaultShape();
-		
-		getStyle().setLocation(location);
+
+		int borderThicknessPx = 2;
+
+		layout = new GlyphLayout(font, getValueManager().getValue());
+
+		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
+
+		getStyle().getBounds().setPosition(position);
 	}
 	
 	private GValueManager getValueManager()

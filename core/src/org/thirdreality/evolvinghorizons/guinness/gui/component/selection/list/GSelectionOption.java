@@ -4,10 +4,12 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GLogic;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GSelectionOption
 {
@@ -22,28 +24,22 @@ public class GSelectionOption
 	private String value;
 	
 	private Image[] icon;
+
+	private GlyphLayout layout;
 	
 	public GSelectionOption(String title, boolean isDefaultOption)
 	{
 		this.isDefaultOption = isDefaultOption;
 
 		setTitle(title);
-		
-		setStyle(new GStyle()
-		{
-			@Override
-			public void setLocation(Point location)
-			{
-				// In real it has no effect because there is no use at all..
-				// The GSelectionOption class was rather made for logical purposes (marking something just as marked or unmarked).
-				this.location = location;
-			}
-		});
-		
+
+		setStyle(new GStyle());
 		setLogic(new GLogic());
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
+		getStyle().setFont(FontScheme.defaultFont);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
+
+		layout = new GlyphLayout(getStyle().getFont(), title);
 	}
 	
 	public GSelectionOption(GStyle style, GLogic logic, boolean isDefaultOption)
@@ -116,5 +112,15 @@ public class GSelectionOption
 	public String getValue()
 	{
 		return value;
+	}
+
+	public GlyphLayout getLayout()
+	{
+		return layout;
+	}
+
+	public void setLayout(GlyphLayout layout)
+	{
+		this.layout = layout;
 	}
 }
