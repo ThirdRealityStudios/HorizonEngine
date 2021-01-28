@@ -8,7 +8,6 @@ import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
 import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.decoration.GImage;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
 
 public class GWindowButton extends GComponent
@@ -29,7 +28,7 @@ public class GWindowButton extends GComponent
 		getStyle().setLocation(new GIPoint(rect.getLocation()).toPoint());
 
 		getStyle().setPrimaryColor(background);
-		getStyle().setOpacity(opacity);
+		getStyle().setAlpha(opacity);
 
 		clickColor = getStyle().getPrimaryColor().mul(0.8f).mul(0.8f);
 		defaultColor = getStyle().getPrimaryColor().mul(0.8f);

@@ -1,6 +1,5 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.style;
 
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
@@ -60,7 +59,7 @@ public abstract class GStyle implements Serializable
 	
 	private int paddingTop = 0, paddingBottom = 0;
 	
-	private float opacity = 1f;
+	private float alpha = 1f;
 
 	private Color primaryColor = null, bufferedColor = null;
 	
@@ -102,7 +101,7 @@ public abstract class GStyle implements Serializable
 		setFont(style.getFont());
 		setImage(style.getImage());
 		setLocation(style.getLocation());
-		setOpacity(style.getOpacity());
+		setAlpha(style.getAlpha());
 		setPaddingBottom(style.getPaddingBottom());
 		setPaddingTop(style.getPaddingTop());
 		setPrimaryColor(style.getPrimaryColor());
@@ -241,28 +240,19 @@ public abstract class GStyle implements Serializable
 		this.paddingBottom = paddingBottom;
 	}
 
-	public float getOpacity()
+	public float getAlpha()
 	{
-		return opacity;
+		return alpha;
 	}
 
-	// Applies the given opacity to the primary color.
-	public void setOpacity(float opacity)
+	// Applies the given alpha value to the primary color.
+	public void setAlpha(float alpha)
 	{
-		if(opacity <= 1 && opacity >= 0)
-		{
-			int maxRGB = 255;
-			
-			float r = (float) getPrimaryColor().r / maxRGB;
-			float g = (float) getPrimaryColor().g / maxRGB;
-			float b = (float) getPrimaryColor().b / maxRGB;
-			
-			Color rgba = new Color(r, g, b, opacity);
-			
-			setPrimaryColor(rgba);
-			
-			this.opacity = opacity;
-		}
+		float r = getPrimaryColor().r;
+		float g = getPrimaryColor().g;
+		float b = getPrimaryColor().b;
+
+		getPrimaryColor().set(r, g, b, alpha);
 	}
 
 	public int getTextAlign()

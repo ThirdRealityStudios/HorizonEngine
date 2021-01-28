@@ -103,7 +103,7 @@ public class Main
 			}
 		});
 		
-		gPolyButton.getStyle().setOpacity(0.7f);
+		gPolyButton.getStyle().setAlpha(0.7f);
 		gPolyButton.getStyle().setTextAlign(1);
 		
 		return gPolyButton;

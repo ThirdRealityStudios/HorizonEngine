@@ -2,7 +2,6 @@ package org.thirdreality.evolvinghorizons;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
@@ -238,7 +237,7 @@ public class GameBackend extends Game
 			}
 		});
 
-		gPolyButton.getStyle().setOpacity(0.7f);
+		gPolyButton.getStyle().setAlpha(0.7f);
 		gPolyButton.getStyle().setTextAlign(1);
 
 		return gPolyButton;

@@ -128,7 +128,7 @@ public class DisplayDrawAdapter
 
 			case "rectangle":
 			{
-				//drawRectangle(c);
+				drawRectangle(c);
 
 				break;
 			}
@@ -162,60 +162,22 @@ public class DisplayDrawAdapter
 	{
 		Color fillColor = c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor();
 
-		// A GRectangle can do more than a usual GComponent.
-		// You can define border-radiuses and more.
-		if(c.getType().contentEquals("rectangle"))
+		Rectangle rectangle = c.getStyle().getPrimaryLook().getBounds();
+
+		Point rectLoc = new GIPoint(rectangle.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
+
+		if(rectangle.getBounds() != null)
 		{
-			GRectangle rect = (GRectangle) c;
+			rectanglePixmap = new Pixmap(rectangle.getBounds().width, rectangle.getBounds().height, Pixmap.Format.RGBA8888);
+			rectanglePixmap.setColor(fillColor);
+			rectanglePixmap.fill();
 
-			// Polygon rectangle = ShapeMaker.createRectangle(rect.getStyle().getLook().getBounds().getLocation(), rect.getStyle().getLook().getBounds().getSize());
-			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderProperties());
+			rectangleSprite = new Sprite(new Texture(rectanglePixmap));
+			rectangleSprite.setX(rectLoc.x);
+			rectangleSprite.setY(rectLoc.y);
 
-			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
-			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
-			
-			Point rectLoc = new GIPoint(rectangle.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
-
-			if(rectangle.getBounds() != null)
-			{
-				// Work on having rounded borders!
-				//Polygon p = ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc);
-
-				rectanglePixmap = new Pixmap(rectangle.getBounds().width, rectangle.getBounds().height, Pixmap.Format.RGBA8888);
-				rectanglePixmap.fill();
-
-				rectangleSprite = new Sprite(new Texture(rectanglePixmap));
-				rectangleSprite.setX(rectLoc.x);
-				rectangleSprite.setY(rectLoc.y);
-				rectangleSprite.setColor(new Color(fillColor));
-
-				// Render the sprite
-				rectangleSprite.draw(batch);
-			}
-		}
-		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
-		else if(c.getStyle().getPrimaryLook() != null)
-		{
-			Rectangle shape = c.getStyle().getPrimaryLook().getBounds();
-			
-			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
-			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
-			
-			Point rectLoc = new GIPoint(shape.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
-			
-			if(shape != null)
-			{
-				rectanglePixmap = new Pixmap((int) (shape.width * scale), (int) (shape.height * scale), Pixmap.Format.RGBA8888);
-				rectanglePixmap.fill();
-
-				rectangleSprite = new Sprite(new Texture(rectanglePixmap));
-				rectangleSprite.setX(rectLoc.x);
-				rectangleSprite.setY(rectLoc.y);
-				rectangleSprite.setColor(fillColor);
-
-				// Render the sprite without rounded borders (see first if-case above).
-				rectangleSprite.draw(batch);
-			}
+			// Render the sprite
+			rectangleSprite.draw(batch);
 		}
 	}
 
@@ -450,7 +412,7 @@ public class DisplayDrawAdapter
 		getDesign().getDesignColor().setBorderColor(new Color(button.getStyle().getPrimaryColor()).mul(0.8f).mul(0.8f));
 
 		drawGeneralField(button, value, value.length());
-		
+
 		getDesign().getDesignColor().setBorderColor(temp);
 	}
 	
@@ -470,7 +432,7 @@ public class DisplayDrawAdapter
 	Sprite fieldSprite1;
 
 	@Deprecated
-	// WOrk on this ! ! !
+	// Work on this ! ! !
 	protected void drawGeneralField(GComponent c, String value, int maxLength)
 	{
 		Rectangle background = c.getStyle().getPrimaryLook().getBounds();
@@ -513,6 +475,8 @@ public class DisplayDrawAdapter
 			Point windowOuterMoved = new GIPoint(c.getStyle().getPrimaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 
 			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getPrimaryLook(), windowOuterMoved);
+
+			drawRectangle(c);
 
 			/*
 			 * When scaling is wanted again, you can implement it here again with this code snippet..
