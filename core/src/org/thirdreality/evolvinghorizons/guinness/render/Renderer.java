@@ -377,18 +377,22 @@ public class Renderer
             RenderSource.shapeRenderer.setColor(ColorScheme.buttonBg);
             RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
 
-            float borderThickness = button.getStyle().getBorderProperties().getBorderThicknessPx();
+            float borderThicknessPx = button.getStyle().getBorderProperties().getBorderThicknessPx();
 
-            Rectangle foreground = new Rectangle(background.x + borderThickness, background.y + borderThickness, background.width - 2*borderThickness, background.height - 2*borderThickness);
+            float padding = button.getStyle().getPadding();
+
+            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
             RenderSource.shapeRenderer.setColor(ColorScheme.buttonFg);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height );
             RenderSource.shapeRenderer.end();
 
             //float fontSize = textfield.getStyle().getFont().getFontSize();
 
+            Font font = button.getStyle().getFont();
+
             RenderSource.spriteBatch.begin();
-            button.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, value, foreground.x + button.getStyle().getPadding(), foreground.y + button.getGlyphLayout().height + button.getStyle().getPadding());
+            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + (background.width / 2 - button.getGlyphLayout().width / 2), background.y + (background.height / 2 - button.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
             RenderSource.spriteBatch.end();
             /*
             GButton button = (GButton) component;

@@ -61,7 +61,7 @@ public class GTextfield extends GComponent
 
 			layout = new GlyphLayout(font.getBitmapFont(), getValueManager().getValue());
 
-			getStyle().setPadding(4);
+			getStyle().setPadding(4); // Default
 
 			getStyle().setBounds(createBoundsAt(position));
 		}

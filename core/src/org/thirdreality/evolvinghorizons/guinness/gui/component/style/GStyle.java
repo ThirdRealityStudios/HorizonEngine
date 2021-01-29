@@ -49,7 +49,7 @@ public class GStyle implements Serializable
 	
 	private Font font;
 	
-	private int padding = 0;
+	private int padding = 4;
 	
 	private float alpha = 1f;
 

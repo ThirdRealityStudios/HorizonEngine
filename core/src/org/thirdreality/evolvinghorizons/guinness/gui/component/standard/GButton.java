@@ -43,12 +43,11 @@ public class GButton extends GComponent
 		//setLength(title.length());
 		getStyle().setFont(font);
 		getStyle().getBorderProperties().setBorderRadiusPx(4);
-
-		int borderThicknessPx = 2;
+		getStyle().setPadding(4);
 
 		layout = new GlyphLayout(font.getBitmapFont(), getTitle());
 
-		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
+		getStyle().setBounds(createBoundsAt(position));
 	}
 	
 	private GValueManager getValueManager()
@@ -70,7 +69,7 @@ public class GButton extends GComponent
 	{
 		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getTitle());
 
-		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding(), getGlyphLayout().height + 2*getStyle().getPadding());
+		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
 	}
 
 	public GlyphLayout getGlyphLayout()
