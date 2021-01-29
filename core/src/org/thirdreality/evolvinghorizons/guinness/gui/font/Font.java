@@ -1,155 +1,42 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.font;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 
 public class Font
 {
-	private String name;
-	
-	private BufferedImage image;
-	
-	private File file;
-	
-	private final static String defaultFilepath = Path.FONT_FOLDER + File.separator + "StandardFont.png";
-	
-	private Color fontColor = Color.BLACK;
-	
-	// This is the font size in pixels.
-	private float fontSize = 17f;
+	private BitmapFont font;
 
-	public Font(String name, String filepath) throws NullPointerException, IllegalArgumentException
+	public Font(FileHandle internal, int fontSize) throws NullPointerException, IllegalArgumentException
 	{
-		if(name != null)
-		{
-			if(name.length() > 0)
-			{
-				this.name = name;
-			}
-			else
-			{
-				throw new IllegalArgumentException("The constructor parameter 'name' cannot be empty.\nMake sure the passed name of the Font has at least a length greater than zero (>0) !");
-			}
-		}
-		else
-		{
-			throw new NullPointerException("The constructor parameter 'name' cannot be null.\nAre you sure, you gave the Font a name?");
-		}
-		
-		if(filepath != null)
-		{
-			File file = new File(filepath);
-			
-			if(file.exists() && file.isFile())
-			{
-				this.file = file;
-				
-				image = loadPattern(file.getAbsolutePath());
-			}
-			else
-			{
-				System.out.println(filepath);
-				throw new IllegalArgumentException("The constructor parameter 'filepath' is invalid.\nMake sure you have specified a valid directory and file for the path of the Font!");
-			}
-		}
-		else
-		{
-			throw new NullPointerException("The constructor parameter 'filepath' cannot be null.\nAre you sure, you gave the Font a file path?");
-		}
-	}
-	
-	public Font(String name, String filepath, float fontSize) throws NullPointerException, IllegalArgumentException
-	{
-		this(name, filepath);
-		
-		if(fontSize > 0)
-		{
-			setFontSize(fontSize);
-		}
-		else
-		{
-			throw new IllegalArgumentException("The constructor parameter 'fontSize' cannot be null.\nAre you sure, you gave the Font a valid font size (>0 px)?");
-		}
-	}
-	
-	private BufferedImage loadPattern(String filepath)
-	{
-		try
-		{
-			BufferedImage loaded = null;
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(internal);
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-			String path = filepath;
+		parameter.color = Color.WHITE;
+		parameter.magFilter = Texture.TextureFilter.Linear;
+		parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.size = fontSize;
 
-			loaded = ImageIO.read(new File(path));
+		font = generator.generateFont(parameter);
 
-			return loaded;
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		font.setColor(Color.BLACK);
 
-			return null;
-		}
-	}
-	
-	public float getFontSize()
-	{
-		return fontSize;
+		generator.dispose();
 	}
 
-	public void setFontSize(float fontSize)
+	public BitmapFont getBitmapFont()
 	{
-		this.fontSize = fontSize;
-	}
-	
-	public void setFontColor(Color fontColor)
-	{
-		this.fontColor = fontColor;
-	}
-	
-	public Color getFontColor()
-	{
-		return fontColor;
-	}
-	
-	public String getName()
-	{
-		return name;
+		return font;
 	}
 
-	public BufferedImage getImage()
+	public int getFontSize(char symbol)
 	{
-		return image;
-	}
-
-	public File getFile()
-	{
-		return file;
-	}
-
-	public static String getDefaultFilepath()
-	{
-		return defaultFilepath;
-	}
-	
-	public Font copy()
-	{
-		return new Font(name, file.getAbsolutePath(), fontSize);
-	}
-	
-	// Simply creates a copy from this Font but in addition it also changes the font size of the new object by the given scale.
-	public Font getScaledFont(float scale)
-	{
-		Font scaledUp = copy();
-		
-		scaledUp.setFontSize((int) (scaledUp.getFontSize() * scale));
-		
-		return scaledUp;
+		return font.getData().getGlyph(symbol).width;
 	}
 }

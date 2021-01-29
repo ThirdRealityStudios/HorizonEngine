@@ -10,7 +10,6 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GTextfield extends GComponent
 {
@@ -22,9 +21,9 @@ public class GTextfield extends GComponent
 
 	private GlyphLayout layout;
 
-	public GTextfield(Vector2 position, String title, int maxInput, BitmapFont font)
+	public GTextfield(Vector2 position, String title, int maxInput, Font font)
 	{
-		super("textfield");
+		super("textfield", font);
 		
 		valueManager = new GValueManager()
 		{
@@ -60,9 +59,9 @@ public class GTextfield extends GComponent
 			getStyle().setColor(Color.WHITE);
 			getStyle().setFont(font);
 
-			layout = new GlyphLayout(font, getValueManager().getValue());
+			layout = new GlyphLayout(font.getBitmapFont(), getValueManager().getValue());
 
-			getStyle().setPadding((int) (layout.height / 4f));
+			getStyle().setPadding(4);
 
 			getStyle().setBounds(createBoundsAt(position));
 		}
@@ -108,7 +107,9 @@ public class GTextfield extends GComponent
 
 	public Rectangle createBoundsAt(Vector2 position)
 	{
-		return new Rectangle(position.x, position.y, layout.width + 2*getStyle().getPadding(), layout.height + 2*getStyle().getPadding());
+		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getInputValue());
+
+		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
 	}
 
 	public GlyphLayout getGlyphLayout()

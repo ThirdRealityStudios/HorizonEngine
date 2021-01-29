@@ -9,7 +9,6 @@ import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GLogic;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GSelectionOption
 {
@@ -27,7 +26,7 @@ public class GSelectionOption
 
 	private GlyphLayout layout;
 	
-	public GSelectionOption(String title, boolean isDefaultOption)
+	public GSelectionOption(String title, Font font, boolean isDefaultOption)
 	{
 		this.isDefaultOption = isDefaultOption;
 
@@ -37,19 +36,11 @@ public class GSelectionOption
 		setLogic(new GLogic());
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(FontScheme.defaultFont);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
+		getStyle().setFont(font);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
 
-		layout = new GlyphLayout(getStyle().getFont(), title);
+		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), title);
 	}
-	
-	public GSelectionOption(GStyle style, GLogic logic, boolean isDefaultOption)
-	{
-		this("", isDefaultOption);
-		
-		this.style = style;
-		this.logic = logic;
-	}
-	
+
 	// The option is being updated with new icons from the GSelectionBox or similar instances.
 	// This way, abstractness is being kept by handling all scaling and other stuff by outer instances.
 	// Doing so, you don't have to take care about applying an icon for each option (including scaling manually).

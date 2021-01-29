@@ -47,7 +47,7 @@ public class GStyle implements Serializable
 
 	private Vector2 vect;
 	
-	private BitmapFont font;
+	private Font font;
 	
 	private int padding = 0;
 	
@@ -98,12 +98,12 @@ public class GStyle implements Serializable
 		this.visible = visible;
 	}
 
-	public BitmapFont getFont()
+	public Font getFont()
 	{
 		return font;
 	}
 
-	public void setFont(BitmapFont font)
+	public void setFont(Font font)
 	{
 		this.font = font;
 	}

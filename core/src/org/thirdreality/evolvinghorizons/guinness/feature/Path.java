@@ -9,6 +9,8 @@ public interface Path
 	public static final String GUINNESS_FOLDER = USER_DIR + File.separator + "media";
 	
 	public static final String FONT_FOLDER = GUINNESS_FOLDER + File.separator + "image" + File.separator + "font";
+
+	public static final String BMP_FONT_FOLDER = USER_DIR + File.separator + "font";
 	
 	public static final String ICON_FOLDER = GUINNESS_FOLDER + File.separator + "image" + File.separator + "icon";
 }

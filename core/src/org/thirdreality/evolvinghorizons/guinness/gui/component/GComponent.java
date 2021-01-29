@@ -19,7 +19,6 @@ import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public abstract class GComponent implements Serializable
 {
@@ -56,16 +55,21 @@ public abstract class GComponent implements Serializable
 	{
 		style = new GStyle();
 		logic = new GLogic();
-		
-		setType(type);
 
-		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(FontScheme.defaultFont);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
+		setType(type);
 	}
-	
-	public GComponent(String type, Rectangle bounds, BitmapFont font)
+
+	public GComponent(String type, Font font)
 	{
 		this(type);
+
+		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
+		getStyle().setFont(font);
+	}
+	
+	public GComponent(String type, Rectangle bounds, Font font)
+	{
+		this(type, font);
 		
 		getStyle().setBounds(bounds);
 		

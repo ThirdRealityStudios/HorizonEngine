@@ -52,7 +52,7 @@ public class GWindow extends GComponent
 
 	public GWindow(String title, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
 	{
-		super("window");
+		super("window", titleFont);
 		
 		this.components = components;
 		

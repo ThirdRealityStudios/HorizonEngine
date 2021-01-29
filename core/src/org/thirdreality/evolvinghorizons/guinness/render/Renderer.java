@@ -168,7 +168,7 @@ public class Renderer
 
             //Point descLoc = new GIPoint(bounds.getLocation()).add(viewport.getOrigin().add(viewport.getOffset(, description.getStyle().isMovableForViewport()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), description.getStyle().isScalableForViewport()).toPoint();
 
-            BitmapFont original = description.getStyle().getFont();
+            Font original = description.getStyle().getFont();
             //Font scaledFont = //new org.thirdreality.evolvinghorizons.guinness.gui.font.Font(original.getName(), original.getFile().getAbsolutePath(), original.getFontSize());
 
             // Work on this! ! !
@@ -306,7 +306,7 @@ public class Renderer
                     //displayDrawContent.fillRectangle(titleShape.getBounds().x, titleShape.getBounds().y, titleShape.width, titleShape.height);
                 }
 
-                BitmapFont original = c.getStyle().getFont();
+                Font original = c.getStyle().getFont();
                // Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), original.getFontSize());
 
                 // Work on this ! ! !
@@ -367,6 +367,34 @@ public class Renderer
 
             String value = button.getTitle();
 
+            syncViewportPosition(viewport, component);
+
+            Vector2 position = new Vector2(button.getStyle().getBounds().getX(), button.getStyle().getBounds().getY());
+
+            Rectangle background = button.createBoundsAt(position);
+
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(ColorScheme.buttonBg);
+            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
+
+            float borderThickness = button.getStyle().getBorderProperties().getBorderThicknessPx();
+
+            Rectangle foreground = new Rectangle(background.x + borderThickness, background.y + borderThickness, background.width - 2*borderThickness, background.height - 2*borderThickness);
+
+            RenderSource.shapeRenderer.setColor(ColorScheme.buttonFg);
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.shapeRenderer.end();
+
+            //float fontSize = textfield.getStyle().getFont().getFontSize();
+
+            RenderSource.spriteBatch.begin();
+            button.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, value, foreground.x + button.getStyle().getPadding(), foreground.y + button.getGlyphLayout().height + button.getStyle().getPadding());
+            RenderSource.spriteBatch.end();
+            /*
+            GButton button = (GButton) component;
+
+            String value = button.getTitle();
+
             Rectangle background = new Rectangle(component.getStyle().getBounds());
 
             Vector2 position = new Vector2(background.x, background.y);
@@ -395,6 +423,7 @@ public class Renderer
 
             RenderSource.shapeRenderer.rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
             RenderSource.shapeRenderer.end();
+             */
         }
 
         private static void syncViewportPosition(Viewport viewport, GComponent component)
@@ -438,18 +467,20 @@ public class Renderer
             RenderSource.shapeRenderer.setColor(ColorScheme.textfieldBg);
             RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
 
-            float borderThickness = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
+            float borderThicknessPx = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
 
-            Rectangle foreground = new Rectangle(background.x + borderThickness, background.y + borderThickness, background.width - 2*borderThickness, background.height - 2*borderThickness);
+            float padding = textfield.getStyle().getPadding();
+
+            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
             RenderSource.shapeRenderer.setColor(ColorScheme.textfieldFg);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height );
             RenderSource.shapeRenderer.end();
 
-            //float fontSize = textfield.getStyle().getFont().getFontSize();
+            Font font = textfield.getStyle().getFont();
 
             RenderSource.spriteBatch.begin();
-            textfield.getStyle().getFont().draw(RenderSource.spriteBatch, value, foreground.x + textfield.getStyle().getPadding(), foreground.y + textfield.getGlyphLayout().height + textfield.getStyle().getPadding());
+            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + (background.width / 2 - textfield.getGlyphLayout().width / 2), background.y + (background.height / 2 - textfield.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
             RenderSource.spriteBatch.end();
         }
 

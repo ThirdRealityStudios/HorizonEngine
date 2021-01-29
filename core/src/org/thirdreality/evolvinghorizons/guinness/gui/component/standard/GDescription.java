@@ -11,7 +11,6 @@ import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GDescription extends GComponent
 {
@@ -23,9 +22,9 @@ public class GDescription extends GComponent
 
 	private GlyphLayout layout;
 
-	public GDescription(Vector2 position, String title, BitmapFont font)
+	public GDescription(Vector2 position, String title, Font font)
 	{
-		super("description");
+		super("description", font);
 		
 		valueManager = new GValueManager()
 		{
@@ -49,7 +48,7 @@ public class GDescription extends GComponent
 
 		int borderThicknessPx = 2;
 
-		layout = new GlyphLayout(font, getValueManager().getValue());
+		layout = new GlyphLayout(font.getBitmapFont(), getValueManager().getValue());
 
 		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
 

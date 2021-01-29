@@ -1,7 +1,9 @@
 package org.thirdreality.evolvinghorizons;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
@@ -23,7 +25,6 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.G
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 import java.awt.*;
 import java.io.File;
@@ -53,7 +54,9 @@ public class GameBackend extends Game
 
 	private GLayer layer0, layer1, layer2_shared, layer3, layer4;
 
-	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
+	private FileHandle mcFont;
+
+	private Font biggerFont, smallerFont;
 
 	private Viewport primaryViewport;
 
@@ -120,12 +123,15 @@ public class GameBackend extends Game
 			}
 		};
 
+		mcFont = Gdx.files.internal("font/MC.ttf");
+		smallerFont = new Font(mcFont, 15);
+		biggerFont = new Font(mcFont, 25);
+
 		initViewport();
 
 		this.displayContext = new DisplayContext(input);
 		this.displayContext.setViewport(primaryViewport);
 
-		initDesign();
 		initComponents();
 
 		postInit();
@@ -213,7 +219,7 @@ public class GameBackend extends Game
 		poly.addPoint(75, 125);
 		poly.addPoint(0, 125);
 
-		GPolyButton gPolyButton = new GPolyButton(new Vector2(450, 370), "CLICK ME", FontScheme.defaultFont, poly);
+		GPolyButton gPolyButton = new GPolyButton(new Vector2(450, 370), "CLICK ME", smallerFont, poly);
 
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -247,7 +253,7 @@ public class GameBackend extends Game
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
 
-		GPolyButton gPolyButton = new GPolyButton(new Vector2(250, 310), "Button", FontScheme.defaultFont, poly);
+		GPolyButton gPolyButton = new GPolyButton(new Vector2(250, 310), "Button", smallerFont, poly);
 
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -291,7 +297,7 @@ public class GameBackend extends Game
 
 		options = new ArrayList<GSelectionOption>();
 
-		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true), option2 = new GSelectionOption("Loose your vibes", false);
+		GSelectionOption option0 = new GSelectionOption("Win a price", smallerFont, false), option1 = new GSelectionOption("Loose everything", smallerFont, true), option2 = new GSelectionOption("Loose your vibes", smallerFont, false);
 
 		option0.getStyle().setPadding(10);
 		option1.getStyle().setPadding(10);
@@ -323,7 +329,7 @@ public class GameBackend extends Game
 			}
 		});
 
-		moveButton = new GButton(new Vector2(150, 75), "Move Viewport right", FontScheme.defaultFont);
+		moveButton = new GButton(new Vector2(150, 75), "Move Viewport right", smallerFont);
 
 		moveButton.setActionListener(new GActionListener()
 		{
@@ -346,7 +352,7 @@ public class GameBackend extends Game
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		increaseScale = new GButton(new Vector2(150, 100), "increase scale", FontScheme.defaultFont);
+		increaseScale = new GButton(new Vector2(150, 100), "increase scale", smallerFont);
 
 		increaseScale.setActionListener(new GActionListener()
 		{
@@ -371,7 +377,7 @@ public class GameBackend extends Game
 			increaseScale.getStyle().setMovableForViewport(false);
 		}
 
-		exit = new GButton(new Vector2(20, 150), "EXIT", FontScheme.defaultFont);
+		exit = new GButton(new Vector2(20, 150), "EXIT", smallerFont);
 
 		exit.setActionListener(new GActionListener()
 		{
@@ -392,7 +398,7 @@ public class GameBackend extends Game
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, FontScheme.defaultFont);
+		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, smallerFont);
 
 		input1.setActionListener(new GActionListener()
 		{
@@ -409,27 +415,14 @@ public class GameBackend extends Game
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Vector2(20, 375), "DEUTSCH", 10, FontScheme.defaultFont);
+		input2 = new GTextfield(new Vector2(20, 375), "DEUTSCH", 10, smallerFont);
 
-		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, FontScheme.defaultFont);
+		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, smallerFont);
 
 		Texture t = ImageToolkit.loadImage(Path.USER_DIR + File.separator + "media" + File.separator + "MountainLake.jpg");
 
 		img0 = new GImage(new Vector2(0, 0), 600, false , t);
 		img0.getLogic().setActionOnHover(false);
-	}
-
-	public void initDesign()
-	{
-		biggerFont.setFontColor(com.badlogic.gdx.graphics.Color.RED);
-
-		//DesignColor designColor = new DesignColor(com.badlogic.gdx.graphics.Color.BLACK, com.badlogic.gdx.graphics.Color.LIGHT_GRAY, com.badlogic.gdx.graphics.Color.DARK_GRAY, com.badlogic.gdx.graphics.Color.GRAY, Color.BLACK);
-
-		GBorderProperty borderProperty = new GBorderProperty(0, 1);
-
-		GPaddingProperty paddingProperty = new GPaddingProperty(5);
-
-		//design = new Classic(designColor, borderProperty, paddingProperty);
 	}
 
 	public void initViewport()
@@ -441,7 +434,7 @@ public class GameBackend extends Game
 
 	public void setupDisplayLayers()
 	{
-		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", FontScheme.defaultFont);
+		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
 
 		layer0.add(img0);
 

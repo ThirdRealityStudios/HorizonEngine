@@ -8,7 +8,7 @@ public class ColorScheme
     private static final float DARKER = 0.64f;
 
     public static final Color defaultBg = new Color(Color.BLACK), defaultFg = new Color(Color.WHITE);
-    public static Color buttonBg = defaultBg, buttonFg = defaultFg;
+    public static Color buttonBg = Color.GRAY, buttonFg = Color.LIGHT_GRAY;
     public static Color textfieldBg = defaultBg, textfieldFg = defaultFg;
     public static Color selectionBoxBg = defaultBg, selectionBoxFg = defaultFg;
     public static Color checkboxBg = defaultBg, checkboxFg = defaultFg;

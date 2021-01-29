@@ -18,7 +18,7 @@ public class GPolyButton extends GComponent
 	private GValueManager valueManager;
 	
 	// Info: The polygon is closed automatically later..
-	public GPolyButton(Vector2 position, String title, BitmapFont font, Polygon polygon)
+	public GPolyButton(Vector2 position, String title, Font font, Polygon polygon)
 	{
 		super("polybutton", new Rectangle(position.x, position.y, polygon.getBounds().width, polygon.getBounds().height), font);
 		

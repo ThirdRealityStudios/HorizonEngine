@@ -10,7 +10,6 @@ import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-import org.thirdreality.evolvinghorizons.guinness.render.FontScheme;
 
 public class GButton extends GComponent
 {
@@ -20,9 +19,9 @@ public class GButton extends GComponent
 
 	private GlyphLayout layout;
 	
-	public GButton(Vector2 position, String title, BitmapFont font)
+	public GButton(Vector2 position, String title, Font font)
 	{
-		super("button");
+		super("button", font);
 		
 		valueManager = new GValueManager()
 		{
@@ -47,7 +46,7 @@ public class GButton extends GComponent
 
 		int borderThicknessPx = 2;
 
-		layout = new GlyphLayout(font, getTitle());
+		layout = new GlyphLayout(font.getBitmapFont(), getTitle());
 
 		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
 	}
@@ -65,5 +64,17 @@ public class GButton extends GComponent
 	public void setTitle(String title)
 	{
 		getValueManager().setValue(title);
+	}
+
+	public Rectangle createBoundsAt(Vector2 position)
+	{
+		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getTitle());
+
+		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding(), getGlyphLayout().height + 2*getStyle().getPadding());
+	}
+
+	public GlyphLayout getGlyphLayout()
+	{
+		return layout;
 	}
 }
