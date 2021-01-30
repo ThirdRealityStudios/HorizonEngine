@@ -126,6 +126,7 @@ public class GTextfield extends GComponent
 		}
 	}
 
+	// Will calcuate the maximum textfield width in pixels by pretending the whole field is full of characters.
 	public float getTextfieldWidth()
 	{
 		char[] repeated = new char[getValueManager().getMaxLength()];
@@ -135,8 +136,6 @@ public class GTextfield extends GComponent
 			repeated[i] = '#';
 		}
 
-		float width = new GlyphLayout(getStyle().getFont().getBitmapFont(), new String(repeated)).width;
-
-		return width;
+		return new GlyphLayout(getStyle().getFont().getBitmapFont(), new String(repeated)).width;
 	}
 }
