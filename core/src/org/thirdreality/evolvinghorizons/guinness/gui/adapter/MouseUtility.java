@@ -76,8 +76,6 @@ public class MouseUtility
 
 			measureDistanceMoved = true;
 		}
-
-
 	}
 	
 	// Returns the general and current mouse speed on screen.
@@ -90,7 +88,7 @@ public class MouseUtility
 	// Returns the absolute current cursor location.
 	public Vector2 getCurrentCursorLocation()
 	{
-		return new Vector2(Gdx.input.getX(), Gdx.input.getY());
+		return new Vector2(Gdx.input.getX(), -1 * (Gdx.input.getY() - Gdx.graphics.getHeight()));
 	}
 	
 	// Tests if the cursor is on the position of a component.
@@ -106,38 +104,11 @@ public class MouseUtility
 			return false;
 		}
 
-		/*
-		 *  Below there are variables and control statements which calculate the correct position of a component,
-		 *  regarding the offset and scale as well as origin location of the given Viewport.
-		 *
-		 * 	If you wouldn't regard these aspects / values,
-		 *  there would be a huge difference between the real components position and what is displayed on screen.
-		 */
+		Vector2 position = new Vector2(source.getOffset()).add(target.getStyle().getPosition());
 
-		Vector2 originAppliedLoc = new Vector2(target.getStyle().getBounds().x, target.getStyle().getBounds().y).add(source.getOrigin());
+		Rectangle componentBackground = new Rectangle(position.x, position.y, target.getStyle().getBounds().width, target.getStyle().getBounds().height);
 
-		Rectangle originApplied = new Rectangle(target.getStyle().getBounds());
-		originApplied.setPosition(originAppliedLoc);
-		
-		if(source.isSimulated())
-		{
-			return originApplied.contains(getCurrentCursorLocation());
-		}
-		else
-		{
-			if(target.getStyle().isMovableForViewport())
-			{				
-				Rectangle offsetApplied = new Rectangle(originApplied);
-
-				Vector2 offsetAppliedPosition = new Vector2(offsetApplied.x, offsetApplied.y).add(source.getOffset());
-
-				return offsetApplied.contains(getCurrentCursorLocation());
-			}
-			else
-			{
-				return originApplied.contains(getCurrentCursorLocation());
-			}
-		}
+		return componentBackground.contains(getCurrentCursorLocation());
 	}
 
 	public boolean isClickingLeft()

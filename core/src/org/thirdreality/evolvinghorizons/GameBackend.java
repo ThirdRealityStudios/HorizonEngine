@@ -193,11 +193,6 @@ public class GameBackend extends Game
 		// Renders the screens with the superclass method.
 		super.render();
 
-		if(exitGame)
-		{
-			setScreen(null);
-			Gdx.app.exit();
-		}
 		//System.out.println("Equals? " + (displayContext.getViewport() == primaryViewport));
 		//System.out.println("Component count: " + displayContext.getViewport().sizeOfComponentOutput());
 

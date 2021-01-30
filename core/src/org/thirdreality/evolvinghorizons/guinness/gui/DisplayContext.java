@@ -55,16 +55,14 @@ public class DisplayContext
 
 	public void render(float delta)
 	{
-		drawBackground();
-
 		updateMouseUtility(delta);
 
-		//System.out.println(">> " + viewport.sizeOfComponentOutput());
-
-		//cHandler.updateChangedLayers(getViewport());
-		//cHandler.triggerComponent(getViewport());
+		drawBackground();
 
 		getViewport().render(getViewport().getComponentOutput());
+
+		cHandler.updateChangedLayers(getViewport());
+		cHandler.triggerComponent(getViewport());
 	}
 
 	/*

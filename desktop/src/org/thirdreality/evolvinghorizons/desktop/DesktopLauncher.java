@@ -21,7 +21,7 @@ public class DesktopLauncher {
 		CONFIG.height = Settings.SCREEN_SIZE.height;
 
 		CONFIG.resizable = false;
-		CONFIG.fullscreen = false;
+		CONFIG.fullscreen = true;
 		CONFIG.title = "Horizon Engine";
 
 		APP = new LwjglApplication(new GameBackend(), CONFIG);

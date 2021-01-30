@@ -400,8 +400,8 @@ public class ComponentHandler
 				{
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
-					boolean activeColorIsSame = focused.getStyle().getColor().equals(ColorScheme.buttonClicked);
-					boolean hoverColorIsSame = focused.getStyle().getColor().equals(ColorScheme.buttonHovered);
+					boolean activeColorIsSame = ColorScheme.buttonClicked.equals(focused.getStyle().getColor());
+					boolean hoverColorIsSame = ColorScheme.buttonHovered.equals(focused.getStyle().getColor());
 					
 					if(clicking)
 					{
