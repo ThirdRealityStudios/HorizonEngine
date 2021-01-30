@@ -24,7 +24,9 @@ public class GDescription extends GComponent
 
 	public GDescription(Vector2 position, String title, Font font)
 	{
-		super("description", font);
+		super("description");
+
+		getStyle().setFont(font);
 		
 		valueManager = new GValueManager()
 		{

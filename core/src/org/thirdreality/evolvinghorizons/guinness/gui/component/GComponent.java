@@ -58,22 +58,12 @@ public abstract class GComponent implements Serializable
 
 		setType(type);
 	}
-
-	public GComponent(String type, Font font)
+	
+	public GComponent(String type, Rectangle bounds)
 	{
 		this(type);
 
-		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(font);
-	}
-	
-	public GComponent(String type, Rectangle bounds, Font font)
-	{
-		this(type, font);
-		
 		getStyle().setBounds(bounds);
-		
-		getStyle().setFont(font);
 	}
 
 	public String getType()

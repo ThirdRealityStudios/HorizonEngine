@@ -53,7 +53,7 @@ public class GStyle implements Serializable
 	
 	private float alpha = 1f;
 
-	private Color color = Color.BLACK;
+	private Color color;
 	
 	// If supported by the component, its borders can be modified by the properties stored in GBorder:
 	// e.g. the border thickness and border radiuses in pixels.
@@ -79,7 +79,6 @@ public class GStyle implements Serializable
 
 		setFont(style.getFont());
 		setImage(style.getImage());
-		setAlpha(style.getAlpha());
 		setPadding(style.getPadding());
 		setColor(style.getColor());
 		setTextAlign(style.getTextAlign());
@@ -156,16 +155,6 @@ public class GStyle implements Serializable
 	public float getAlpha()
 	{
 		return alpha;
-	}
-
-	// Applies the given alpha value to the primary color.
-	public void setAlpha(float alpha)
-	{
-		float r = getColor().r;
-		float g = getColor().g;
-		float b = getColor().b;
-
-		getColor().set(r, g, b, alpha);
 	}
 
 	public int getTextAlign()

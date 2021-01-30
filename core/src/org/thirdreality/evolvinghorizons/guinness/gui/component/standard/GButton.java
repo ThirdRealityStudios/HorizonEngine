@@ -21,7 +21,7 @@ public class GButton extends GComponent
 	
 	public GButton(Vector2 position, String title, Font font)
 	{
-		super("button", font);
+		super("button");
 		
 		valueManager = new GValueManager()
 		{

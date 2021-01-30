@@ -8,13 +8,15 @@ public class ColorScheme
     private static final float DARKER = 0.64f;
 
     public static final Color defaultBg = new Color(Color.BLACK), defaultFg = new Color(Color.WHITE);
-    public static Color buttonBg = Color.GRAY, buttonFg = Color.LIGHT_GRAY;
+    public static Color buttonBg = Color.DARK_GRAY, buttonFg = Color.LIGHT_GRAY;
     public static Color textfieldBg = defaultBg, textfieldFg = defaultFg;
-    public static Color selectionBoxBg = defaultBg, selectionBoxFg = defaultFg;
-    public static Color checkboxBg = defaultBg, checkboxFg = defaultFg;
+    public static Color selectionBoxBg = Color.RED, selectionBoxFg = defaultFg;
+    public static Color checkboxBg = Color.DARK_GRAY, checkboxFg = defaultFg;
 
     public static Color buttonClicked = new Color(buttonFg).mul(DARKER);
     public static Color buttonHovered = new Color(buttonFg).mul(BRIGHTER);
+
+    public static Color textfieldClicked = new Color(checkboxFg).mul(DARKER);
 
     public static Color textfieldActive = new Color(textfieldFg).mul(DARKER);
     public static Color textfieldInactive = new Color(textfieldFg);

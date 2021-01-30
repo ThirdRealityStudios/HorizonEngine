@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.feature.image;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.PixmapLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -19,11 +20,6 @@ import javax.xml.soap.Text;
 
 public class ImageToolkit
 {
-	public static Texture loadImage(String path)
-	{
-		return new Texture(path);
-	}
-
 	@Deprecated
 	public static void colorize(float x, float y, int width, int height, Texture texture, Color color)
     {

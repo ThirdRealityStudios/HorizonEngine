@@ -23,7 +23,9 @@ public class GTextfield extends GComponent
 
 	public GTextfield(Vector2 position, String title, int maxInput, Font font)
 	{
-		super("textfield", font);
+		super("textfield");
+
+		getStyle().setFont(font);
 		
 		valueManager = new GValueManager()
 		{

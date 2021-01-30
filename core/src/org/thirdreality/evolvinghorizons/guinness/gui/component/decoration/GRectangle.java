@@ -12,17 +12,14 @@ public class GRectangle extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GRectangle(int x, int y, Dimension size, Color color, float opacity)
+	public GRectangle(int x, int y, Dimension size, Color color)
 	{
-		super("rectangle", new Rectangle(x, y, size.width, size.height), null);
+		super("rectangle", new Rectangle(x, y, size.width, size.height));
 
 		// First, the primary color needs to be set.
 		// When applying the opacity below it uses the primary color.
 		// That's why you need to set a primary color first because
 		// otherwise it would cause a NullPointerException.
 		getStyle().setColor(color);
-
-		// Applies the given opacity to the primary color.
-		getStyle().setAlpha(opacity);
 	}
 }

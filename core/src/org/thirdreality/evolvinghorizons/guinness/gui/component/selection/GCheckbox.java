@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,15 +24,10 @@ public class GCheckbox extends GComponent
 
 	public GCheckbox(Vector2 location, boolean checked)
 	{
-		super("checkbox", new Rectangle(location.x, location.y, 20, 20), null);
-		
-		init(checked);
-	}
+		super("checkbox", new Rectangle(location.x, location.y, 20, 20));
 
-	public GCheckbox(Vector2 location, boolean checked, int sizePx)
-	{
-		super("checkbox", new Rectangle(location.x, location.y, sizePx, sizePx), null);
-		
+		getStyle().getBorderProperties().setBorderThicknessPx(1);
+
 		init(checked);
 	}
 
@@ -41,14 +37,7 @@ public class GCheckbox extends GComponent
 	{
 		setChecked(checked);
 		
-		getStyle().setImage(ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "check_sign.png"));
-
-		int borderThicknessPx = 2;
-
-		float size_scaled = getStyle().getBounds().width - 4*borderThicknessPx;
-
-		// Draw by size in render loop.. (access from primary look)
-		getStyle().getBounds().setSize(size_scaled, size_scaled);
+		getStyle().setImage(new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png")));
 	}
 	
 	public boolean isChecked()

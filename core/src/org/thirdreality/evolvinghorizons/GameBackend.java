@@ -2,6 +2,7 @@ package org.thirdreality.evolvinghorizons;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -236,7 +237,6 @@ public class GameBackend extends Game
 			}
 		});
 
-		gPolyButton.getStyle().setAlpha(0.7f);
 		gPolyButton.getStyle().setTextAlign(1);
 
 		return gPolyButton;
@@ -289,7 +289,7 @@ public class GameBackend extends Game
 		//window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
 		//window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
-		rect = new GRectangle(0, -50, new Dimension(800, 136), com.badlogic.gdx.graphics.Color.RED, 0.5f);
+		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED);
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 
 		// The button ("start" variable) is focused later during runtime instead.
@@ -312,7 +312,7 @@ public class GameBackend extends Game
 
 		gSB = new GSelectionBox(new Vector2(200, 150), options);
 
-		checkbox1 = new GCheckbox(new Vector2(20, 200), true, 20);
+		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
 
 		checkbox1.setActionListener(new GActionListener()
 		{
@@ -419,7 +419,7 @@ public class GameBackend extends Game
 
 		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, smallerFont);
 
-		Texture t = ImageToolkit.loadImage(Path.USER_DIR + File.separator + "media" + File.separator + "MountainLake.jpg");
+		Texture t = new Texture(Gdx.files.internal(Path.MEDIA_FOLDER + File.separator + "MountainLake.jpg"));
 
 		img0 = new GImage(new Vector2(0, 0), 600, false , t);
 		img0.getLogic().setActionOnHover(false);
@@ -463,7 +463,7 @@ public class GameBackend extends Game
 	{
 		GLayer layer5 = new GLayer(0, true);
 
-		Texture imgMountain = ImageToolkit.loadImage(Path.USER_DIR + File.separator + "media" + File.separator + "MountainLake.jpg");
+		Texture imgMountain = new Texture(Gdx.files.internal(Path.MEDIA_FOLDER + File.separator + "MountainLake.jpg"));
 
 		GImage img0 = new GImage(new Rectangle(0,0,100, 365), imgMountain);
 

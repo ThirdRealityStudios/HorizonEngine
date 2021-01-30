@@ -20,7 +20,7 @@ public class GPolyButton extends GComponent
 	// Info: The polygon is closed automatically later..
 	public GPolyButton(Vector2 position, String title, Font font, Polygon polygon)
 	{
-		super("polybutton", new Rectangle(position.x, position.y, polygon.getBounds().width, polygon.getBounds().height), font);
+		super("polybutton", new Rectangle(position.x, position.y, polygon.getBounds().width, polygon.getBounds().height));
 		
 		// Make sure, the polygon is at the correct position.
 		// This way, you can also independently create polygons regardless of the Viewports measurements.

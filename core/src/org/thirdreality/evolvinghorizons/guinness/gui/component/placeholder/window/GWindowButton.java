@@ -17,7 +17,7 @@ public class GWindowButton extends GComponent
 	
 	private Color defaultColor, clickColor, hoverColor;
 
-	public GWindowButton(Rectangle rect, Color background, float opacity, GBorderProperty borderProperties, GImage icon)
+	public GWindowButton(Rectangle rect, Color background, GBorderProperty borderProperties, GImage icon)
 	{
 		super("window_button");
 
@@ -27,7 +27,6 @@ public class GWindowButton extends GComponent
 		//getStyle().setLocation(new GIPoint(rect.getLocation()).toPoint());
 
 		getStyle().setColor(background);
-		getStyle().setAlpha(opacity);
 
 		clickColor = getStyle().getColor().mul(0.8f).mul(0.8f);
 		defaultColor = getStyle().getColor().mul(0.8f);

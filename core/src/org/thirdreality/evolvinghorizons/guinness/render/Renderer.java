@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -131,6 +129,66 @@ public class Renderer
             }
         }
 
+    // In every cycle this will set the component to the correct position,
+    // meaning it regards the current origin and offset of the Viewport.
+    private static void syncViewportPosition(Viewport viewport, GComponent component)
+    {
+        Vector2 position = new Vector2(component.getStyle().getPosition());
+
+        if(viewport.getOrigin() != component.getOrigin())
+        {
+            component.setOrigin(viewport);
+
+            position.add(viewport.getOrigin().sub(component.getOrigin()));
+        }
+
+        if(component.getStyle().isMovableForViewport())
+        {
+            if(viewport.getOffset() != component.getOffset())
+            {
+                component.setOffset(viewport);
+
+                position.add(viewport.getOffset().sub(component.getOffset()));
+            }
+        }
+
+        component.getStyle().getBounds().setPosition(position);
+    }
+
+    @Deprecated
+    // Will return the corresponding foreground color defined in the ColorScheme when there was no color defined in the component itself.
+    // Uses: to get the correct color for the component when a user clicks it or hovers across it.
+    private static Color getUpdatedForegroundColor(GComponent component)
+    {
+        Color componentFg = null;
+
+        switch(component.getType())
+        {
+            case "button":
+            {
+                componentFg = ColorScheme.buttonFg;
+
+                break;
+            }
+
+            case "textfield":
+            {
+                componentFg = ColorScheme.textfieldFg;
+
+                break;
+            }
+
+            case "checkbox":
+            {
+                componentFg = ColorScheme.checkboxFg;
+
+                break;
+            }
+        }
+
+        return (component.getStyle().getColor() == null) ? componentFg : component.getStyle().getColor();
+    }
+
         @Deprecated
         private static void drawRectangle(Viewport viewport, GComponent c)
         {
@@ -202,6 +260,8 @@ public class Renderer
         {
             GCheckbox checkbox = (GCheckbox) c;
 
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
             // Represents simply the outer bounds of the component.
             Rectangle background = new Rectangle(c.getStyle().getBounds());
 
@@ -209,18 +269,24 @@ public class Renderer
                 Vector2 bgPosition = new Vector2(background.x, background.y);
                 bgPosition.add(viewport.getOrigin());
 
-                if (c.getStyle().isMovableForViewport()) {
+                if (c.getStyle().isMovableForViewport())
+                {
                     bgPosition.add(viewport.getOffset());
                 }
 
                 background.setPosition(bgPosition);
             }
 
-            int borderThicknessPx = 1;
+            float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
 
-            Vector2 fgPosition = new Vector2(background.x, background.y).add(borderThicknessPx, borderThicknessPx);
+            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
 
-            Rectangle foreground = new Rectangle(fgPosition.x, fgPosition.y, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
+            RenderSource.shapeRenderer.setColor(ColorScheme.checkboxBg);
+            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.width);
+
+            RenderSource.shapeRenderer.setColor(getUpdatedForegroundColor(c));
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.width);
+            RenderSource.shapeRenderer.end();
 
             if(checkbox.isChecked())
             {
@@ -229,18 +295,12 @@ public class Renderer
                 // Simply the square size of the image.
                 // The image is saved with square dimensions,
                 // so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
-                int sizePx = (int) (checkSymbol.getWidth());
+                float sizePx = foreground.width;
 
-                //Point imgLoc = new GIPoint(locInner).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
-
-                // Work on this ! ! !
-                // p.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
+                RenderSource.spriteBatch.begin();
+                RenderSource.spriteBatch.draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
+                RenderSource.spriteBatch.end();
             }
-
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.width);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.width);
-            RenderSource.shapeRenderer.end();
         }
 
         @Deprecated
@@ -383,7 +443,7 @@ public class Renderer
 
             Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-            RenderSource.shapeRenderer.setColor(ColorScheme.buttonFg);
+            RenderSource.shapeRenderer.setColor(getUpdatedForegroundColor(component));
             RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height );
             RenderSource.shapeRenderer.end();
 
@@ -428,30 +488,6 @@ public class Renderer
             RenderSource.shapeRenderer.rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
             RenderSource.shapeRenderer.end();
              */
-        }
-
-        private static void syncViewportPosition(Viewport viewport, GComponent component)
-        {
-            Vector2 position = new Vector2(component.getStyle().getPosition());
-
-            if(viewport.getOrigin() != component.getOrigin())
-            {
-                component.setOrigin(viewport);
-
-                position.add(viewport.getOrigin().sub(component.getOrigin()));
-            }
-
-            if(component.getStyle().isMovableForViewport())
-            {
-                if(viewport.getOffset() != component.getOffset())
-                {
-                    component.setOffset(viewport);
-
-                    position.add(viewport.getOffset().sub(component.getOffset()));
-                }
-            }
-
-            component.getStyle().getBounds().setPosition(position);
         }
 
         @Deprecated
