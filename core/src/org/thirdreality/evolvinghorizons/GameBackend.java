@@ -26,6 +26,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.G
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
+import org.thirdreality.evolvinghorizons.guinness.handler.ComponentHandler;
 
 import java.awt.*;
 import java.io.File;
@@ -66,7 +67,7 @@ public class GameBackend extends Game
 
 	private DisplayContext displayContext;
 
-	private InputProcessor input;
+	private ComponentHandler input;
 
 	private CopyOnWriteArrayList<Viewport> viewports;
 
@@ -74,52 +75,58 @@ public class GameBackend extends Game
 
 	private boolean exitGame = false;
 
+	private InputProcessor gameInput;
+
 	@Override
 	public void create()
 	{
-		// You always need to have at least one input processor active currently..
-		this.input = new InputProcessor()
+		gameInput = new InputProcessor()
 		{
 			@Override
-			public boolean keyDown(int keycode) {
+			public boolean keyDown(int keycode)
+			{
 				return false;
 			}
 
 			@Override
-			public boolean keyUp(int keycode) {
+			public boolean keyUp(int keycode)
+			{
 				return false;
 			}
 
 			@Override
 			public boolean keyTyped(char character)
 			{
-				input3.getValueManager().write(character);
-
 				return false;
 			}
 
 			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+			public boolean touchDown(int screenX, int screenY, int pointer, int button)
+			{
 				return false;
 			}
 
 			@Override
-			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+			public boolean touchUp(int screenX, int screenY, int pointer, int button)
+			{
 				return false;
 			}
 
 			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
+			public boolean touchDragged(int screenX, int screenY, int pointer)
+			{
 				return false;
 			}
 
 			@Override
-			public boolean mouseMoved(int screenX, int screenY) {
+			public boolean mouseMoved(int screenX, int screenY)
+			{
 				return false;
 			}
 
 			@Override
-			public boolean scrolled(float amountX, float amountY) {
+			public boolean scrolled(float amountX, float amountY)
+			{
 				return false;
 			}
 		};
@@ -130,7 +137,12 @@ public class GameBackend extends Game
 
 		initViewport();
 
-		this.displayContext = new DisplayContext(input);
+		// You always need to have at least one input processor active currently..
+		this.input = new ComponentHandler(primaryViewport, gameInput);
+
+		Gdx.input.setInputProcessor(input);
+
+		this.displayContext = new DisplayContext();
 		this.displayContext.setViewport(primaryViewport);
 
 		initComponents();

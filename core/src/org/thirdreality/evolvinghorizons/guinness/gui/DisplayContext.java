@@ -19,25 +19,10 @@ public class DisplayContext
 
 	private Viewport viewport;
 
-	private ComponentHandler cHandler;
-
-	private InputProcessor personalizedInput;
-
 	private MouseUtility mouseUtility;
 
-	public DisplayContext(InputProcessor personalizedInput) throws NullPointerException
+	public DisplayContext()
 	{
-		if(personalizedInput != null)
-		{
-			this.personalizedInput = personalizedInput;
-		}
-		else
-		{
-			throw new NullPointerException("No InputProcessor was passed to the created DisplayContext object! Create one and try again..");
-		}
-
-		cHandler = new ComponentHandler(personalizedInput);
-
 		mouseUtility = new MouseUtility();
 	}
 
@@ -60,9 +45,6 @@ public class DisplayContext
 		drawBackground();
 
 		getViewport().render(getViewport().getComponentOutput());
-
-		cHandler.updateChangedLayers(getViewport());
-		cHandler.triggerComponent(getViewport());
 	}
 
 	/*

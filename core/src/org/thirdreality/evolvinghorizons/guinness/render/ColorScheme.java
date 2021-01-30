@@ -21,4 +21,6 @@ public class ColorScheme
 
     public static Color textfieldActive = new Color(textfieldFg).mul(DARKER);
     public static Color textfieldInactive = new Color(textfieldFg);
+
+    public static Color checkboxPressed = new Color(checkboxFg).mul(DARKER);
 }
