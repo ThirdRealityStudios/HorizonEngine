@@ -521,7 +521,7 @@ public class Renderer
             Font font = textfield.getStyle().getFont();
 
             RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + (background.width / 2 - textfield.getGlyphLayout().width / 2), background.y + (background.height / 2 - textfield.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + padding + borderThicknessPx, background.y + (background.height / 2 - textfield.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
             RenderSource.spriteBatch.end();
         }
 

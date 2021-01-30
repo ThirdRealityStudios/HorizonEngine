@@ -23,7 +23,7 @@ public class Font
 		parameter.size = fontSize;
 
 		font = generator.generateFont(parameter);
-
+		
 		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		font.setColor(Color.BLACK);
 

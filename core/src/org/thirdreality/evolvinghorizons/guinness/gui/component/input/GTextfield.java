@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,11 +21,14 @@ public class GTextfield extends GComponent
 
 	private GlyphLayout layout;
 
-	public GTextfield(Vector2 position, String title, int maxInput, Font font)
+	private float width;
+
+	public GTextfield(Vector2 position, String title, final int maxInputSymbols, Font font)
 	{
 		super("textfield");
 
 		getStyle().setFont(font);
+
 		getStyle().setBounds(new Rectangle());
 
 		valueManager = new GValueManager()
@@ -40,9 +44,9 @@ public class GTextfield extends GComponent
 			}
 		};
 
-		if(maxInput > 0)
+		if(maxInputSymbols > 0)
 		{
-			getValueManager().setMaxLength(maxInput);
+			getValueManager().setMaxLength(maxInputSymbols);
 		}
 		else
 		{
@@ -114,11 +118,25 @@ public class GTextfield extends GComponent
 
 	public void updateBoundsAt(Vector2 position)
 	{
-		getStyle().getBounds().setSize(getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
+		getStyle().getBounds().setSize(getTextfieldWidth() + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
 
 		if(position != null)
 		{
 			getStyle().getBounds().setPosition(position);
 		}
+	}
+
+	public float getTextfieldWidth()
+	{
+		char[] repeated = new char[getValueManager().getMaxLength()];
+
+		for(int i = 0; i < getValueManager().getMaxLength(); i++)
+		{
+			repeated[i] = '#';
+		}
+
+		float width = new GlyphLayout(getStyle().getFont().getBitmapFont(), new String(repeated)).width;
+
+		return width;
 	}
 }
