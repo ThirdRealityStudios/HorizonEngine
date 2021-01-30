@@ -1,7 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.input;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -26,18 +25,18 @@ public class GTextfield extends GComponent
 		super("textfield");
 
 		getStyle().setFont(font);
-		
+		getStyle().setBounds(new Rectangle());
+
 		valueManager = new GValueManager()
 		{
 			@Override
 			public void setValue(String value)
 			{
-				if(value == null)
-				{
-					return;
-				}
-
 				this.value = value;
+
+				layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getInputValue());
+
+				updateBoundsAt(null);
 			}
 		};
 
@@ -49,23 +48,24 @@ public class GTextfield extends GComponent
 		{
 			throw new IllegalArgumentException("Maximum length must be 1 or greater!");
 		}
-		
-		boolean isValidTextfield = title.length() <= getValueManager().getMaxLength();
 
-		if(isValidTextfield)
+		boolean isTextCompleted = title.length() <= getValueManager().getMaxLength();
+
+		if(isTextCompleted)
 		{
-			// Will set the title or text which is contained yet.
-			// Will also update the "default shape".
-			getValueManager().setValue(title);
-
 			getStyle().setColor(Color.WHITE);
 			getStyle().setFont(font);
 
-			layout = new GlyphLayout(font.getBitmapFont(), getValueManager().getValue());
-
 			getStyle().setPadding(4); // Default
 
-			getStyle().setBounds(createBoundsAt(position));
+			// Create the GlyphLayout so the method createBounds(...) used below can determine the new bounds.
+			layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), title);
+
+			updateBoundsAt(position);
+
+			// Will set the title or text which is contained yet.
+			// Will also update the "default shape".
+			getValueManager().setValue(title);
 		}
 		else
 		{
@@ -107,15 +107,18 @@ public class GTextfield extends GComponent
 		return getValueManager().getValue();
 	}
 
-	public Rectangle createBoundsAt(Vector2 position)
-	{
-		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getInputValue());
-
-		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
-	}
-
 	public GlyphLayout getGlyphLayout()
 	{
 		return layout;
+	}
+
+	public void updateBoundsAt(Vector2 position)
+	{
+		getStyle().getBounds().setSize(getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
+
+		if(position != null)
+		{
+			getStyle().getBounds().setPosition(position);
+		}
 	}
 }

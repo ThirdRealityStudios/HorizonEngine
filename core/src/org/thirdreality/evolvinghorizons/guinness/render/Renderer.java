@@ -62,7 +62,7 @@ public class Renderer
 
                 case "description":
                 {
-                    //drawDescription(target, c);
+                    drawDescription(target, c);
 
                     break;
                 }
@@ -221,16 +221,17 @@ public class Renderer
         {
             GDescription description = (GDescription) c;
 
-            // Represents simply the outer bounds of the component.
-            Rectangle bounds = description.getStyle().getBounds();
+            syncViewportPosition(viewport, description);
 
-            //Point descLoc = new GIPoint(bounds.getLocation()).add(viewport.getOrigin().add(viewport.getOffset(, description.getStyle().isMovableForViewport()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), description.getStyle().isScalableForViewport()).toPoint();
+            Vector2 position = new Vector2(description.getStyle().getBounds().getX(), description.getStyle().getBounds().getY());
 
-            Font original = description.getStyle().getFont();
-            //Font scaledFont = //new org.thirdreality.evolvinghorizons.guinness.gui.font.Font(original.getName(), original.getFile().getAbsolutePath(), original.getFontSize());
+            description.getStyle().setBounds(description.createBoundsAt(position));
 
-            // Work on this! ! !
-            // DrawToolkit.drawString(p, description.getTitle(), descLoc, scaledFont);
+            Font font = description.getStyle().getFont();
+
+            RenderSource.spriteBatch.begin();
+            font.getBitmapFont().draw(RenderSource.spriteBatch, description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            RenderSource.spriteBatch.end();
         }
 
         private static void drawImage(Viewport viewport, GComponent c)
@@ -501,7 +502,7 @@ public class Renderer
 
             Vector2 position = new Vector2(textfield.getStyle().getBounds().getX(), textfield.getStyle().getBounds().getY());
 
-            Rectangle background = textfield.createBoundsAt(position);
+            Rectangle background = textfield.getStyle().getBounds();
 
             RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             RenderSource.shapeRenderer.setColor(ColorScheme.textfieldBg);

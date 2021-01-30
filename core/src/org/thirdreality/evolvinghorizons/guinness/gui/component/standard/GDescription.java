@@ -1,10 +1,6 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.standard;
 
-import java.awt.Point;
-
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
@@ -22,7 +18,7 @@ public class GDescription extends GComponent
 
 	private GlyphLayout layout;
 
-	public GDescription(Vector2 position, String title, Font font)
+	public GDescription(Vector2 position, String text, Font font)
 	{
 		super("description");
 
@@ -33,26 +29,20 @@ public class GDescription extends GComponent
 			@Override
 			public void setValue(String value)
 			{
-				if(value == null)
-				{
-					return;
-				}
-
 				this.value = value;
+
+				layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getText());
 			}
 		};
 		
-		setTitle(title);
-		
-		getValueManager().setMaxLength(title.length());
-		
+		setText(text);
+
 		getStyle().setFont(font);
 
-		int borderThicknessPx = 2;
+		layout = new GlyphLayout(font.getBitmapFont(), getText());
 
-		layout = new GlyphLayout(font.getBitmapFont(), getValueManager().getValue());
-
-		getStyle().setBounds(new Rectangle(position.x, position.y, layout.width + 2*borderThicknessPx, layout.height + 2*borderThicknessPx));
+		// Only saves the position in the bounds.
+		getStyle().setBounds(createBoundsAt(position));
 
 		getStyle().getBounds().setPosition(position);
 	}
@@ -62,18 +52,28 @@ public class GDescription extends GComponent
 		return valueManager;
 	}
 
-	public String getTitle()
+	public String getText()
 	{
 		return getValueManager().getValue();
 	}
 
-	public void setTitle(String title)
+	public void setText(String text)
 	{
-		getValueManager().setValue(title);
+		getValueManager().setValue(text);
 	}
 
 	public boolean isInteractionEnabled()
 	{
 		return interaction;
+	}
+
+	public GlyphLayout getGlyphLayout()
+	{
+		return layout;
+	}
+
+	public Rectangle createBoundsAt(Vector2 position)
+	{
+		return new Rectangle(position.x, position.y, getGlyphLayout().width, getGlyphLayout().height);
 	}
 }

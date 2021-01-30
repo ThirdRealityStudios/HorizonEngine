@@ -2,7 +2,7 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.optional;
 
 public abstract class GValueManager
 {
-	private int length = 0;
+	private int maxLength = 0;
 
 	protected volatile String value = "";
 
@@ -77,11 +77,11 @@ public abstract class GValueManager
 
 	public int getMaxLength()
 	{
-		return length;
+		return maxLength;
 	}
 
 	public void setMaxLength(int length)
 	{
-		this.length = length;
+		this.maxLength = length;
 	}
 }

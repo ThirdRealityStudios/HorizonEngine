@@ -22,28 +22,22 @@ public class GButton extends GComponent
 	public GButton(Vector2 position, String title, Font font)
 	{
 		super("button");
-		
+
 		valueManager = new GValueManager()
 		{
 			@Override
-			public void setValue(String value)
+			public void setValue(String title)
 			{
-				if(value == null)
-				{
-					return;
-				}
-
-				this.value = value;
-
-				setMaxLength(value.length());
+				this.value = title;
 			}
 		};
 
-		setTitle(title);
 		//setLength(title.length());
 		getStyle().setFont(font);
 		getStyle().getBorderProperties().setBorderRadiusPx(4);
 		getStyle().setPadding(4);
+
+		setTitle(title);
 
 		layout = new GlyphLayout(font.getBitmapFont(), getTitle());
 
@@ -63,12 +57,12 @@ public class GButton extends GComponent
 	public void setTitle(String title)
 	{
 		getValueManager().setValue(title);
+
+		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getTitle());
 	}
 
 	public Rectangle createBoundsAt(Vector2 position)
 	{
-		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getTitle());
-
 		return new Rectangle(position.x, position.y, getGlyphLayout().width + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
 	}
 
