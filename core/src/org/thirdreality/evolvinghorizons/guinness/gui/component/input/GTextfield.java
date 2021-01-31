@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GValueManager;
@@ -136,6 +137,8 @@ public class GTextfield extends GComponent
 			repeated[i] = '#';
 		}
 
-		return new GlyphLayout(getStyle().getFont().getBitmapFont(), new String(repeated)).width;
+		GlyphLayout layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), new String(repeated));
+
+		return layout.width;
 	}
 }

@@ -131,8 +131,8 @@ public class GameBackend extends Game
 			}
 		};
 
-		mcFont = Gdx.files.internal("font/MC.ttf");
-		smallerFont = new Font(mcFont, 15);
+		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
+		smallerFont = new Font(mcFont, 20);
 		biggerFont = new Font(mcFont, 25);
 
 		initViewport();
@@ -296,7 +296,7 @@ public class GameBackend extends Game
 		//window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
 		//window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
-		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED);
+		rect = new GRectangle(new Rectangle(0, -50, 800, 136), Color.RED);
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 
 		// The button ("start" variable) is focused later during runtime instead.

@@ -17,7 +17,11 @@ public class Font
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(internal);
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-		parameter.color = Color.WHITE;
+		parameter.padBottom = 0;
+		parameter.padTop = 0;
+		parameter.padLeft = 0;
+		parameter.padRight = 0;
+		parameter.color = Color.BLACK;
 		parameter.magFilter = Texture.TextureFilter.Linear;
 		parameter.minFilter = Texture.TextureFilter.Linear;
 		parameter.size = fontSize;
@@ -25,7 +29,6 @@ public class Font
 		font = generator.generateFont(parameter);
 		
 		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		font.setColor(Color.BLACK);
 
 		generator.dispose();
 	}

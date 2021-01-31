@@ -48,8 +48,6 @@ public class Renderer
                 {
                     drawImage(target, c);
 
-                    // .end() is both called in drawImage(...)
-
                     break;
                 }
 
@@ -78,8 +76,6 @@ public class Renderer
                 {
                     drawTextfield(target, c);
 
-                    // .end() is both called in drawTextfield(...)
-
                     break;
                 }
 
@@ -87,14 +83,12 @@ public class Renderer
                 {
                     drawCheckbox(target, c);
 
-                    // .end() is both called in drawCheckbox(...)
-
                     break;
                 }
 
                 case "selectionbox":
                 {
-                    //drawSelectionBox(target, c);
+                    drawSelectionBox(target, c);
 
                     break;
                 }
@@ -103,16 +97,12 @@ public class Renderer
                 {
                     drawRectangle(target, c);
 
-                    // .end() is both called in drawRectangle(...)
-
                     break;
                 }
 
                 case "button":
                 {
                     drawButton(target, c);
-
-                    // .end() is both called in drawButton(...)
 
                     break;
                 }
@@ -192,28 +182,21 @@ public class Renderer
         @Deprecated
         private static void drawRectangle(Viewport viewport, GComponent c)
         {
-            Rectangle rectangle = new Rectangle(c.getStyle().getBounds());
+            Rectangle rect = new Rectangle(c.getStyle().getBounds());
 
-            if(rectangle != null)
+            Vector2 pos = new Vector2(rect.x, rect.y).add(viewport.getOrigin());
+
+            if(c.getStyle().isMovableForViewport())
             {
-                // Every rectangle has by default its own color.
-                Color fillColor = c.getStyle().getColor();
-
-                Vector2 position = new Vector2(rectangle.x, rectangle.y).add(viewport.getOrigin());
-
-                if(c.getStyle().isMovableForViewport())
-                {
-                    position.add(viewport.getOffset());
-                }
-
-                rectangle.setPosition(position);
-
-                // Render the rectangle
-                RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                RenderSource.shapeRenderer.setColor(fillColor);
-                RenderSource.shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                RenderSource.shapeRenderer.end();
+                pos.add(viewport.getOffset());
             }
+
+            rect.setPosition(pos);
+
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(c.getStyle().getColor());
+            RenderSource.shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            RenderSource.shapeRenderer.end();
         }
 
         @Deprecated
@@ -310,7 +293,23 @@ public class Renderer
         {
             GSelectionBox selectionBox = (GSelectionBox) c;
 
-            drawRectangle(viewport, selectionBox);
+            Rectangle background = c.getStyle().getBounds();
+
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxBg);
+            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
+            RenderSource.shapeRenderer.end();
+
+            float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
+
+            Vector2 position = new Vector2(background.x + borderThicknessPx, background.y + borderThicknessPx);
+
+            Rectangle foreground = new Rectangle(position.x, position.y, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
+
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxFg);
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.shapeRenderer.end();
 
             ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
 
@@ -363,12 +362,24 @@ public class Renderer
                 // But if there is no background color, then no background will just be drawn..
                 if(optionColor != null)
                 {
+                    RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    RenderSource.shapeRenderer.setColor(optionColor);
+                    RenderSource.shapeRenderer.rect(titleShape.x, titleShape.y, titleShape.width, titleShape.height);
+                    RenderSource.shapeRenderer.end();
+
                     //displayDrawContent.setColor(optionColor);
                     //displayDrawContent.fillRectangle(titleShape.getBounds().x, titleShape.getBounds().y, titleShape.width, titleShape.height);
                 }
 
                 Font original = c.getStyle().getFont();
                // Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), original.getFontSize());
+
+                float optionBorderThickness = option.getStyle().getBorderProperties().getBorderThicknessPx();
+                float optionPadding = option.getStyle().getPadding();
+
+                RenderSource.spriteBatch.begin();
+                option.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, option.getValue(), titleShape.x, titleShape.y);
+                RenderSource.spriteBatch.end();
 
                 // Work on this ! ! !
                 // DrawToolkit.drawString(g, option.getValue(), titleShape.getBounds().getLocation(), scaledFont);
@@ -453,7 +464,7 @@ public class Renderer
             Font font = button.getStyle().getFont();
 
             RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + (background.width / 2 - button.getGlyphLayout().width / 2), background.y + (background.height / 2 - button.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
             RenderSource.spriteBatch.end();
             /*
             GButton button = (GButton) component;
@@ -521,7 +532,7 @@ public class Renderer
             Font font = textfield.getStyle().getFont();
 
             RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + padding + borderThicknessPx, background.y + (background.height / 2 - textfield.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
             RenderSource.spriteBatch.end();
         }
 

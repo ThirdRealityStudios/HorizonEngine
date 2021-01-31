@@ -11,7 +11,7 @@ public class ColorScheme
     public static Color buttonBg = Color.DARK_GRAY, buttonFg = Color.LIGHT_GRAY;
     public static Color textfieldBg = defaultBg, textfieldFg = defaultFg;
     public static Color descriptionBg = Color.DARK_GRAY, descriptionFg = defaultFg;
-    public static Color selectionBoxBg = Color.RED, selectionBoxFg = defaultFg;
+    public static Color selectionBoxBg = defaultBg, selectionBoxFg = defaultFg;
     public static Color checkboxBg = Color.DARK_GRAY, checkboxFg = defaultFg;
 
     public static Color buttonClicked = new Color(buttonFg).mul(DARKER);

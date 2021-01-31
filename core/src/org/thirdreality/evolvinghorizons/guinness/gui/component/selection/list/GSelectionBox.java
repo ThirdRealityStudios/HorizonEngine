@@ -10,6 +10,7 @@ import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.feature.container.SizedTexture;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
 public class GSelectionBox extends GComponent
 {
@@ -58,6 +59,8 @@ public class GSelectionBox extends GComponent
 		
 		// Is always executed after having set the box shape because it transforms it directly to the given location.
 		getStyle().getBounds().setPosition(position);
+
+		getStyle().getBorderProperties().setBorderThicknessPx(1);
 	}
 	
 	// Only there to load the images for the icons..
