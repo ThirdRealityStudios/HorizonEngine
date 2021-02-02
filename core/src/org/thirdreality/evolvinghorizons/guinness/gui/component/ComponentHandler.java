@@ -1,26 +1,37 @@
-package org.thirdreality.evolvinghorizons.guinness.handler;
+package org.thirdreality.evolvinghorizons.guinness.gui.component;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
 public class ComponentHandler implements InputProcessor
 {
-	private MouseUtility mouseUtility;
-
 	private int keyDown, keyUp;
 	private char keyTyped;
 
 	private InputProcessor customInput;
-
+	private MouseUtility mouseUtility;
 	private Viewport viewport;
+
+	// Below are the components which have been saved temporarily.
+	private GSelectionListBox selectionBoxFocused;
+	private GSelectionOption lastlyHoveredOption;
+
+	private GTextfield textfieldFocused;
+
+	private GButton buttonFocused;
+	private GButton lastlyHoveredButton;
+
+	private GComponent lastlyFocused;
 
 	public ComponentHandler(Viewport viewport, InputProcessor input)
 	{
@@ -56,8 +67,6 @@ public class ComponentHandler implements InputProcessor
 		return flag;
 	}
 
-	private GTextfield textfieldFocused;
-
 	@Override
 	public boolean keyTyped(char character)
 	{
@@ -75,8 +84,6 @@ public class ComponentHandler implements InputProcessor
 
 		return flag;
 	}
-
-	private GButton buttonFocused;
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
@@ -115,6 +122,18 @@ public class ComponentHandler implements InputProcessor
 				textfieldFocused = null;
 
 				focused.getStyle().setColor(ColorScheme.checkboxPressed);
+
+				break;
+			}
+
+			case "selectionbox":
+			{
+				Rectangle tickBoxBounds;
+
+				if(lastlyHoveredOption != null)
+				{
+					lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
+				}
 
 				break;
 			}
@@ -159,6 +178,21 @@ public class ComponentHandler implements InputProcessor
 					break;
 				}
 
+				case "selectionbox":
+				{
+					Rectangle tickBoxBounds;
+
+					if(lastlyHoveredOption != null)
+					{
+						lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
+
+						// Simply assume, after releasing the mouse button, the cursor still remain over the tick box.
+						lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxHovered);
+					}
+
+					break;
+				}
+
 				default:
 				{
 
@@ -174,11 +208,14 @@ public class ComponentHandler implements InputProcessor
 	{
 		boolean flag = customInput.touchDragged(screenX, screenY, pointer);
 
+		if(lastlyHoveredOption != null)
+		{
+			lastlyHoveredOption.setBackgroundColor(null);
+			lastlyHoveredOption = null;
+		}
+
 		return flag;
 	}
-
-	private GButton lastlyHoveredButton;
-	private GComponent lastlyFocused;
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
@@ -201,6 +238,34 @@ public class ComponentHandler implements InputProcessor
 				buttonFocused.getStyle().setColor(ColorScheme.buttonHovered);
 
 				lastlyHoveredButton = buttonFocused;
+
+				break;
+			}
+
+			case "selectionbox":
+			{
+				selectionBoxFocused = (GSelectionListBox) focused;
+
+				Rectangle tickBoxBounds;
+
+				if(lastlyHoveredOption != null)
+				{
+					lastlyHoveredOption.setBackgroundColor(null);
+					lastlyHoveredOption = null;
+				}
+
+				for(int i = 0; i < selectionBoxFocused.size(); i++)
+				{
+					tickBoxBounds = selectionBoxFocused.getOption(i).getTickBox();
+
+					// See if the user hovered the current selection option.
+					if(selectionBoxFocused.isJustHovered(i) && selectionBoxFocused.getOption(i).getBackgroundColor() == null)
+					{
+						selectionBoxFocused.getOption(i).setBackgroundColor(ColorScheme.selectionBoxHovered);
+
+						lastlyHoveredOption = selectionBoxFocused.getOption(i);
+					}
+				}
 
 				break;
 			}

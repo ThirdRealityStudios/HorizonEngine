@@ -4,11 +4,9 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
-import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
 import org.thirdreality.evolvinghorizons.guinness.gui.DisplayContext;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.decoration.GImage;
@@ -17,21 +15,18 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionBox;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.guinness.handler.ComponentHandler;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.ComponentHandler;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBackend extends Game
@@ -48,10 +43,7 @@ public class GameBackend extends Game
 
 	private GCheckbox checkbox1;
 
-	// Some sample options for the selection box below.
-	private ArrayList<GSelectionOption> options;
-
-	private GSelectionBox gSB;
+	private GSelectionListBox gSB;
 
 	private GWindow window0, window1;
 
@@ -303,9 +295,7 @@ public class GameBackend extends Game
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		options = new ArrayList<GSelectionOption>();
-
-		gSB = new GSelectionBox(new Vector2(200, 150), false, smallerFont);
+		gSB = new GSelectionListBox(new Vector2(200, 150), false, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());

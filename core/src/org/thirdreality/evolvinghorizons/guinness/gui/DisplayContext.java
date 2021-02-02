@@ -3,15 +3,8 @@ package org.thirdreality.evolvinghorizons.guinness.gui;
 import java.awt.Dimension;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import org.thirdreality.evolvinghorizons.Settings;
 import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
-import org.thirdreality.evolvinghorizons.guinness.handler.ComponentHandler;
 
 public class DisplayContext
 {

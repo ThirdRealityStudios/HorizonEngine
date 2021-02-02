@@ -86,7 +86,7 @@ public class MouseUtility
 	}
 
 	// Returns the absolute current cursor location.
-	public Vector2 getCurrentCursorLocation()
+	public static Vector2 getCurrentCursorLocation()
 	{
 		return new Vector2(Gdx.input.getX(), -1 * (Gdx.input.getY() - Gdx.graphics.getHeight()));
 	}
@@ -94,7 +94,7 @@ public class MouseUtility
 	// Tests if the cursor is on the position of a component.
 	// Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
 	// Returns 'false' if target is 'null'.
-	public boolean isFocusing(Viewport source, GComponent target)
+	public static boolean isFocusing(Viewport source, GComponent target)
 	{
 		// If there is no component given or interaction is forbidden,
 		// this method assumes no component was found,
@@ -111,14 +111,14 @@ public class MouseUtility
 		return componentBackground.contains(getCurrentCursorLocation());
 	}
 
-	public boolean isClickingLeft()
+	public static boolean isClickingLeft()
 	{
 		return Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
 	}
 
 	@Deprecated
 	// Tests if the user is clicking a component.
-	public boolean isClickingLeft(Viewport source, GComponent component)
+	public static boolean isClickingLeft(Viewport source, GComponent component)
 	{
 		return isFocusing(source, component) && isClickingLeft();
 	}
@@ -126,7 +126,7 @@ public class MouseUtility
 	// Returns the first component which is focused by the cursor.
 	// Makes the UI more efficient by breaking at the first component already.
 	// Returns null if there is no such component.
-	public GComponent getFocusedComponent(Viewport source)
+	public static GComponent getFocusedComponent(Viewport source)
 	{
 		GComponent firstMatch = null;
 		
@@ -158,7 +158,7 @@ public class MouseUtility
 	
 	// Checks whether the cursor is over any GUInness component.
 	// Should be avoided if used too often because of performance reasons.
-	public boolean isFocusingAny(Viewport source, ArrayList<String> exceptionalTypes)
+	public static boolean isFocusingAny(Viewport source, ArrayList<String> exceptionalTypes)
 	{
 		GComponent focused = getFocusedComponent(source);
 		

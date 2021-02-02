@@ -1,117 +1,73 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list;
 
-import java.awt.Image;
-import java.awt.Point;
-import java.io.File;
-
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import org.thirdreality.evolvinghorizons.guinness.feature.Path;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.GLogic;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
-import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 
 public class GSelectionOption
 {
-	private GStyle style;
-	
-	private GLogic logic;
-	
-	private boolean isChecked = false;
-	
-	private boolean isDefaultOption = false;
-	
-	private String value;
-	
-	private Image[] icon;
+    private String text;
+    private boolean selected;
+    private Rectangle tickBox, textBox;
+    protected Color backgroundColor;
 
-	private GlyphLayout layout;
-	
-	public GSelectionOption(String title, Font font, boolean isDefaultOption)
-	{
-		this.isDefaultOption = isDefaultOption;
+    private GStyle style;
 
-		setTitle(title);
+    public GSelectionOption(String text)
+    {
+        this.text = text;
 
-		setStyle(new GStyle());
-		setLogic(new GLogic());
-		
-		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(font);//new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
+        tickBox = new Rectangle();
+        textBox = new Rectangle();
+    }
 
-		layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), title);
-	}
+    public String getText()
+    {
+        return text;
+    }
 
-	// The option is being updated with new icons from the GSelectionBox or similar instances.
-	// This way, abstractness is being kept by handling all scaling and other stuff by outer instances.
-	// Doing so, you don't have to take care about applying an icon for each option (including scaling manually).
-	public void setIcon(Image[] icons, int width, int height)
-	{
-		icon[0] = icons[0].getScaledInstance(width, height, Image.SCALE_SMOOTH); // "Unselected" state
-		icon[1] = icons[1].getScaledInstance(width, height, Image.SCALE_SMOOTH); // "Selected" state
-	}
-	
-	public Image[] getIcon()
-	{
-		return icon;
-	}
+    public void setText(String text)
+    {
+        this.text = text;
+    }
 
-	public GStyle getStyle()
-	{
-		return style;
-	}
+    public boolean isSelected()
+    {
+        return selected;
+    }
 
-	public void setStyle(GStyle style)
-	{
-		this.style = style;
-	}
+    public void setSelected(boolean selected)
+    {
+        this.selected = selected;
+    }
 
-	public GLogic getLogic()
-	{
-		return logic;
-	}
+    public Rectangle getTickBox()
+    {
+        return tickBox;
+    }
 
-	public void setLogic(GLogic logic)
-	{
-		this.logic = logic;
-	}
+    protected void setTickBox(Rectangle tickBox)
+    {
+        this.tickBox = tickBox;
+    }
 
-	public boolean isChecked()
-	{
-		return isChecked;
-	}
+    public Rectangle getTextBox()
+    {
+        return textBox;
+    }
 
-	public void setChecked(boolean isChecked)
-	{
-		this.isChecked = isChecked;
-	}
+    protected void setTextBox(Rectangle textBox)
+    {
+        this.textBox = textBox;
+    }
 
-	public boolean isDefaultOption()
-	{
-		return isDefaultOption;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public void setDefaultOption(boolean isDefaultOption)
-	{
-		this.isDefaultOption = isDefaultOption;
-	}
-	
-	public void setTitle(String value)
-	{
-		this.value = value;
-	}
-	
-	public String getValue()
-	{
-		return value;
-	}
-
-	public GlyphLayout getLayout()
-	{
-		return layout;
-	}
-
-	public void setLayout(GlyphLayout layout)
-	{
-		this.layout = layout;
-	}
+    public void setBackgroundColor(Color backgroundColor)
+    {
+        this.backgroundColor = backgroundColor;
+    }
 }

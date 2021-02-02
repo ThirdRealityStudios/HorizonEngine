@@ -1,79 +1,73 @@
 package org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
+import org.thirdreality.evolvinghorizons.guinness.feature.Path;
+import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
+import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
-public class GSelectionBox extends GComponent
+public class GSelectionListBox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	private ArrayList<String> options;
-
 	private boolean multipleChoice;
 
-	// For multiple-choice
-	private ArrayList<Boolean> selections;
+	private ArrayList<GSelectionOption> options;
 
-	private ArrayList<Rectangle> tickBoxBounds, textBounds;
+	private int lastSelection = 0;
 
 	private int selection = 0;
 
-	public GSelectionBox(Vector2 position, boolean multipleChoice, Font font)
+	public GSelectionListBox(Vector2 position, boolean multipleChoice, Font font)
 	{
 		super("selectionbox");
 
 		getStyle().setFont(font);
+		getStyle().setImage(new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png")));
 
 		getStyle().setBounds(new Rectangle(position.x, position.y, 0,0));
 
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
-		getStyle().setPadding(20);
+		getStyle().setPadding(8);
 
-		options = new ArrayList<String>();
+		options = new ArrayList<GSelectionOption>();
 
 		this.multipleChoice = multipleChoice;
-
-		if(multipleChoice)
-		{
-			selections = new ArrayList<Boolean>();
-		}
-
-		tickBoxBounds = new ArrayList<Rectangle>();
-		textBounds = new ArrayList<Rectangle>();
 	}
 
 	public void select(int option)
 	{
 		if(multipleChoice)
 		{
-			selections.set(option, !selections.get(option));
+			options.get(option).setSelected(!options.get(option).isSelected());
 		}
 		else
 		{
-			selections.set(selection, false);
-			selections.set(option, true);
+			options.get(lastSelection).setSelected(false);
+			options.get(option).setSelected(true);
 		}
 	}
 
 	public void addOption(String text)
 	{
-		options.add(text);
+		GSelectionOption option = new GSelectionOption(text);
 
 		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
 
 		float width = 0;
 
 		float sizeTickBox = firstOptionLayout.height;
-
-		tickBoxBounds.clear();
-		textBounds.clear();
 
 		Vector2 origin = getStyle().getPosition();
 		Vector2 tickBoxPosition = new Vector2(origin).add(getStyle().getPadding(), 0);
@@ -87,7 +81,7 @@ public class GSelectionBox extends GComponent
 			tickBoxPosition.y += padding;
 
 			Rectangle tickBoxBounds = new Rectangle(tickBoxPosition.x, tickBoxPosition.y, sizeTickBox, sizeTickBox);
-			this.tickBoxBounds.add(tickBoxBounds);
+			option.setTickBox(tickBoxBounds);
 
 			// Update tick box position for the next one.
 			tickBoxPosition.y += tickBoxBounds.height;
@@ -97,7 +91,7 @@ public class GSelectionBox extends GComponent
 			GlyphLayout optionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), currentText);
 
 			Rectangle textBounds = new Rectangle(tickBoxBounds.x + sizeTickBox + padding, tickBoxBounds.y, optionLayout.width, optionLayout.height);
-			this.textBounds.add(textBounds);
+			option.setTextBox(textBounds);
 
 			float inlineWidth = textBounds.x + textBounds.width + padding - origin.x;
 
@@ -115,13 +109,15 @@ public class GSelectionBox extends GComponent
 
 		getStyle().setBounds(gBoxBounds);
 
-
-		if(multipleChoice)
+		if(!multipleChoice && options.size() > 0 && options.get(lastSelection) != null && options.get(lastSelection).isSelected() && option.isSelected())
 		{
-			selections.add(false);
+			options.get(lastSelection).setSelected(false);
 		}
+
+		options.add(option);
 	}
 
+	/*
 	public void removeOption(String text)
 	{
 		int index = options.indexOf(text);
@@ -147,22 +143,21 @@ public class GSelectionBox extends GComponent
 
 		textBounds.remove(option);
 	}
+	 */
 
 	public String getText(int option)
 	{
-		return options.get(option);
+		return options.get(option).getText();
 	}
 
 	public boolean isSelected(int option)
 	{
-		if(multipleChoice)
-		{
-			return selections.get(option);
-		}
-		else
-		{
-			return option == selection;
-		}
+		return options.get(option).isSelected();
+	}
+
+	public boolean isJustHovered(int option)
+	{
+		return options.get(option).getTickBox().contains(MouseUtility.getCurrentCursorLocation());
 	}
 
 	public int size()
@@ -170,13 +165,8 @@ public class GSelectionBox extends GComponent
 		return options.size();
 	}
 
-	public Rectangle getTickBoxBounds(int option)
+	public GSelectionOption getOption(int option)
 	{
-		return new Rectangle(tickBoxBounds.get(option));
-	}
-
-	public Rectangle getTextBounds(int option)
-	{
-		return new Rectangle(textBounds.get(option));
+		return options.get(option);
 	}
 }

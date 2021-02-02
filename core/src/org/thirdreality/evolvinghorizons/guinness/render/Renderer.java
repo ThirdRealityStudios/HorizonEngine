@@ -12,13 +12,11 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionBox;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-
-import java.util.ArrayList;
 
 public class Renderer
 {
@@ -306,17 +304,17 @@ public class Renderer
         // Work on this (text displaying)!
         private static void drawSelectionBox(Viewport viewport, GComponent c)
         {
-            GSelectionBox selectionBox = (GSelectionBox) c;
+            GSelectionListBox selectionBox = (GSelectionListBox) c;
 
             drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 
             for(int i = 0; i < selectionBox.size(); i++)
             {
-                Rectangle tickBox = selectionBox.getTickBoxBounds(i);
+                Rectangle tickBox = selectionBox.getOption(i).getTickBox();
 
                 drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 
-                Rectangle textBounds = selectionBox.getTextBounds(i);
+                Rectangle textBounds = selectionBox.getOption(i).getTextBox();
 
                 float x = textBounds.x;
                 float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
@@ -324,13 +322,32 @@ public class Renderer
                 RenderSource.spriteBatch.begin();
                 selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, selectionBox.getText(i), x, y);
                 RenderSource.spriteBatch.end();
+
+                float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
+
+                // Simply the square size of the image.
+                float sizePx = tickBox.width - 2*borderThicknessPx;
+
+                Color hoverColor = selectionBox.getOption(i).getBackgroundColor();
+
+                if(hoverColor != null)
+                {
+                    RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    RenderSource.shapeRenderer.setColor(hoverColor);
+                    RenderSource.shapeRenderer.rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                    RenderSource.shapeRenderer.end();
+                }
+
+                if(selectionBox.isSelected(i))
+                {
+                    Texture tickSymbol = c.getStyle().getImage();
+
+                    RenderSource.spriteBatch.begin();
+                    RenderSource.spriteBatch.draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                    RenderSource.spriteBatch.end();
+                }
             }
 
-            /*
-            RenderSource.spriteBatch.begin();
-            selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
-            RenderSource.spriteBatch.end();
-             */
         }
 
         /*

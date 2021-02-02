@@ -18,9 +18,11 @@ public class ColorScheme
     public static Color buttonHovered = new Color(buttonFg).mul(BRIGHTER);
 
     public static Color textfieldClicked = new Color(checkboxFg).mul(DARKER);
-
     public static Color textfieldActive = new Color(textfieldFg).mul(DARKER);
     public static Color textfieldInactive = new Color(textfieldFg);
+
+    public static Color selectionBoxClicked = new Color(selectionBoxFg).mul(DARKER);
+    public static Color selectionBoxHovered = new Color(Color.GRAY).mul(BRIGHTER);
 
     public static Color checkboxPressed = new Color(checkboxFg).mul(DARKER);
 }
