@@ -287,103 +287,50 @@ public class Renderer
             }
         }
 
+        private static void drawRectangle(Rectangle bounds, float borderThicknessPx)
+        {
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxBg);
+            RenderSource.shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+            RenderSource.shapeRenderer.end();
+
+            Rectangle foreground = new Rectangle(bounds.x + borderThicknessPx, bounds.y + borderThicknessPx, bounds.width - 2*borderThicknessPx, bounds.height - 2*borderThicknessPx);
+
+            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxFg);
+            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.shapeRenderer.end();
+        }
+
         @Deprecated
         // Work on this (text displaying)!
         private static void drawSelectionBox(Viewport viewport, GComponent c)
         {
             GSelectionBox selectionBox = (GSelectionBox) c;
 
-            Rectangle background = c.getStyle().getBounds();
+            drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxBg);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
-            RenderSource.shapeRenderer.end();
-
-            float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
-
-            Vector2 position = new Vector2(background.x + borderThicknessPx, background.y + borderThicknessPx);
-
-            Rectangle foreground = new Rectangle(position.x, position.y, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
-
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxFg);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
-            RenderSource.shapeRenderer.end();
-
-            ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
-
-            // Draws every single option from the GSelectionBox.
-            for(int i = 0; i < shapeTable.size(); i++)
+            for(int i = 0; i < selectionBox.size(); i++)
             {
-                GSelectionOption option = selectionBox.getOptions().get(i);
+                Rectangle tickBox = selectionBox.getTickBoxBounds(i);
 
-                Rectangle optionShape = new Rectangle(shapeTable.get(i)[0]);
-                Rectangle titleShape = new Rectangle(shapeTable.get(i)[2]);
+                drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 
-                {
-                    Vector2 positionOptionShape = new Vector2(optionShape.x, optionShape.y).add(viewport.getOrigin());
+                Rectangle textBounds = selectionBox.getTextBounds(i);
 
-                    if (c.getStyle().isMovableForViewport())
-                    {
-                        positionOptionShape.add(viewport.getOffset());
-                    }
-
-                    // Move the options to the Viewport relative position.
-                    optionShape.setPosition(positionOptionShape);
-                }
-
-                {
-                    Vector2 positionTitleShape = new Vector2(titleShape.x, titleShape.y).add(viewport.getOrigin());
-
-                    if (c.getStyle().isMovableForViewport())
-                    {
-                        positionTitleShape.add(viewport.getOffset());
-                    }
-
-                    // Move the options to the Viewport relative position.
-                    titleShape.setPosition(positionTitleShape);
-                }
-
-                if(option.isChecked())
-                {
-                    // Work on this ! ! !
-                    //g.drawImage(selectionBox.getIcons()[1], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
-                }
-                else
-                {
-                    // Work on this ! ! !
-                    //g.drawImage(selectionBox.getIcons()[0], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
-                }
-
-                // Every option can have a background color..
-                Color optionColor = option.getStyle().getColor();
-
-                // But if there is no background color, then no background will just be drawn..
-                if(optionColor != null)
-                {
-                    RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    RenderSource.shapeRenderer.setColor(optionColor);
-                    RenderSource.shapeRenderer.rect(titleShape.x, titleShape.y, titleShape.width, titleShape.height);
-                    RenderSource.shapeRenderer.end();
-
-                    //displayDrawContent.setColor(optionColor);
-                    //displayDrawContent.fillRectangle(titleShape.getBounds().x, titleShape.getBounds().y, titleShape.width, titleShape.height);
-                }
-
-                Font original = c.getStyle().getFont();
-               // Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), original.getFontSize());
-
-                float optionBorderThickness = option.getStyle().getBorderProperties().getBorderThicknessPx();
-                float optionPadding = option.getStyle().getPadding();
+                float x = textBounds.x;
+                float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
 
                 RenderSource.spriteBatch.begin();
-                option.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, option.getValue(), titleShape.x, titleShape.y);
+                selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, selectionBox.getText(i), x, y);
                 RenderSource.spriteBatch.end();
-
-                // Work on this ! ! !
-                // DrawToolkit.drawString(g, option.getValue(), titleShape.getBounds().getLocation(), scaledFont);
             }
+
+            /*
+            RenderSource.spriteBatch.begin();
+            selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
+            RenderSource.spriteBatch.end();
+             */
         }
 
         /*

@@ -31,6 +31,7 @@ import org.thirdreality.evolvinghorizons.guinness.handler.ComponentHandler;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBackend extends Game
@@ -132,7 +133,7 @@ public class GameBackend extends Game
 		};
 
 		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
-		smallerFont = new Font(mcFont, 20);
+		smallerFont = new Font(mcFont, 18);
 		biggerFont = new Font(mcFont, 25);
 
 		initViewport();
@@ -304,20 +305,11 @@ public class GameBackend extends Game
 
 		options = new ArrayList<GSelectionOption>();
 
-		GSelectionOption option0 = new GSelectionOption("Win a price", smallerFont, false), option1 = new GSelectionOption("Loose everything", smallerFont, true), option2 = new GSelectionOption("Loose your vibes", smallerFont, false);
-
-		option0.getStyle().setPadding(10);
-		option1.getStyle().setPadding(10);
-		option2.getStyle().setPadding(10);
-
-		options.add(option0);
-		options.add(option1);
-		options.add(option2);
-
-		// The first option should have a different background color.
-		option0.getStyle().setColor(new com.badlogic.gdx.graphics.Color(0f, 1f, 0f, 1f));
-
-		gSB = new GSelectionBox(new Vector2(200, 150), options);
+		gSB = new GSelectionBox(new Vector2(200, 150), false, smallerFont);
+		gSB.addOption("Hello");
+		gSB.addOption("ASDF - -");
+		gSB.addOption("Hell asdas dasd".toUpperCase());
+		gSB.addOption("Hellö, it's me.");
 
 		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
 

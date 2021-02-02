@@ -59,14 +59,11 @@ public class GStyle implements Serializable
 	// e.g. the border thickness and border radiuses in pixels.
 	private GBorderProperty border;
 
-	private Vector2 location;
-
 	private Texture img;
 
 	public GStyle()
 	{
 		textTransition = new Vector2();
-		location = new Vector2();
 		border = new GBorderProperty();
 	}
 
