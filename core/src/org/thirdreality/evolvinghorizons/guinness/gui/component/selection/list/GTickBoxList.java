@@ -18,13 +18,14 @@ public class GTickBoxList extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	private boolean multipleChoice;
+	// As it says, you can determine in the beginning whether this list should accept multiple selections or only one at once.
+	private final boolean multipleChoice;
 
 	private ArrayList<GTickOption> options;
 
-	private int lastSelection = 0;
-
-	private int currentSelection = 0;
+	// Remembers the last selected option (index for 'options' right above).
+	// Is only used for the method addOption(...) .
+	int lastSelection = 0;
 
 	public GTickBoxList(Vector2 position, boolean multipleChoice, Font font)
 	{
@@ -49,6 +50,10 @@ public class GTickBoxList extends GComponent
 
 		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
 
+		// Will be used down in the for-loop to determine the possible largest width for this GTickBoxList.
+		// The value will further depend on the font size, text length, tick box size and border-related settings,
+		// such as the padding.
+		// The border-thickness will not have an effect here as it is not used and meant to have such an effect on the bounds of something.
 		float width = 0;
 
 		float sizeTickBox = firstOptionLayout.height;
@@ -58,7 +63,8 @@ public class GTickBoxList extends GComponent
 
 		float padding = getStyle().getPadding();
 
-		// Update
+		// Updates all corresponding bounds for the tick boxes and their related texts.
+		// Also updates the outer bounds (background size and position) of this GTickBoxList.
 		for(int i = 0; i < options.size(); i++)
 		{
 			// Update tick box position for the next one.
