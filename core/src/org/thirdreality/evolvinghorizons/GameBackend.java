@@ -15,8 +15,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GTickBoxList;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GPolyButton;
@@ -43,7 +42,7 @@ public class GameBackend extends Game
 
 	private GCheckbox checkbox1;
 
-	private GSelectionListBox gSB;
+	private GTickBoxList gSB;
 
 	private GWindow window0, window1;
 
@@ -295,7 +294,7 @@ public class GameBackend extends Game
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		gSB = new GSelectionListBox(new Vector2(200, 150), false, smallerFont);
+		gSB = new GTickBoxList(new Vector2(200, 150), false, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());

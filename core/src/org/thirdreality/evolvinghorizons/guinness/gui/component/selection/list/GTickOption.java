@@ -4,16 +4,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 
-public class GSelectionOption
+public class GTickOption
 {
     private String text;
     private boolean selected;
     private Rectangle tickBox, textBox;
-    protected Color backgroundColor;
+    private Color backgroundColor;
 
     private GStyle style;
 
-    public GSelectionOption(String text)
+    public GTickOption(String text)
     {
         this.text = text;
 

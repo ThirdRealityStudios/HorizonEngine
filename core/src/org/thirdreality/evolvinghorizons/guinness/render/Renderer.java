@@ -12,8 +12,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GTickBoxList;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
@@ -304,7 +303,7 @@ public class Renderer
         // Work on this (text displaying)!
         private static void drawSelectionBox(Viewport viewport, GComponent c)
         {
-            GSelectionListBox selectionBox = (GSelectionListBox) c;
+            GTickBoxList selectionBox = (GTickBoxList) c;
 
             drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 

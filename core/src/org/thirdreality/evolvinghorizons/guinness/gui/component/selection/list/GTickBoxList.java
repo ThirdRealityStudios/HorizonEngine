@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,23 +12,21 @@ import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
 import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.style.GStyle;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
-import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
-public class GSelectionListBox extends GComponent
+public class GTickBoxList extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
 	private boolean multipleChoice;
 
-	private ArrayList<GSelectionOption> options;
+	private ArrayList<GTickOption> options;
 
 	private int lastSelection = 0;
 
-	private int selection = 0;
+	private int currentSelection = 0;
 
-	public GSelectionListBox(Vector2 position, boolean multipleChoice, Font font)
+	public GTickBoxList(Vector2 position, boolean multipleChoice, Font font)
 	{
 		super("selectionbox");
 
@@ -41,27 +38,14 @@ public class GSelectionListBox extends GComponent
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
 		getStyle().setPadding(8);
 
-		options = new ArrayList<GSelectionOption>();
+		options = new ArrayList<GTickOption>();
 
 		this.multipleChoice = multipleChoice;
 	}
 
-	public void select(int option)
-	{
-		if(multipleChoice)
-		{
-			options.get(option).setSelected(!options.get(option).isSelected());
-		}
-		else
-		{
-			options.get(lastSelection).setSelected(false);
-			options.get(option).setSelected(true);
-		}
-	}
-
 	public void addOption(String text)
 	{
-		GSelectionOption option = new GSelectionOption(text);
+		GTickOption option = new GTickOption(text);
 
 		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
 
@@ -117,37 +101,14 @@ public class GSelectionListBox extends GComponent
 		options.add(option);
 	}
 
-	/*
-	public void removeOption(String text)
-	{
-		int index = options.indexOf(text);
-
-		options.remove(index);
-
-		if(multipleChoice)
-		{
-			selections.remove(index);
-		}
-
-		textBounds.remove(index);
-	}
-
-	public void removeOption(int option)
-	{
-		options.remove(option);
-
-		if(multipleChoice)
-		{
-			selections.remove(option);
-		}
-
-		textBounds.remove(option);
-	}
-	 */
-
 	public String getText(int option)
 	{
 		return options.get(option).getText();
+	}
+
+	public boolean isMultipleChoice()
+	{
+		return multipleChoice;
 	}
 
 	public boolean isSelected(int option)
@@ -165,7 +126,7 @@ public class GSelectionListBox extends GComponent
 		return options.size();
 	}
 
-	public GSelectionOption getOption(int option)
+	public GTickOption getOption(int option)
 	{
 		return options.get(option);
 	}
