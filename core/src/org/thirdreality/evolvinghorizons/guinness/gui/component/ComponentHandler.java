@@ -2,14 +2,13 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.adapter.MouseUtility;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionListBox;
-import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GSelectionOption;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GTickBoxList;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GTickOption;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.render.ColorScheme;
 
@@ -23,8 +22,8 @@ public class ComponentHandler implements InputProcessor
 	private Viewport viewport;
 
 	// Below are the components which have been saved temporarily.
-	private GSelectionListBox selectionBoxFocused;
-	private GSelectionOption lastlyHoveredOption;
+	private GTickBoxList selectionBoxFocused;
+	private GTickOption lastlyHoveredOption;
 
 	private GTextfield textfieldFocused;
 
@@ -128,8 +127,6 @@ public class ComponentHandler implements InputProcessor
 
 			case "selectionbox":
 			{
-				Rectangle tickBoxBounds;
-
 				if(lastlyHoveredOption != null)
 				{
 					lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
@@ -180,14 +177,24 @@ public class ComponentHandler implements InputProcessor
 
 				case "selectionbox":
 				{
-					Rectangle tickBoxBounds;
+					GTickBoxList listBox = (GTickBoxList) lastlyFocused;
 
 					if(lastlyHoveredOption != null)
 					{
-						lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
-
 						// Simply assume, after releasing the mouse button, the cursor still remain over the tick box.
 						lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxHovered);
+
+						if(!listBox.isMultipleChoice())
+						{
+							for(int i = 0; i < listBox.size(); i++)
+							{
+								GTickOption option = listBox.getOption(i);
+
+								option.setSelected(false);
+							}
+						}
+
+						lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
 					}
 
 					break;
@@ -244,7 +251,7 @@ public class ComponentHandler implements InputProcessor
 
 			case "selectionbox":
 			{
-				selectionBoxFocused = (GSelectionListBox) focused;
+				selectionBoxFocused = (GTickBoxList) focused;
 
 				Rectangle tickBoxBounds;
 
