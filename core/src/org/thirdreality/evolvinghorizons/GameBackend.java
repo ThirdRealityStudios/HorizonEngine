@@ -3,7 +3,11 @@ package org.thirdreality.evolvinghorizons;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
+import com.badlogic.gdx.graphics.g2d.PolygonSprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
@@ -202,16 +206,25 @@ public class GameBackend extends Game
 
 	private GPolyButton getPolyButton0()
 	{
-		Polygon poly = new Polygon();
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 
-		poly.addPoint(0, 0);
-		poly.addPoint(100, 0);
-		poly.addPoint(150, 50);
-		poly.addPoint(150, 100);
-		poly.addPoint(75, 125);
-		poly.addPoint(0, 125);
+		pixmap.setColor(Color.RED);
+		pixmap.fill();
 
-		GPolyButton gPolyButton = new GPolyButton(new Vector2(450, 370), "CLICK ME", smallerFont, poly);
+		Texture texture = new Texture(pixmap);
+
+		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
+
+		float[] vertices = new float[]{0,0,50,0,50,50,0,50};
+
+		short[] triangles = new short[]{0,1,2,0,2,3};
+
+		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, vertices, triangles);
+
+		PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
+		polygonSprite.setOrigin(450, 370);
+
+		GPolyButton gPolyButton = new GPolyButton(polygonSprite, "CLICK ME", smallerFont);
 
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -244,8 +257,9 @@ public class GameBackend extends Game
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
 
-		GPolyButton gPolyButton = new GPolyButton(new Vector2(250, 310), "Button", smallerFont, poly);
+		GPolyButton gPolyButton = null;//new GPolyButton(poly, "Button", smallerFont, poly);
 
+		/*
 		gPolyButton.setActionListener(new GActionListener()
 		{
 			@Override
@@ -264,6 +278,7 @@ public class GameBackend extends Game
 		gPolyButton.getStyle().setColor(Color.RED);
 		gPolyButton.getStyle().setTextAlign(1);
 		gPolyButton.getStyle().setTextTransition(new Vector2(0, -40));
+		*/
 
 		return gPolyButton;
 	}
@@ -288,7 +303,7 @@ public class GameBackend extends Game
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		gSB = new GTickBoxList(new Vector2(200, 150), false, smallerFont);
+		gSB = new GTickBoxList(new Vector2(200, 150), true, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());
@@ -421,7 +436,7 @@ public class GameBackend extends Game
 		layer0.add(img0);
 
 		layer1.add(getPolyButton0());
-		layer1.add(getPolyButton1());
+		//layer1.add(getPolyButton1());
 		layer1.add(increaseScale);
 		//layer1.add(moveButton);
 		layer1.add(checkbox1);

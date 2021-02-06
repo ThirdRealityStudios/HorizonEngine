@@ -15,6 +15,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.GCheck
 import org.thirdreality.evolvinghorizons.guinness.gui.component.selection.list.GTickBoxList;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
+import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 
 import javax.xml.soap.Text;
@@ -48,7 +49,7 @@ public class Renderer
 
                 case "polybutton":
                 {
-                    //drawPolyButton(target, c);
+                    drawPolyButton(target, c);
 
                     break;
                 }
@@ -346,52 +347,15 @@ public class Renderer
 
         }
 
-        /*
         @Deprecated
         protected static void drawPolyButton(Viewport viewport, GComponent c)
         {
             GPolyButton polyButton = (GPolyButton) c;
 
-            Polygon look = polyButton.getStyle().getPrimaryLook();
-
-            // Represents simply the outer bounds of the component.
-            Rectangle bounds = look.getBounds();
-
-            //displayDrawContent.setColor(polyButton.getStyle().getPrimaryColor());
-
-            Point buttonLoc = new GIPoint(bounds.getLocation()).add(viewport.getOrigin().add(viewport.getOffset(, polyButton.getStyle().isMovableForViewport()).toPoint();
-
-            // Here it is only working with a copy in order not to modify the original object (polygon).
-            Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, buttonLoc), scale);
-
-            // Work on this ! ! !
-            //g.fillPolygon(transformedCopy);
-
-            // If text should be displayed in the center of the component.
-            if(polyButton.getStyle().getTextAlign() == 1)
-            {
-                int textLength = polyButton.getStyle().getFont().getFontSize() * polyButton.getTitle().length();
-
-                int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
-                int centerY = bounds.getLocation().y + bounds.height / 2 - polyButton.getStyle().getFont().getFontSize() / 2;
-
-                Point loc = new GIPoint(centerX, centerY).add(polyButton.getStyle().getTextTransition()).add(viewport.getOffset(, polyButton.getStyle().isMovableForViewport()).mul(getScale(), polyButton.getStyle().isScalableForViewport()).toPoint();
-
-                org.thirdreality.evolvinghorizons.guinness.gui.font.Font original = polyButton.getStyle().getFont();
-                org.thirdreality.evolvinghorizons.guinness.gui.font.Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-
-                // Work on this ! ! !
-                //DrawToolkit.drawString(g, polyButton.getTitle(), loc, scaledFont);
-            }
-            else // If text should be displayed normally (upper-left corner of the component).
-            {
-                Point loc = new GIPoint(bounds.getLocation()).add(polyButton.getStyle().getTextTransition()).add(viewport.getOffset(), polyButton.getStyle().isMovableForViewport()).toPoint();
-
-                // Work on this ! ! !
-                //DrawToolkit.drawString(g, polyButton.getTitle(), loc, polyButton.getStyle().getFont());
-            }
+            RenderSource.getPolygonSpriteBatch().begin();
+            polyButton.getPolygonSprite().draw(RenderSource.getPolygonSpriteBatch());
+            RenderSource.getPolygonSpriteBatch().end();
         }
-         */
 
         private static void drawButton(Viewport viewport, GComponent component)
         {

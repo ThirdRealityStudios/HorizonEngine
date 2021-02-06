@@ -3,6 +3,8 @@ package org.thirdreality.evolvinghorizons.guinness.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonBatch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.thirdreality.evolvinghorizons.Settings;
@@ -11,6 +13,7 @@ public class RenderSource
 {
     private static final ShapeRenderer shapeRenderer = new ShapeRenderer();
     private static final SpriteBatch spriteBatch = new SpriteBatch();
+    private static final PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
 
     // They both will be steadily updated.
     private static Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
@@ -35,6 +38,11 @@ public class RenderSource
     public static SpriteBatch getSpriteBatch()
     {
         return spriteBatch;
+    }
+
+    public static PolygonSpriteBatch getPolygonSpriteBatch()
+    {
+        return polygonSpriteBatch;
     }
 
     public static Pixmap getPixmap()

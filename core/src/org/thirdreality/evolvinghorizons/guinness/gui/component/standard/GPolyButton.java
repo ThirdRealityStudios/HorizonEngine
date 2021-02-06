@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
@@ -14,19 +15,18 @@ import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 public class GPolyButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
+
 	private GValueManager valueManager;
-	
+
+	private PolygonSprite polygon;
+
 	// Info: The polygon is closed automatically later..
-	public GPolyButton(Vector2 position, String title, Font font, Polygon polygon)
+	public GPolyButton(PolygonSprite polygon, String title, Font font)
 	{
-		super("polybutton", new Rectangle(position.x, position.y, polygon.getBounds().width, polygon.getBounds().height));
-		
-		// Make sure, the polygon is at the correct position.
-		// This way, you can also independently create polygons regardless of the Viewports measurements.
-		// Anyway, scaling polygons and other transformations are up to the user still..
-		polygon.translate((int) position.x, (int) position.y);
-		
+		super("polybutton", new Rectangle(polygon.getBoundingRectangle().x, polygon.getBoundingRectangle().y, polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height));
+
+		this.polygon = polygon;
+
 		valueManager = new GValueManager()
 		{
 			@Override
@@ -42,13 +42,18 @@ public class GPolyButton extends GComponent
 				setMaxLength(getValue().length());
 			}
 		};
-		
+
 		setTitle(title);
 	}
-	
+
 	private GValueManager getValueManager()
 	{
 		return valueManager;
+	}
+
+	public PolygonSprite getPolygonSprite()
+	{
+		return polygon;
 	}
 
 	public String getTitle()
