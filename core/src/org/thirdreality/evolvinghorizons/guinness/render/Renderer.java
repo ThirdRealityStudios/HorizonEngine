@@ -17,14 +17,12 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GButton
 import org.thirdreality.evolvinghorizons.guinness.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 
+import javax.xml.soap.Text;
+
 public class Renderer
 {
         private Vector2 offset;
         private Vector2 origin;
-
-        private Pixmap displayDrawContent = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-
-        private Texture t = new Texture(displayDrawContent);
 
         private Pixmap buttonBg, buttonFt;
 
@@ -190,10 +188,8 @@ public class Renderer
 
             rect.setPosition(pos);
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(c.getStyle().getColor());
-            RenderSource.shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-            RenderSource.shapeRenderer.end();
+            RenderSource.getPixmap().drawRectangle((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
+            RenderSource.getTexture().draw(RenderSource.getPixmap(), 0, 0);
         }
 
         @Deprecated
@@ -209,9 +205,9 @@ public class Renderer
 
             Font font = description.getStyle().getFont();
 
-            RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
-            RenderSource.spriteBatch.end();
+            RenderSource.getSpriteBatch().begin();
+            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            RenderSource.getSpriteBatch().end();
         }
 
         private static void drawImage(Viewport viewport, GComponent c)
@@ -226,9 +222,9 @@ public class Renderer
                 position.add(viewport.getOffset());
             }
 
-            RenderSource.spriteBatch.begin();
-            RenderSource.spriteBatch.draw(c.getStyle().getImage(), position.x, position.y, bounds.width, bounds.height);
-            RenderSource.spriteBatch.end();
+            RenderSource.getSpriteBatch().begin();
+            RenderSource.getSpriteBatch().draw(c.getStyle().getImage(), position.x, position.y, bounds.width, bounds.height);
+            RenderSource.getSpriteBatch().end();
         }
 
         // Needs to be updated with offset and scale ability from the Viewports settings.
@@ -241,7 +237,7 @@ public class Renderer
         {
             GCheckbox checkbox = (GCheckbox) c;
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
 
             // Represents simply the outer bounds of the component.
             Rectangle background = new Rectangle(c.getStyle().getBounds());
@@ -262,12 +258,13 @@ public class Renderer
 
             Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
 
-            RenderSource.shapeRenderer.setColor(ColorScheme.checkboxBg);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.width);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.checkboxBg);
+            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.width);
 
-            RenderSource.shapeRenderer.setColor(getUpdatedForegroundColor(c));
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.width);
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(c));
+            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.width);
+
+            RenderSource.getShapeRenderer().end();
 
             if(checkbox.isChecked())
             {
@@ -278,25 +275,25 @@ public class Renderer
                 // so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
                 float sizePx = foreground.width;
 
-                RenderSource.spriteBatch.begin();
-                RenderSource.spriteBatch.draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
-                RenderSource.spriteBatch.end();
+                RenderSource.getSpriteBatch().begin();
+                RenderSource.getSpriteBatch().draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
+                RenderSource.getSpriteBatch().end();
             }
         }
 
         private static void drawRectangle(Rectangle bounds, float borderThicknessPx)
         {
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxBg);
-            RenderSource.shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxBg);
+            RenderSource.getShapeRenderer().rect(bounds.x, bounds.y, bounds.width, bounds.height);
+            RenderSource.getShapeRenderer().end();
 
             Rectangle foreground = new Rectangle(bounds.x + borderThicknessPx, bounds.y + borderThicknessPx, bounds.width - 2*borderThicknessPx, bounds.height - 2*borderThicknessPx);
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.selectionBoxFg);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height);
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxFg);
+            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height);
+            RenderSource.getShapeRenderer().end();
         }
 
         @Deprecated
@@ -318,9 +315,9 @@ public class Renderer
                 float x = textBounds.x;
                 float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
 
-                RenderSource.spriteBatch.begin();
-                selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.spriteBatch, selectionBox.getText(i), x, y);
-                RenderSource.spriteBatch.end();
+                RenderSource.getSpriteBatch().begin();
+                selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(), selectionBox.getText(i), x, y);
+                RenderSource.getSpriteBatch().end();
 
                 float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -331,19 +328,19 @@ public class Renderer
 
                 if(hoverColor != null)
                 {
-                    RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    RenderSource.shapeRenderer.setColor(hoverColor);
-                    RenderSource.shapeRenderer.rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                    RenderSource.shapeRenderer.end();
+                    RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+                    RenderSource.getShapeRenderer().setColor(hoverColor);
+                    RenderSource.getShapeRenderer().rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                    RenderSource.getShapeRenderer().end();
                 }
 
                 if(selectionBox.isSelected(i))
                 {
                     Texture tickSymbol = c.getStyle().getImage();
 
-                    RenderSource.spriteBatch.begin();
-                    RenderSource.spriteBatch.draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                    RenderSource.spriteBatch.end();
+                    RenderSource.getSpriteBatch().begin();
+                    RenderSource.getSpriteBatch().draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                    RenderSource.getSpriteBatch().end();
                 }
             }
 
@@ -408,9 +405,9 @@ public class Renderer
 
             Rectangle background = button.createBoundsAt(position);
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.buttonBg);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.buttonBg);
+            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
 
             float borderThicknessPx = button.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -418,17 +415,17 @@ public class Renderer
 
             Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-            RenderSource.shapeRenderer.setColor(getUpdatedForegroundColor(component));
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height );
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(component));
+            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
+            RenderSource.getShapeRenderer().end();
 
             //float fontSize = textfield.getStyle().getFont().getFontSize();
 
             Font font = button.getStyle().getFont();
 
-            RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
-            RenderSource.spriteBatch.end();
+            RenderSource.getSpriteBatch().begin();
+            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
+            RenderSource.getSpriteBatch().end();
             /*
             GButton button = (GButton) component;
 
@@ -446,22 +443,22 @@ public class Renderer
 
             int borderThicknessPx = 1;
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.buttonBg);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.buttonBg);
+            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
 
             // Use the color defined in the scheme when there is no specific color set directly by the button.
             if(component.getStyle().getColor() == null)
             {
-                RenderSource.shapeRenderer.setColor(ColorScheme.buttonFg);
+                RenderSource.getShapeRenderer().setColor(ColorScheme.buttonFg);
             }
             else
             {
-                RenderSource.shapeRenderer.setColor(component.getStyle().getColor());
+                RenderSource.getShapeRenderer().setColor(component.getStyle().getColor());
             }
 
-            RenderSource.shapeRenderer.rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
+            RenderSource.getShapeRenderer().end();
              */
         }
 
@@ -478,9 +475,9 @@ public class Renderer
 
             Rectangle background = textfield.getStyle().getBounds();
 
-            RenderSource.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.shapeRenderer.setColor(ColorScheme.textfieldBg);
-            RenderSource.shapeRenderer.rect(background.x, background.y, background.width, background.height);
+            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldBg);
+            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
 
             float borderThicknessPx = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -488,15 +485,15 @@ public class Renderer
 
             Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-            RenderSource.shapeRenderer.setColor(ColorScheme.textfieldFg);
-            RenderSource.shapeRenderer.rect(foreground.x, foreground.y, foreground.width, foreground.height );
-            RenderSource.shapeRenderer.end();
+            RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldFg);
+            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
+            RenderSource.getShapeRenderer().end();
 
             Font font = textfield.getStyle().getFont();
 
-            RenderSource.spriteBatch.begin();
-            font.getBitmapFont().draw(RenderSource.spriteBatch, value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
-            RenderSource.spriteBatch.end();
+            RenderSource.getSpriteBatch().begin();
+            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
+            RenderSource.getSpriteBatch().end();
         }
 
         @Deprecated

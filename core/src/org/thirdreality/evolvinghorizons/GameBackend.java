@@ -23,6 +23,7 @@ import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.G
 import org.thirdreality.evolvinghorizons.guinness.gui.font.Font;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.ComponentHandler;
+import org.thirdreality.evolvinghorizons.guinness.render.RenderSource;
 
 import java.awt.*;
 import java.io.File;
@@ -149,8 +150,6 @@ public class GameBackend extends Game
 
 			}
 
-			float totalDelta = 0;
-
 			@Override
 			public void render(float delta)
 			{
@@ -196,13 +195,6 @@ public class GameBackend extends Game
 	{
 		// Renders the screens with the superclass method.
 		super.render();
-
-		//System.out.println("Equals? " + (displayContext.getViewport() == primaryViewport));
-		//System.out.println("Component count: " + displayContext.getViewport().sizeOfComponentOutput());
-
-		//getScreen().render(Gdx.graphics.getDeltaTime());
-
-		//displayContext.render();
 	}
 	
 	@Override
@@ -269,7 +261,7 @@ public class GameBackend extends Game
 			}
 		});
 
-		gPolyButton.getStyle().setColor(com.badlogic.gdx.graphics.Color.RED);
+		gPolyButton.getStyle().setColor(Color.RED);
 		gPolyButton.getStyle().setTextAlign(1);
 		gPolyButton.getStyle().setTextTransition(new Vector2(0, -40));
 
@@ -288,7 +280,9 @@ public class GameBackend extends Game
 		//window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
 		//window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
-		rect = new GRectangle(new Rectangle(0, -50, 800, 136), Color.RED);
+		Color transparentRed = new Color(1f, 0, 0, 0.5f);
+
+		rect = new GRectangle(new Rectangle(0, -50, 800, 136), new Color(1f, 0f, 0f, 0.1f));
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 
 		// The button ("start" variable) is focused later during runtime instead.
