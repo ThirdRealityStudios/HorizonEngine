@@ -214,11 +214,11 @@ public class SampleApplication extends Game
 
 		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
 
-		float[] vertices = new float[]{0,0,50,0,50,50,0,50};
+		float[] vertices = new float[]{0,0,50,0,50,25,75,50,100,40,125,60,50,70};
 
-		short[] triangles = new short[]{0,1,2,3,2,0};
+		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
 
-		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, vertices, triangles);
+		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), poly.getTriangles());
 
 		PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
 		polygonSprite.setOrigin(450, 370);

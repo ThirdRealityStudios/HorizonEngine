@@ -4,6 +4,9 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.badlogic.gdx.graphics.g3d.particles.values.MeshSpawnShapeValue;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
