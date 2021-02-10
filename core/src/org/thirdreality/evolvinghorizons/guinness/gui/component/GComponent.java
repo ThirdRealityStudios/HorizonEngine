@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.Settings;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
-import org.thirdreality.evolvinghorizons.guinness.feature.Path;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.DisplayContext;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.optional.GActionListener;

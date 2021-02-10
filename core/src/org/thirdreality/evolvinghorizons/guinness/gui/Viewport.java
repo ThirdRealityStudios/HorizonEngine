@@ -7,7 +7,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.evolvinghorizons.guinness.gui.layer.GLayer;

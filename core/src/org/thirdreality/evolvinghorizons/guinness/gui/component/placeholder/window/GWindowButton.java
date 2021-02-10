@@ -3,8 +3,6 @@ package org.thirdreality.evolvinghorizons.guinness.gui.component.placeholder.win
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
-import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.decoration.GImage;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.style.property.GBorderProperty;

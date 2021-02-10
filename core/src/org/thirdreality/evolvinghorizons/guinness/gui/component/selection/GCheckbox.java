@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
 import org.thirdreality.evolvinghorizons.guinness.feature.Path;
-import org.thirdreality.evolvinghorizons.guinness.feature.image.ImageToolkit;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 
 public class GCheckbox extends GComponent

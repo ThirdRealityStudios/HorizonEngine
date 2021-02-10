@@ -217,7 +217,7 @@ public class GameBackend extends Game
 
 		float[] vertices = new float[]{0,0,50,0,50,50,0,50};
 
-		short[] triangles = new short[]{0,1,2,0,2,3};
+		short[] triangles = new short[]{0,1,2,3,2,0};
 
 		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, vertices, triangles);
 

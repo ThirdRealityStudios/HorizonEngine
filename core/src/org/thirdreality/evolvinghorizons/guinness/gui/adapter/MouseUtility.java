@@ -8,8 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.guinness.feature.GIPoint;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.evolvinghorizons.guinness.gui.Viewport;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 

@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 
 public class GRectangle extends GComponent

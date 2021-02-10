@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.guinness.Meta;
-import org.thirdreality.evolvinghorizons.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.evolvinghorizons.guinness.gui.component.GComponent;
 import org.w3c.dom.css.Rect;
 
