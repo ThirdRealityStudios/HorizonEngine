@@ -3,14 +3,14 @@ package org.thirdreality.evolvinghorizons.engine.io;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickBoxList;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickOption;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
-import org.thirdreality.evolvinghorizons.engine.render.ColorScheme;
+import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 
 public class ComponentHandler implements InputProcessor
 {

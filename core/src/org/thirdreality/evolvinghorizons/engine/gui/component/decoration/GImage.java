@@ -3,7 +3,7 @@ package org.thirdreality.evolvinghorizons.engine.gui.component.decoration;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 
 public class GImage extends GComponent

@@ -3,8 +3,8 @@ package org.thirdreality.evolvinghorizons.engine.gui.component.placeholder;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import org.thirdreality.evolvinghorizons.engine.Meta;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 

@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.io;
+package org.thirdreality.evolvinghorizons.engine.settings;
 
 import java.io.File;
 

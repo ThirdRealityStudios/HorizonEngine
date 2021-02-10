@@ -4,10 +4,11 @@ import java.io.Serializable;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Meta;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.container.GLogic;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GActionListener;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.GStyle;
+import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
 public abstract class GComponent implements Serializable
 {

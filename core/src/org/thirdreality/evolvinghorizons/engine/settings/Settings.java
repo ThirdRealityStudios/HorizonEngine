@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons;
+package org.thirdreality.evolvinghorizons.engine.settings;
 
 import java.awt.*;
 

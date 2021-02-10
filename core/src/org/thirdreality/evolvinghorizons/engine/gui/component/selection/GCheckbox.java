@@ -6,8 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Meta;
-import org.thirdreality.evolvinghorizons.engine.io.Path;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 
 public class GCheckbox extends GComponent

@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.thirdreality.evolvinghorizons.engine.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 
 // Contains an amount of drawable components.

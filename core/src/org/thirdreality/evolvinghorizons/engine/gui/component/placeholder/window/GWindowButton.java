@@ -2,10 +2,10 @@ package org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.windo
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.property.GBorderProperty;
+import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 
 public class GWindowButton extends GComponent
 {

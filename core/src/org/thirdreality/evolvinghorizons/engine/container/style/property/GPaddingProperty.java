@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.style.property;
+package org.thirdreality.evolvinghorizons.engine.container.style.property;
 
 public class GPaddingProperty
 {

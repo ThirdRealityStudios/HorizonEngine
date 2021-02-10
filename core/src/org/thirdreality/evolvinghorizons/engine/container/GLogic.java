@@ -1,8 +1,8 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component;
+package org.thirdreality.evolvinghorizons.engine.container;
 
 import java.io.Serializable;
 
-import org.thirdreality.evolvinghorizons.engine.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 
 public class GLogic implements Serializable
 {

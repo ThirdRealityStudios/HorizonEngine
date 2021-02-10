@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui;
+package org.thirdreality.evolvinghorizons.engine;
 
 import java.awt.*;
 import java.util.Collections;

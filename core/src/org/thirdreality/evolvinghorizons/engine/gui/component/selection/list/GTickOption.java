@@ -2,7 +2,7 @@ package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.GStyle;
+import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
 public class GTickOption
 {

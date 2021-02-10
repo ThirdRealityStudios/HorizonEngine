@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.render;
+package org.thirdreality.evolvinghorizons.engine.gui;
 
 import com.badlogic.gdx.graphics.Color;
 

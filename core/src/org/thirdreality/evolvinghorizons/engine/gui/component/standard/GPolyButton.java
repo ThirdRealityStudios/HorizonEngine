@@ -2,7 +2,7 @@ package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
 
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.Meta;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;

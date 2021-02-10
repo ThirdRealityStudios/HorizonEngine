@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import org.thirdreality.evolvinghorizons.Settings;
+import org.thirdreality.evolvinghorizons.engine.settings.Settings;
 
 public class RenderSource
 {

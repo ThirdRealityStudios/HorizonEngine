@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.style;
+package org.thirdreality.evolvinghorizons.engine.container.style;
 
 import java.io.Serializable;
 
@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Meta;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.property.GBorderProperty;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GStyle implements Serializable

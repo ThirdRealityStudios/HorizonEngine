@@ -2,8 +2,8 @@ package org.thirdreality.evolvinghorizons.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.thirdreality.evolvinghorizons.GameBackend;
-import org.thirdreality.evolvinghorizons.Settings;
+import org.thirdreality.evolvinghorizons.SampleApplication;
+import org.thirdreality.evolvinghorizons.engine.settings.Settings;
 
 import java.awt.*;
 
@@ -24,6 +24,6 @@ public class DesktopLauncher {
 		CONFIG.fullscreen = false;
 		CONFIG.title = "Horizon Engine";
 
-		APP = new LwjglApplication(new GameBackend(), CONFIG);
+		APP = new LwjglApplication(new SampleApplication(), CONFIG);
 	}
 }

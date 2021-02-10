@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.io.Path;
-import org.thirdreality.evolvinghorizons.engine.gui.DisplayContext;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.settings.Path;
+import org.thirdreality.evolvinghorizons.engine.DisplayContext;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GRectangle;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
@@ -23,7 +23,7 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTi
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.property.GBorderProperty;
+import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.io.ComponentHandler;
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class GameBackend extends Game
+public class SampleApplication extends Game
 {
 	private GRectangle rect;
 

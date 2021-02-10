@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine;
+package org.thirdreality.evolvinghorizons.engine.settings;
 
 public interface Meta
 {

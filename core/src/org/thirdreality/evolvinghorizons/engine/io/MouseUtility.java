@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 
 public class MouseUtility

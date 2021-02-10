@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.style.property;
+package org.thirdreality.evolvinghorizons.engine.container.style.property;
 
 // Mainly a container to indicate all different kinds of border properties in pixels (px)
 // and to improve the readibility of the GStyle class.

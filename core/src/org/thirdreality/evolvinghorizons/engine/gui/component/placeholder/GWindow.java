@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Meta;
-import org.thirdreality.evolvinghorizons.engine.gui.Viewport;
+import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.GLogic;
+import org.thirdreality.evolvinghorizons.engine.container.GLogic;
 import org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.window.GWindowButton;
-import org.thirdreality.evolvinghorizons.engine.gui.component.style.property.GBorderProperty;
+import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GWindow extends GComponent
