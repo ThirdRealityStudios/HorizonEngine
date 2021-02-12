@@ -29,6 +29,7 @@ import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.io.ComponentHandler;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
