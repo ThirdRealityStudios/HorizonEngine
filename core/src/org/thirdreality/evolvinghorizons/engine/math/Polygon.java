@@ -8,6 +8,8 @@ import javax.sound.sampled.Line;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Polygon extends com.badlogic.gdx.math.Polygon
 {
@@ -82,15 +84,15 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return new com.badlogic.gdx.math.Polygon(vertices);
     }
 
-    public Line2D[] loadTriangleLine(short[] triangle)
+    public Line2D.Float[] loadTriangleLine(short[] triangle)
     {
         float[] vertices = loadTriangleVertices(triangle);
 
-        Line2D lineAB = new Line2D.Float(vertices[0],vertices[1],vertices[2],vertices[3]);
-        Line2D lineBC = new Line2D.Float(vertices[2],vertices[3],vertices[4],vertices[5]);
-        Line2D lineCA = new Line2D.Float(vertices[4],vertices[5],vertices[0],vertices[1]);
+        Line2D.Float lineAB = new Line2D.Float(vertices[0],vertices[1],vertices[2],vertices[3]);
+        Line2D.Float lineBC = new Line2D.Float(vertices[2],vertices[3],vertices[4],vertices[5]);
+        Line2D.Float lineCA = new Line2D.Float(vertices[4],vertices[5],vertices[0],vertices[1]);
 
-        return new Line2D[]{lineAB, lineBC, lineCA};
+        return new Line2D.Float[]{lineAB, lineBC, lineCA};
     }
 
     private boolean isValidLine(Line2D triangleLine)
@@ -210,57 +212,73 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return (short) ((initialVertexIndex + add) % maxVertexIndex);
     }
 
-    // Calculates all triangles for this polygon, starting from the given position (vertex) to draw them all.
-    // If nothing is returned (null), no combination of triangles was found to make up this polygon.
-    // In this case, just try another starting point. If you yet tried every starting point, this polygon is simple too complex for this algorithm.
-    // Remember, that most non-continuous polygons are too complex, e.g. having a circular-like shape is generally critical.
-    private short[] calcTriangles(int initialVertexIndex)
+
+
+    private short[][] buildCombination()
     {
-        short[] triangles = new short[getVectorVertices().length*3];
+        short[][] combination = new short[getVectorVertices().length][2];
 
-        int maxVertex = getVectorVertices().length;
+        int maxVertex = (short) getVectorVertices().length;
 
-        short a = (short) (initialVertexIndex % maxVertex);
-        short b = (short) ((initialVertexIndex + 1) % maxVertex);
-        short c = (short) ((initialVertexIndex + 2) % maxVertex);
-
-        int pointer = 0;
-
-        System.out.println();
-        System.out.println();
-        System.out.println("[Triangle] (" + initialVertexIndex + ")");
-
-        for(int i = 0; i < maxVertex-2; i++)
+        for(short i = 0; i < combination.length; i++)
         {
-            triangles[pointer] = a;
-            triangles[pointer+1] = b;
-            triangles[pointer+2] = c;
-
-            System.out.print("[Triangle] a= " + a + " | b = " + b + " | c = " + c);
-
-            /*
-            // Checks whether the currently calculated triangle of the polygon is not outside it.
-            // In different words: the calculated triangle MUST be inside this polygon.
-            if(!contains(new short[]{a,b,c}))
-            {
-                System.out.print(" > invalid");
-
-                return null;
-            }
-             */
-
-            System.out.println();
-
-            b += 1;
-            b %= maxVertex;
-
-            c += 1;
-            c %= maxVertex;
-
-            pointer += 3;
+            combination[i][0] = (short) (i % maxVertex);
+            combination[i][1] = ((short) ((i+1) % maxVertex));
         }
 
-        return triangles;
+        return combination;
+    }
+
+    private Line2D.Float getTriangleLine(short[] triangle)
+    {
+        Line2D.Float[] lineTriangle = loadTriangleLine(triangle);
+
+        Point2D.Float[] centerPointTriangle = new Point2D.Float[3];
+
+        for(int i = 0; i < lineTriangle.length; i++)
+        {
+            Line2D triangleLine = lineTriangle[i];
+
+            Vector2 centerPoint = center(triangleLine.getP1(), triangleLine.getP2());
+
+            // Conversion
+            centerPointTriangle[i] = new Point2D.Float(centerPoint.x, centerPoint.y);
+        }
+
+        // Erase the point (Point2D) which is not contained in this polygon.
+        // The remaining point (only one) will then represent the line which builds up the full triangle.
+        for(Line2D.Float shapeLine : getLineShape())
+        {
+            if(shapeLine.contains(centerPointTriangle[0]))
+            {
+                centerPointTriangle[0] = null;
+            }
+
+            if(shapeLine.contains(centerPointTriangle[1]))
+            {
+                centerPointTriangle[1] = null;
+            }
+
+            if(shapeLine.contains(centerPointTriangle[2]))
+            {
+                centerPointTriangle[2] = null;
+            }
+        }
+
+        int lineIndex = -1;
+
+        // Find the line which represents the inner triangle line.
+        for(int i = 0; i < centerPointTriangle.length; i++)
+        {
+            if(centerPointTriangle[i] != null)
+            {
+                lineIndex = i;
+            }
+        }
+
+        Line2D.Float lineCenterPoint = lineTriangle[lineIndex];
+
+        return lineCenterPoint;
     }
 
     // Calculates the triangles for this polygon.
@@ -268,6 +286,60 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     // If you do this anyway, the algorithm could fail, so you might receive a NullPointerException / a value of 'null'.
     private short[] calcTriangles()
     {
+        short[][] combination = buildCombination();
+
+        int maxVertex = (short) getVectorVertices().length;
+
+        ArrayList<Line2D.Float> validTriangles = new ArrayList<Line2D.Float>();
+
+        // Try to find a valid triangle for each combination.
+        for(int i = 0; i < maxVertex; i++)
+        {
+            short b = combination[i][0];
+            short c = combination[i][1];
+
+            // To do so, combine 'b' & 'c' with a value chosen for 'a' in the loop below.
+            for(short a = 0; a < maxVertex; a++)
+            {
+                short[] triangleCombined = new short[]{a,b,c};
+
+                Line2D.Float l0 = new Line2D.Float(0,-2,3,4.5f);
+                Line2D.Float l1 = new Line2D.Float(0,0,4,4);
+                Line2D.Float l2 = new Line2D.Float(0,-2,4,2);
+
+                System.out.println("l0 -> l1: " + LinTools.crossingEachOther(l0,l1));
+                System.out.println("l1 -> l2: " + LinTools.crossingEachOther(l1,l2));
+                System.out.println("l0 -> l2: " + LinTools.crossingEachOther(l0,l2));
+
+                /*
+                Line2D.Float triangleLine = getTriangleLine(triangleCombined);
+
+                triangleLine.
+
+                // Remember the current line of the triangle
+                validTriangles.add(triangleLine);
+
+                boolean isValidTriangle = contains(triangleCombined) && ;
+                 */
+
+                /*
+                if(a == x && b == y && c == z)
+                System.out.println("> " + triangleLine.getP1() + " - " + triangleLine.getP2());
+                 */
+            }
+        }
+
+        triangles = new short[]{0,1,2};
+
+        /*
+        for(short[] s : combination)
+        {
+            System.out.print("> b = " + s[0] + " | c = " + s[1]);
+            System.out.println();
+        }
+         */
+
+        /*
         short[] triangles = new short[0];
 
         int maxVertex = getVectorVertices().length;
@@ -283,6 +355,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
                 break;
             }
         }
+         */
 
         return triangles;
     }
