@@ -216,10 +216,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     // Remember, that most non-continuous polygons are too complex, e.g. having a circular-like shape is generally critical.
     private short[] calcTriangles(int initialVertexIndex)
     {
-        System.out.println();
-        Gdx.app.log("Triangle Calc.","i = " + initialVertexIndex);
-        System.out.println();
-
         short[] triangles = new short[getVectorVertices().length*3];
 
         int maxVertex = getVectorVertices().length;
@@ -230,20 +226,30 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         int pointer = 0;
 
+        System.out.println();
+        System.out.println();
+        System.out.println("[Triangle] (" + initialVertexIndex + ")");
+
         for(int i = 0; i < maxVertex-2; i++)
         {
             triangles[pointer] = a;
             triangles[pointer+1] = b;
             triangles[pointer+2] = c;
 
+            System.out.print("[Triangle] a= " + a + " | b = " + b + " | c = " + c);
+
+            /*
             // Checks whether the currently calculated triangle of the polygon is not outside it.
             // In different words: the calculated triangle MUST be inside this polygon.
             if(!contains(new short[]{a,b,c}))
             {
-                System.out.println();
+                System.out.print(" > invalid");
 
                 return null;
             }
+             */
+
+            System.out.println();
 
             b += 1;
             b %= maxVertex;
@@ -253,8 +259,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
             pointer += 3;
         }
-
-        System.out.println();
 
         return triangles;
     }

@@ -215,7 +215,7 @@ public class SampleApplication extends Game
 
 		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
 
-		float[] vertices = new float[]{0,0,50,0,51,25,75,50,100,40,125,60,50,70};
+		float[] vertices = new float[]{0,0,50,0,50,25,75,50,100,40,125,60,50,70};
 
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
 
