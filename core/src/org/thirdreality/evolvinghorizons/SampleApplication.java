@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.engine.math.LinTools;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.DisplayContext;
 import org.thirdreality.evolvinghorizons.engine.Viewport;
@@ -215,11 +216,21 @@ public class SampleApplication extends Game
 
 		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
 
-		float[] vertices = new float[]{0,0,50,0,50,25,75,50,100,40,125,60,50,70};
+		float[] vertices = new float[]{0,100,50,100,66.66f,50,116.66f,100,100,150,83.33f,116.66f,50,150};
+
+		Line2D.Float line0 = new Line2D.Float(0,100,50,100);
+		Line2D.Float line1 = new Line2D.Float(25,50,40,50);
+		Line2D.Float line2 = new Line2D.Float(25,50,40,50);
+
+		Line2D.Float[] lines = new Line2D.Float[]{line0, line1};
+
+		System.out.println("l0 & l1 & l2 ? " + LinTools.crossingOthers(lines, line2, true));
 
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
 
-		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), poly.getTriangles());
+		short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
+
+		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), triangles);//poly.getTriangles());
 
 		PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
 		polygonSprite.setOrigin(450, 370);

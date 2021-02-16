@@ -34,7 +34,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         lineShape = toLine();
 
-        triangles = calcTriangles();
+        prepareForRendering();
     }
 
     @Override
@@ -212,152 +212,69 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return (short) ((initialVertexIndex + add) % maxVertexIndex);
     }
 
-
-
-    private short[][] buildCombination()
+    private ArrayList<Short>[] connectVertices()
     {
-        short[][] combination = new short[getVectorVertices().length][2];
+        Vector2[] vertices = getVectorVertices();
 
-        int maxVertex = (short) getVectorVertices().length;
+        ArrayList<Short>[] connections = new ArrayList[vertices.length];
 
-        for(short i = 0; i < combination.length; i++)
+        // Contains all inner borders which should organize the construction of triangles.
+        // Anyway, this ArrayList only serves as a control / check in order to prevent multiple lines crossing each other in the polygon.
+        ArrayList<Line2D.Float> innerBorders = new ArrayList<Line2D.Float>();
+
+        for(short i = 0; i < vertices.length; i++)
         {
-            combination[i][0] = (short) (i % maxVertex);
-            combination[i][1] = ((short) ((i+1) % maxVertex));
+            connections[i] = new ArrayList<Short>();
+
+            for(short dest = 0; dest < vertices.length; dest++)
+            {
+                boolean doubleLine = vertices[i].x == vertices[dest].x && vertices[i].y == vertices[dest].y;
+
+                if(!doubleLine)
+                {
+                    Line2D.Float connection = new Line2D.Float(vertices[i].x, vertices[i].y, vertices[dest].x, vertices[dest].y);
+
+                    boolean crossingInnerBorders = LinTools.crossingOthers(innerBorders, connection, false);
+                    boolean crossingBorders = LinTools.crossingOthers(getLineShape(), connection, true);
+
+                    //if(!crossingInnerBorders)
+
+                    boolean validLine = !crossingBorders;
+
+                    if(validLine)
+                    {
+                        System.out.print("Connection (" + (connection.getP1() + " - " + connection.getP2()) + ")");
+                        System.out.println(" is valid!");
+
+                        innerBorders.add(connection);
+                        connections[i].add(dest);
+                    }
+                }
+            }
         }
 
-        return combination;
+        for(int i = 0; i < connections.length; i++)
+        {
+            System.out.print("{" + i + ",");
+
+            ArrayList<Short> shorts = connections[i];
+
+            for(Short s : shorts)
+            {
+                System.out.print(s + ",");
+            }
+
+            System.out.println("}");
+        }
+
+        return connections;
     }
 
-    private Line2D.Float getTriangleLine(short[] triangle)
+    private void prepareForRendering()
     {
-        Line2D.Float[] lineTriangle = loadTriangleLine(triangle);
-
-        Point2D.Float[] centerPointTriangle = new Point2D.Float[3];
-
-        for(int i = 0; i < lineTriangle.length; i++)
-        {
-            Line2D triangleLine = lineTriangle[i];
-
-            Vector2 centerPoint = center(triangleLine.getP1(), triangleLine.getP2());
-
-            // Conversion
-            centerPointTriangle[i] = new Point2D.Float(centerPoint.x, centerPoint.y);
-        }
-
-        // Erase the point (Point2D) which is not contained in this polygon.
-        // The remaining point (only one) will then represent the line which builds up the full triangle.
-        for(Line2D.Float shapeLine : getLineShape())
-        {
-            if(shapeLine.contains(centerPointTriangle[0]))
-            {
-                centerPointTriangle[0] = null;
-            }
-
-            if(shapeLine.contains(centerPointTriangle[1]))
-            {
-                centerPointTriangle[1] = null;
-            }
-
-            if(shapeLine.contains(centerPointTriangle[2]))
-            {
-                centerPointTriangle[2] = null;
-            }
-        }
-
-        int lineIndex = -1;
-
-        // Find the line which represents the inner triangle line.
-        for(int i = 0; i < centerPointTriangle.length; i++)
-        {
-            if(centerPointTriangle[i] != null)
-            {
-                lineIndex = i;
-            }
-        }
-
-        Line2D.Float lineCenterPoint = lineTriangle[lineIndex];
-
-        return lineCenterPoint;
-    }
-
-    // Calculates the triangles for this polygon.
-    // But note: too complex shapes (e.g. circular-like shapes) are not meant to be calculated with this method.
-    // If you do this anyway, the algorithm could fail, so you might receive a NullPointerException / a value of 'null'.
-    private short[] calcTriangles()
-    {
-        short[][] combination = buildCombination();
-
-        int maxVertex = (short) getVectorVertices().length;
-
-        ArrayList<Line2D.Float> validTriangles = new ArrayList<Line2D.Float>();
-
-        // Try to find a valid triangle for each combination.
-        for(int i = 0; i < maxVertex; i++)
-        {
-            short b = combination[i][0];
-            short c = combination[i][1];
-
-            // To do so, combine 'b' & 'c' with a value chosen for 'a' in the loop below.
-            for(short a = 0; a < maxVertex; a++)
-            {
-                short[] triangleCombined = new short[]{a,b,c};
-
-                Line2D.Float l0 = new Line2D.Float(0,-2,3,4.5f);
-                Line2D.Float l1 = new Line2D.Float(0,0,4,4);
-                Line2D.Float l2 = new Line2D.Float(0,-2,4,2);
-
-                System.out.println("l0 -> l1: " + LinTools.crossingEachOther(l0,l1));
-                System.out.println("l1 -> l2: " + LinTools.crossingEachOther(l1,l2));
-                System.out.println("l0 -> l2: " + LinTools.crossingEachOther(l0,l2));
-
-                /*
-                Line2D.Float triangleLine = getTriangleLine(triangleCombined);
-
-                triangleLine.
-
-                // Remember the current line of the triangle
-                validTriangles.add(triangleLine);
-
-                boolean isValidTriangle = contains(triangleCombined) && ;
-                 */
-
-                /*
-                if(a == x && b == y && c == z)
-                System.out.println("> " + triangleLine.getP1() + " - " + triangleLine.getP2());
-                 */
-            }
-        }
+        connectVertices();
 
         triangles = new short[]{0,1,2};
-
-        /*
-        for(short[] s : combination)
-        {
-            System.out.print("> b = " + s[0] + " | c = " + s[1]);
-            System.out.println();
-        }
-         */
-
-        /*
-        short[] triangles = new short[0];
-
-        int maxVertex = getVectorVertices().length;
-
-        for(int currentApproach = 0; currentApproach < maxVertex; currentApproach++)
-        {
-            triangles = calcTriangles(currentApproach);
-
-            // See whether the calculation of the triangles for this polygon was successful.
-            // In this case, the algorithm will just return the calculated set of triangles.
-            if(triangles != null)
-            {
-                break;
-            }
-        }
-         */
-
-        return triangles;
     }
 
     public short[] getTriangles()
