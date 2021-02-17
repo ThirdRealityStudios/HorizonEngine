@@ -12,7 +12,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private Vector2[] vectorVertices;
 
-    private Line2D.Float[] lineShape;
+    private ArrayList<Line2D.Float> lineShape;
 
     public Polygon(float[] vertices)
     {
@@ -143,7 +143,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         Line2D[] lineTriangle = loadTriangleLine(triangle);
 
-        Line2D[] linePolygon = getLineShape();
+        ArrayList<Line2D.Float> linePolygon = getLineShape();
 
         boolean lineAValid = isValidLine(lineTriangle[0]);
         boolean lineBValid = isValidLine(lineTriangle[1]);
@@ -155,11 +155,11 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return lineAValid && lineBValid && lineCValid;
     }
 
-    private Line2D.Float[] toLine()
+    private ArrayList<Line2D.Float> toLine()
     {
         Vector2[] vertices = getVectorVertices();
 
-        Line2D.Float[] lines = new Line2D.Float[vertices.length];
+        ArrayList<Line2D.Float> lines = new ArrayList<Line2D.Float>(vertices.length);
 
         Vector2 a;
         Vector2 b;
@@ -169,19 +169,19 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             a = new Vector2(vertices[i]);
             b = new Vector2(vertices[i+1]);
 
-            lines[i] = new Line2D.Float(a.x, a.y, b.x, b.y);
+            lines.add(new Line2D.Float(a.x, a.y, b.x, b.y));
         }
 
         // Always connect the last two points of the polygon to close it.
         a = new Vector2(vertices[vertices.length-1]);
         b = new Vector2(vertices[0]);
 
-        lines[lines.length-1] = new Line2D.Float(a.x, a.y, b.x, b.y);
+        lines.set(lines.size()-1, new Line2D.Float(a.x, a.y, b.x, b.y));
 
         return lines;
     }
 
-    public Line2D.Float[] getLineShape()
+    public ArrayList<Line2D.Float> getLineShape()
     {
         return lineShape;
     }
@@ -229,8 +229,8 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
                 {
                     Line2D.Float connection = new Line2D.Float(vertices[i].x, vertices[i].y, vertices[dest].x, vertices[dest].y);
 
-                    boolean crossingInnerBorders = false;//LinTools.intersects(innerBorders, connection, false, null, null);
-                    boolean crossingBorders = false;//LinTools.intersects(getLineShape(), connection, false, this, getVectorVertices());
+                    boolean crossingInnerBorders = false;//LinTools.intersectsIgnoreEnds(connection, innerBorders);
+                    boolean crossingBorders = false;//LinTools.intersectsIgnoreEnds(connection, getLineShape());
 
                     System.out.println("Crossing borders: " + !crossingBorders);
 

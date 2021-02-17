@@ -3,7 +3,10 @@ package org.thirdreality.evolvinghorizons.engine.math;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
+import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LinTools
@@ -63,11 +66,11 @@ public class LinTools
     // Returns the intersection point for both lines, and 'null' if there is none.
     public static Result<Vector2> getIntersectionVector(Line2D.Float line0, Line2D.Float line1)
     {
-        float m1 = line0.y2 - line0.y1;
-        float b1 = (line0.y2 > line0.y1) ? line0.y1 : line0.y2;
+        float m1 = (line0.y2 - line0.y1) / (line0.x2 - line0.x1);
+        float b1 = line0.y1;
 
-        float m2 = line1.y2 - line1.y1;
-        float b2 = (line1.y2 > line1.y1) ? line1.y1 : line1.y2;
+        float m2 = (line1.y2 - line1.y1) / (line1.x2 - line1.x1);
+        float b2 = line1.y1;
 
         Result<Float> x = solveX(m1, b1, m2, b2);
 
@@ -105,7 +108,7 @@ public class LinTools
         return contains;
     }
 
-    public static boolean intersects(Line2D.Float line, Line2D.Float[] container)
+    public static boolean intersects(Line2D.Float line, ArrayList<Line2D.Float> container)
     {
         boolean intersects = false;
 
@@ -129,6 +132,11 @@ public class LinTools
         return false;
     }
 
+    private static boolean equals(Point2D point0, Point2D point1)
+    {
+        return point0.getX() == point1.getX() && point0.getY() == point1.getY();
+    }
+
     // Tells you whether two lines intersect each other.
     // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
     // meaning it considers only intersections between them.
@@ -136,17 +144,33 @@ public class LinTools
     {
         Vector2 result = getIntersectionVector(line0, line1).getResult();
 
-        if(result != null)
-        {
-            boolean matchesEndLine0 = line0.getP1().getX() == result.x && line0.getP1().getY() == result.y || line0.getP2().getX() == result.x && line0.getP2().getY() == result.y;
-            boolean matchesEndLine1 = line1.getP1().getX() == result.x && line1.getP1().getY() == result.y || line1.getP2().getX() == result.x && line1.getP2().getY() == result.y;
+        boolean leftEquals = equals(line0.getP1(), line1.getP1());
+        boolean rightEquals = equals(line0.getP2(), line1.getP2());
 
-            if(line0.intersectsLine(line1) && !matchesEndLine0 && !matchesEndLine1)
-            {
-                return true;
-            }
+        boolean insideBounds = true;
+
+        if(leftEquals || rightEquals || !line0.getBounds().contains(result.x, result.y) && !line1.getBounds().contains(result.x, result.y))
+        {
+            return false;
         }
 
-        return false;
+        boolean resultExists = result != null;
+
+        return resultExists;
     }
+
+    /*
+    public static boolean intersectsIgnoreEnds(Line2D.Float line, ArrayList<Line2D.Float> lines)
+    {
+        boolean intersects = false;
+
+        for(Line2D.Float comparedLine : lines)
+        {
+            intersects |= intersectsIgnoreEnds(line, comparedLine);
+        }
+
+        return intersects;
+    }
+
+     */
 }
