@@ -220,13 +220,14 @@ public class SampleApplication extends Game
 
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
 
-		Line2D.Float line0 = new Line2D.Float(0,100,50,100);
-		Line2D.Float line1 = new Line2D.Float(25,50,40,50);
-		Line2D.Float line2 = new Line2D.Float(25,1000,40,999);
+		Line2D.Float line0 = new Line2D.Float(0,100,30,30);
+		Line2D.Float line1 = new Line2D.Float(0,1,9999,1);
+
+		Line2D.Float line = new Line2D.Float(0,1,9999,1);
 
 		Line2D.Float[] lines = new Line2D.Float[]{line0, line1};
 
-		System.out.println("l0 & l1 & l2 ? " + LinTools.intersects(lines, line2, false, poly, poly.getVectorVertices()));
+		System.out.println("l0 & l1 ? " + LinTools.intersectsIgnoreEnds(line, line1));
 
 		short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
 

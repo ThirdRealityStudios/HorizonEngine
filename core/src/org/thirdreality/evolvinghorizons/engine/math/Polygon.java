@@ -229,8 +229,8 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
                 {
                     Line2D.Float connection = new Line2D.Float(vertices[i].x, vertices[i].y, vertices[dest].x, vertices[dest].y);
 
-                    boolean crossingInnerBorders = LinTools.intersects(innerBorders, connection, false, this, getVectorVertices());
-                    boolean crossingBorders = LinTools.intersects(getLineShape(), connection, false, this, getVectorVertices());
+                    boolean crossingInnerBorders = false;//LinTools.intersects(innerBorders, connection, false, null, null);
+                    boolean crossingBorders = false;//LinTools.intersects(getLineShape(), connection, false, this, getVectorVertices());
 
                     System.out.println("Crossing borders: " + !crossingBorders);
 

@@ -75,68 +75,73 @@ public class LinTools
 
         if(x.getResult() != null)
         {
-            resultVector.setResult(new Vector2(x.getResult(), m1*x.getResult()+b1));
+            resultVector.setResult(new Vector2(x.getResult(), m1*x.getResult() + b1));
         }
 
         return resultVector;
     }
 
-    // Tells you whether two lines intersect each other.
-    // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
-    // meaning it considers only intersections between them.
-    public static boolean intersects(Line2D.Float line0, Line2D.Float line1, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
+    private static boolean isContained(Vector2 vertex, Vector2[] container)
     {
-        Result<Vector2> result = getIntersectionVector(line0, line1);
+        boolean contains = false;
 
-        boolean intersectionPointExists = result.getResult() != null;
-        boolean hasInfiniteIntersections = result.isInfinite;
-
-        if(intersectionPointExists)
+        for(Vector2 comparedVertex : container)
         {
-            Vector2 resultVector = result.getResult();
-
-            boolean containsUnwanted = false;
-
-            if(ignoreIntersections != null)
-            {
-                for(Vector2 vertex : ignoreIntersections)
-                {
-                    boolean equals = resultVector.x == vertex.x && resultVector.y == vertex.y;
-
-                    containsUnwanted |= equals;
-                }
-            }
-
-            boolean considerResultsInShapeOnly = resultContainer != null;
-
-            return !containsUnwanted && (considerResultsInShapeOnly ? (resultContainer.contains(result.getResult())) : true);
-        }
-        else
-        {
-            return hasInfiniteIntersections;
+            contains |= (vertex.x == comparedVertex.x && vertex.y == comparedVertex.x);
         }
 
-        //return considerOverlapping ? (result.isInfinite || result.getResult() != null) : result.getResult() != null;
+        return contains;
     }
 
-    public static boolean intersects(Line2D.Float[] lines, Line2D.Float line, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
+    private static boolean isContained(Vector2 vertex, Line2D.Float[] container)
     {
-        for(Line2D.Float currentLine : lines)
+        boolean contains = false;
+
+        for(Line2D.Float comparedLine : container)
         {
-            if(intersects(currentLine, line, considerOverlapping, resultContainer, ignoreIntersections))
-            {
-                return true;
-            }
+            contains |= (comparedLine.contains(vertex.x, vertex.y));
         }
+
+        return contains;
+    }
+
+    public static boolean intersects(Line2D.Float line, Line2D.Float[] container)
+    {
+        boolean intersects = false;
+
+        for(Line2D.Float comparedLine : container)
+        {
+            intersects |= (line.intersectsLine(comparedLine));
+        }
+
+        return intersects;
+    }
+
+    private static boolean isContained(Vector2 vertex, Polygon container)
+    {
+        return container.contains(vertex);
+    }
+
+    public static boolean isFree(Line2D.Float line, Line2D.Float[] subdivisions, Polygon border)
+    {
+        //Vector2 intersection = getIntersectionVector();
 
         return false;
     }
 
-    public static boolean intersects(ArrayList<Line2D.Float> lines, Line2D.Float line, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
+    // Tells you whether two lines intersect each other.
+    // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
+    // meaning it considers only intersections between them.
+    public static boolean intersectsIgnoreEnds(Line2D.Float line0, Line2D.Float line1)
     {
-        for(Line2D.Float currentLine : lines)
+        Vector2 result = getIntersectionVector(line0, line1).getResult();
+
+        if(result != null)
         {
-            if(intersects(currentLine, line, considerOverlapping, resultContainer, ignoreIntersections))
+            boolean matchesEndLine0 = line0.getP1().getX() == result.x && line0.getP1().getY() == result.y || line0.getP2().getX() == result.x && line0.getP2().getY() == result.y;
+            boolean matchesEndLine1 = line1.getP1().getX() == result.x && line1.getP1().getY() == result.y || line1.getP2().getX() == result.x && line1.getP2().getY() == result.y;
+
+            if(line0.intersectsLine(line1) && !matchesEndLine0 && !matchesEndLine1)
             {
                 return true;
             }
