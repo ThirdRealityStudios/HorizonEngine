@@ -1,15 +1,10 @@
 package org.thirdreality.evolvinghorizons.engine.math;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.sound.sampled.Line;
-import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Polygon extends com.badlogic.gdx.math.Polygon
 {
@@ -234,12 +229,14 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
                 {
                     Line2D.Float connection = new Line2D.Float(vertices[i].x, vertices[i].y, vertices[dest].x, vertices[dest].y);
 
-                    boolean crossingInnerBorders = LinTools.crossingOthers(innerBorders, connection, false);
-                    boolean crossingBorders = LinTools.crossingOthers(getLineShape(), connection, true);
+                    boolean crossingInnerBorders = LinTools.intersects(innerBorders, connection, false, this, getVectorVertices());
+                    boolean crossingBorders = LinTools.intersects(getLineShape(), connection, false, this, getVectorVertices());
+
+                    System.out.println("Crossing borders: " + !crossingBorders);
 
                     //if(!crossingInnerBorders)
 
-                    boolean validLine = !crossingBorders;
+                    boolean validLine = !crossingBorders && !crossingInnerBorders;
 
                     if(validLine)
                     {
@@ -255,7 +252,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         for(int i = 0; i < connections.length; i++)
         {
-            System.out.print("{" + i + ",");
+            System.out.print("{" + i + " -> ");
 
             ArrayList<Short> shorts = connections[i];
 

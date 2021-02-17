@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.math;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 import java.awt.geom.Line2D;
@@ -59,8 +60,8 @@ public class LinTools
         }
     }
 
-    // Returns the crossing / intersection point for both lines, and 'null' if there is none.
-    public static Result<Vector2> getCrossingVector(Line2D.Float line0, Line2D.Float line1)
+    // Returns the intersection point for both lines, and 'null' if there is none.
+    public static Result<Vector2> getIntersectionVector(Line2D.Float line0, Line2D.Float line1)
     {
         float m1 = line0.y2 - line0.y1;
         float b1 = (line0.y2 > line0.y1) ? line0.y1 : line0.y2;
@@ -80,21 +81,49 @@ public class LinTools
         return resultVector;
     }
 
-    // Tells you whether two lines cross each other.
+    // Tells you whether two lines intersect each other.
     // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
     // meaning it considers only intersections between them.
-    public static boolean crossingEachOther(Line2D.Float line0, Line2D.Float line1, boolean considerOverlapping)
+    public static boolean intersects(Line2D.Float line0, Line2D.Float line1, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
     {
-        Result<Vector2> result = getCrossingVector(line0, line1);
+        Result<Vector2> result = getIntersectionVector(line0, line1);
 
-        return considerOverlapping ? (result.isInfinite || result.getResult() != null) : result.getResult() != null;
+        boolean intersectionPointExists = result.getResult() != null;
+        boolean hasInfiniteIntersections = result.isInfinite;
+
+        if(intersectionPointExists)
+        {
+            Vector2 resultVector = result.getResult();
+
+            boolean containsUnwanted = false;
+
+            if(ignoreIntersections != null)
+            {
+                for(Vector2 vertex : ignoreIntersections)
+                {
+                    boolean equals = resultVector.x == vertex.x && resultVector.y == vertex.y;
+
+                    containsUnwanted |= equals;
+                }
+            }
+
+            boolean considerResultsInShapeOnly = resultContainer != null;
+
+            return !containsUnwanted && (considerResultsInShapeOnly ? (resultContainer.contains(result.getResult())) : true);
+        }
+        else
+        {
+            return hasInfiniteIntersections;
+        }
+
+        //return considerOverlapping ? (result.isInfinite || result.getResult() != null) : result.getResult() != null;
     }
 
-    public static boolean crossingOthers(Line2D.Float[] lines, Line2D.Float line, boolean considerOverlapping)
+    public static boolean intersects(Line2D.Float[] lines, Line2D.Float line, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
     {
         for(Line2D.Float currentLine : lines)
         {
-            if(crossingEachOther(currentLine, line, considerOverlapping))
+            if(intersects(currentLine, line, considerOverlapping, resultContainer, ignoreIntersections))
             {
                 return true;
             }
@@ -103,11 +132,11 @@ public class LinTools
         return false;
     }
 
-    public static boolean crossingOthers(ArrayList<Line2D.Float> lines, Line2D.Float line, boolean considerOverlapping)
+    public static boolean intersects(ArrayList<Line2D.Float> lines, Line2D.Float line, boolean considerOverlapping, Polygon resultContainer, Vector2[] ignoreIntersections)
     {
         for(Line2D.Float currentLine : lines)
         {
-            if(crossingEachOther(currentLine, line, considerOverlapping))
+            if(intersects(currentLine, line, considerOverlapping, resultContainer, ignoreIntersections))
             {
                 return true;
             }
