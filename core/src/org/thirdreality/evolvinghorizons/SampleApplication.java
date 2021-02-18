@@ -31,7 +31,9 @@ import org.thirdreality.evolvinghorizons.engine.io.ComponentHandler;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SampleApplication extends Game
@@ -220,10 +222,19 @@ public class SampleApplication extends Game
 
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
 
-		Line2D.Float line1 = new Line2D.Float(0,10,10,10);
-		Line2D.Float line = new Line2D.Float(0,-11,10,11);
+		Line2D.Float line3 = new Line2D.Float(0,0,20,10);
+		Line2D.Float line2 = new Line2D.Float(0,10,20,10);
+		Line2D.Float line1 = new Line2D.Float(0,-10,20,10);
 
-		System.out.println("l0 & l1 ? " + LinTools.intersectsIgnoreEnds(line, line1));
+		Line2D.Float line0 = new Line2D.Float(0,0,20,10);
+
+		ArrayList<Line2D.Float> lines = new ArrayList<Line2D.Float>();
+		lines.add(line0);
+
+		Line2D.Float line = new Line2D.Float(0,100,50,100);
+
+        //if(!crossingInnerBorders)
+		System.out.println("l0 ? " + poly.isPolyLine(line0));
 
 		short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
 

@@ -176,7 +176,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         a = new Vector2(vertices[vertices.length-1]);
         b = new Vector2(vertices[0]);
 
-        lines.set(lines.size()-1, new Line2D.Float(a.x, a.y, b.x, b.y));
+        lines.add(new Line2D.Float(a.x, a.y, b.x, b.y));
 
         return lines;
     }
@@ -207,61 +207,47 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return (short) ((initialVertexIndex + add) % maxVertexIndex);
     }
 
-    private ArrayList<Short>[] connectVertices()
+    public boolean isPolyLine(Line2D.Float line)
     {
-        Vector2[] vertices = getVectorVertices();
-
-        ArrayList<Short>[] connections = new ArrayList[vertices.length];
-
-        // Contains all inner borders which should organize the construction of triangles.
-        // Anyway, this ArrayList only serves as a control / check in order to prevent multiple lines crossing each other in the polygon.
-        ArrayList<Line2D.Float> innerBorders = new ArrayList<Line2D.Float>();
-
-        for(short i = 0; i < vertices.length; i++)
+        for(Line2D.Float comparedLine : getLineShape())
         {
-            connections[i] = new ArrayList<Short>();
+            boolean hasSameSteepness = LinTools.getSteepness(comparedLine) == LinTools.getSteepness(line);
 
-            for(short dest = 0; dest < vertices.length; dest++)
+            if(line.intersectsLine(comparedLine) && hasSameSteepness)
             {
-                boolean doubleLine = vertices[i].x == vertices[dest].x && vertices[i].y == vertices[dest].y;
-
-                if(!doubleLine)
-                {
-                    Line2D.Float connection = new Line2D.Float(vertices[i].x, vertices[i].y, vertices[dest].x, vertices[dest].y);
-
-                    boolean crossingInnerBorders = false;//LinTools.intersectsIgnoreEnds(connection, innerBorders);
-                    boolean crossingBorders = false;//LinTools.intersectsIgnoreEnds(connection, getLineShape());
-
-                    System.out.println("Crossing borders: " + !crossingBorders);
-
-                    //if(!crossingInnerBorders)
-
-                    boolean validLine = !crossingBorders && !crossingInnerBorders;
-
-                    if(validLine)
-                    {
-                        System.out.print("Connection (" + (connection.getP1() + " - " + connection.getP2()) + ")");
-                        System.out.println(" is valid!");
-
-                        innerBorders.add(connection);
-                        connections[i].add(dest);
-                    }
-                }
+                return true;
             }
+            /*
+            if(comparedLine.getBounds().equals(line.getBounds()))
+            {
+                return true;
+            }
+             */
         }
 
-        for(int i = 0; i < connections.length; i++)
+        return false;
+    }
+
+    private ArrayList<Short[]> connectVertices()
+    {
+        ArrayList<Short[]> connections = new ArrayList<Short[]>();
+
+
+        // The double-loop just goes through all possibilities to build line which goes to every vertex point of the polygon.
+        // This will make sense in order to check whether the constructed line can be used to build up a triangle later.
+        for(short a = 0; a < getVectorVertices().length; a++)
         {
-            System.out.print("{" + i + " -> ");
-
-            ArrayList<Short> shorts = connections[i];
-
-            for(Short s : shorts)
+            // The loop-condition prevents the end point from being the start point (pointing at itself).
+            for(short n = (short) ((a + 1) % getVectorVertices().length); n != a; n = (short) ((n + 1) % getVectorVertices().length))
             {
-                System.out.print(s + ",");
-            }
+                Point2D.Float start = new Point2D.Float(getVectorVertices()[a].x, getVectorVertices()[a].y);
+                Point2D.Float end = new Point2D.Float(getVectorVertices()[n].x, getVectorVertices()[n].y);
 
-            System.out.println("}");
+                Line2D.Float connection = new Line2D.Float(start, end);
+
+                if(!isPolyLine(connection))
+                System.out.println("> [" + a + "][" + n + "] = " + start + " -> " + end);
+            }
         }
 
         return connections;

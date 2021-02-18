@@ -63,13 +63,21 @@ public class LinTools
         }
     }
 
+    // Determines the steepness of a line.
+    // If the line goes straight up (meaning the steepness is infinite),
+    // the method will cause an error due to division by zero.
+    public static float getSteepness(Line2D.Float line)
+    {
+        return (line.y2 - line.y1) / (line.x2 - line.x1);
+    }
+
     // Returns the intersection point for both lines, and 'null' if there is none.
     public static Result<Vector2> getIntersectionVector(Line2D.Float line0, Line2D.Float line1)
     {
-        float m1 = (line0.y2 - line0.y1) / (line0.x2 - line0.x1);
+        float m1 = getSteepness(line0);
         float b1 = line0.y1;
 
-        float m2 = (line1.y2 - line1.y1) / (line1.x2 - line1.x1);
+        float m2 = getSteepness(line1);
         float b2 = line1.y1;
 
         Result<Float> x = solveX(m1, b1, m2, b2);
@@ -125,13 +133,6 @@ public class LinTools
         return container.contains(vertex);
     }
 
-    public static boolean isFree(Line2D.Float line, Line2D.Float[] subdivisions, Polygon border)
-    {
-        //Vector2 intersection = getIntersectionVector();
-
-        return false;
-    }
-
     private static boolean equals(Point2D point0, Point2D point1)
     {
         return point0.getX() == point1.getX() && point0.getY() == point1.getY();
@@ -143,6 +144,11 @@ public class LinTools
     public static boolean intersectsIgnoreEnds(Line2D.Float line0, Line2D.Float line1)
     {
         Vector2 result = getIntersectionVector(line0, line1).getResult();
+
+        if(result == null)
+        {
+            return false;
+        }
 
         boolean leftEquals = equals(line0.getP1(), line1.getP1());
         boolean rightEquals = equals(line0.getP2(), line1.getP2());
@@ -159,7 +165,6 @@ public class LinTools
         return resultExists;
     }
 
-    /*
     public static boolean intersectsIgnoreEnds(Line2D.Float line, ArrayList<Line2D.Float> lines)
     {
         boolean intersects = false;
@@ -171,6 +176,4 @@ public class LinTools
 
         return intersects;
     }
-
-     */
 }
