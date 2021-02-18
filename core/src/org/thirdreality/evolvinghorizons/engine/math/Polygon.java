@@ -345,18 +345,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             triangle[1][0] = 1;
             triangle[2][0] = 2;
 
-            for(Short[] sA : triangle)
-            {
-                System.out.print("[");
-
-                for(Short s : sA)
-                {
-                    System.out.print(s + ",");
-                }
-
-                System.out.println("]");
-            }
-
             return triangle;
         }
 
@@ -371,18 +359,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             triangle[2] = new Short[]{2,0};
 
             triangle[3][0] = 3;
-
-            for(Short[] sA : triangle)
-            {
-                System.out.print("[");
-
-                for(Short s : sA)
-                {
-                    System.out.print(s + ",");
-                }
-
-                System.out.println("]");
-            }
 
             return triangle;
         }
@@ -420,18 +396,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         }
 
         Short[][] connectionsPrepared = removeDoublesAndPrepare(connections);
-
-        for(Short[] sA : connectionsPrepared)
-        {
-            System.out.print("[");
-
-            for(Short s : sA)
-            {
-                System.out.print(s + ",");
-            }
-
-            System.out.println("]");
-        }
 
         return connectionsPrepared;
     }
