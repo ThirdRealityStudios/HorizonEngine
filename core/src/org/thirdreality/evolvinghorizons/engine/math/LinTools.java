@@ -116,13 +116,34 @@ public class LinTools
         return contains;
     }
 
-    public static boolean intersects(Line2D.Float line, ArrayList<Line2D.Float> container)
+    public static boolean intersects_IgnoreEndsAndIntersectionPointsBetweenLines(Line2D.Float line, ArrayList<Line2D.Float> container)
     {
         boolean intersects = false;
 
         for(Line2D.Float comparedLine : container)
         {
-            intersects |= (line.intersectsLine(comparedLine));
+            Vector2 intersectionVector = LinTools.getIntersectionVector(comparedLine, line).getResult();
+
+            Point2D.Float intersectionPoint = null;
+
+            if(intersectionVector != null)
+            {
+                intersectionPoint = new Point2D.Float(intersectionVector.x, intersectionVector.y);
+            }
+
+            // Point2D.Float[50.0, 150.0] -> Point2D.Float[100.0, 150.0]
+
+            boolean linePointsIntersect =  equals(line.getP1(), comparedLine.getP1()) || equals(line.getP2(), comparedLine.getP2()) || equals(line.getP2(), comparedLine.getP1()) || equals(line.getP1(), comparedLine.getP2()) || equals(line.getP2(), comparedLine.getP1()) || equals(line.getP1(), comparedLine.getP2());
+
+            boolean lineIntersectionPointsIntersect = intersectionPoint != null && (equals(intersectionPoint, comparedLine.getP1()) || equals(intersectionPoint, comparedLine.getP2()) || equals(intersectionPoint, line.getP1()) || equals(intersectionPoint, line.getP2()));
+
+            boolean intersectsInBetweenOnly = comparedLine.intersectsLine(line) && !linePointsIntersect && !lineIntersectionPointsIntersect;
+
+           // if(intersectsInBetweenOnly)
+            {
+                intersects |= intersectsInBetweenOnly;//(line.intersectsLine(comparedLine));
+                //System.out.println("> " + LinTools.getIntersectionVector(comparedLine, line).getResult() + " of " + comparedLine.getP1() + " -> " + comparedLine.getP2() + " & " + line.getP1() + " -> " + line.getP2());
+            }
         }
 
         return intersects;
@@ -138,6 +159,7 @@ public class LinTools
         return point0.getX() == point1.getX() && point0.getY() == point1.getY();
     }
 
+    /*
     // Tells you whether two lines intersect each other.
     // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
     // meaning it considers only intersections between them.
@@ -160,11 +182,12 @@ public class LinTools
             return false;
         }
 
-        boolean resultExists = result != null;
-
-        return resultExists;
+        // Result exists (!= null), so return true.
+        return true;
     }
+     */
 
+    /*
     public static boolean intersectsIgnoreEnds(Line2D.Float line, ArrayList<Line2D.Float> lines)
     {
         boolean intersects = false;
@@ -176,4 +199,5 @@ public class LinTools
 
         return intersects;
     }
+     */
 }

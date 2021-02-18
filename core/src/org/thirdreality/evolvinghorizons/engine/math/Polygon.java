@@ -245,7 +245,9 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
                 Line2D.Float connection = new Line2D.Float(start, end);
 
-                if(!isPolyLine(connection))
+                boolean intersectsPolyLines = LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(connection, getLineShape());
+
+                if(!isPolyLine(connection) && !intersectsPolyLines)
                 System.out.println("> [" + a + "][" + n + "] = " + start + " -> " + end);
             }
         }
