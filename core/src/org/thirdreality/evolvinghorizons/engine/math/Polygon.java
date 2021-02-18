@@ -337,6 +337,56 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private Short[][] connectVertices()
     {
+        if(getVectorVertices().length == 3)
+        {
+            Short[][] triangle = new Short[3][1];
+
+            triangle[0][0] = 0;
+            triangle[1][0] = 1;
+            triangle[2][0] = 2;
+
+            for(Short[] sA : triangle)
+            {
+                System.out.print("[");
+
+                for(Short s : sA)
+                {
+                    System.out.print(s + ",");
+                }
+
+                System.out.println("]");
+            }
+
+            return triangle;
+        }
+
+        if(getVectorVertices().length == 4)
+        {
+            Short[][] triangle = new Short[4][1];
+
+            triangle[0][0] = 0;
+
+            triangle[1][0] = 1;
+
+            triangle[2] = new Short[]{2,0};
+
+            triangle[3][0] = 3;
+
+            for(Short[] sA : triangle)
+            {
+                System.out.print("[");
+
+                for(Short s : sA)
+                {
+                    System.out.print(s + ",");
+                }
+
+                System.out.println("]");
+            }
+
+            return triangle;
+        }
+
         ArrayList<Short[]> connections = new ArrayList<Short[]>();
 
         ArrayList<Line2D.Float> triangleLines = new ArrayList<Line2D.Float>();
