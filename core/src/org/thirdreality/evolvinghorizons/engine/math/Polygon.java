@@ -403,19 +403,73 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         Short[][] connectionsPrepared = removeDoublesAndPrepare(connections);
 
-        for(int i = 0; i < connectionsPrepared.length; i++)
+        return connectionsPrepared;
+    }
+
+    private ArrayList<Short[]> buildTrianglesFromCombination(Short[] before, Short[] current, Short[] after, Short[] first, Short[] last)
+    {
+        ArrayList<Short[]> triangles = new ArrayList<Short[]>();
+
+        if(current.length >= 2 && after.length >= 1)
         {
-            System.out.print("[");
-
-            for(int u = 0; u < connectionsPrepared[i].length; u++)
-            {
-                System.out.print(connectionsPrepared[i][u] + ",");
-            }
-
-            System.out.println("]");
+            triangles.add(new Short[]{current[0], current[1], after[0]});
         }
 
-        return connectionsPrepared;
+        if(current.length >= 3)
+        {
+            triangles.add(new Short[]{current[0], current[1], current[2]});
+        }
+
+        if(current.length >= 4)
+        {
+            for(int i = 2; i+1 < current.length; i++)
+            {
+                triangles.add(new Short[]{current[0], current[i], current[i+1]});
+            }
+        }
+
+        // This will build up the last triangle.
+        // Might cause issues if the first combination is smaller than 2 which is very unlikely to happen.
+        // If there is such a case, there simply needs to be further implementation.
+        if(current == last)
+        {
+            triangles.add(new Short[]{current[0], first[0], first[first.length-1]});
+        }
+
+        return triangles;
+    }
+
+    private ArrayList<Short[]> buildTriangles(Short[][] connectionsPrepared)
+    {
+        ArrayList<Short[]> triangles = new ArrayList<Short[]>();
+
+        Short[] before, current, after, first, last;
+
+        for(int i = 0; i < connectionsPrepared.length; i++)
+        {
+            int beforeIndex = (i-1) > 0 ? i-1 : connectionsPrepared.length-1;
+            int currentIndex = i;
+            int afterIndex = (i+1) < connectionsPrepared.length ? i+1 : 0;
+            int firstIndex = 0;
+            int lastIndex = connectionsPrepared.length-1;
+
+            before = connectionsPrepared[beforeIndex];
+            current = connectionsPrepared[currentIndex];
+            after = connectionsPrepared[afterIndex];
+            first = connectionsPrepared[firstIndex];
+            last = connectionsPrepared[lastIndex];
+
+            ArrayList<Short[]> trianglesFound = buildTrianglesFromCombination(before, current, after, first, last);
+
+            triangles.addAll(trianglesFound);
+        }
+
+        for(Short[] s : triangles)
+        {
+            print(s);
+        }
+
+        return triangles;
     }
 
     private void print(Short[] s)
@@ -432,7 +486,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private void prepareForRendering()
     {
-        connectVertices();
+        buildTriangles(connectVertices());
 
         triangles = new short[]{0,1,2};
     }
