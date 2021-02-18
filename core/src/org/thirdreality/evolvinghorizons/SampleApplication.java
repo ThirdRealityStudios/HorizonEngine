@@ -220,7 +220,7 @@ public class SampleApplication extends Game
 
 		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
 
-		float[] vertices = new float[]{50,0, 100,0, 150.1f,50, 150,100, 100,150, 50,150, 0,0, };
+		float[] vertices = new float[]{50,0, 100,0, 150.1f,50, 150,100, 100,150, 50,150, 0,0};
 
 		//float[] vertices = new float[]{0,100,50,100,66.66f,50,116.66f,100,100,150,83.33f,116.66f,50,150};
 
