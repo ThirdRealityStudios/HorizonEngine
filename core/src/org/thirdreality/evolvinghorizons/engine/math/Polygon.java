@@ -233,15 +233,74 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return poly.contains(center(line.getP1(), line.getP2()));
     }
 
+    private boolean intersectsTriangleLines(Line2D.Float triangleLine, ArrayList<Line2D.Float> triangleLines)
+    {
+        return LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(triangleLine, triangleLines);
+    }
+
+    private Short[] writeVertexConnections(short a, ArrayList<Short> vertexConnections)
+    {
+        Short[] vertexConnectionsWritten = new Short[vertexConnections.size()+1];
+
+        for(int i = 1; i < vertexConnectionsWritten.length; i++)
+        {
+            vertexConnectionsWritten[i] = vertexConnections.get(i-1);
+        }
+
+        return vertexConnectionsWritten;
+    }
+
+    // Checks whether two vertex lines refer to the same direction.
+    // This prevents double triangles.
+    // Used in the algorithm to determine all triangles for a polygon correctly.
+    private boolean isDoubleConnection(Short[] a, Short[] b)
+    {
+        if((a[0] == b[1] && a[1] == b[0]))
+        System.out.println("Removing " + "(" + a[0] + " == " + b[1] + " && " + a[1] + " == " + b[0] + ")");
+
+        return (a[0] == b[1] && a[1] == b[0]);
+    }
+
+    private Short[] toArray(ArrayList<Short> list)
+    {
+        Short[] array = new Short[list.size()];
+
+        for(int i = 0; i < array.length; i++)
+        {
+            array[i] = list.get(i);
+        }
+
+        return array;
+    }
+
+    private ArrayList<Short[]> removeDoublesAndPrepare(ArrayList<Short[]> connections)
+    {
+        for(short a = 0; a < connections.size(); a++)
+        {
+            for(int b = 0; b < connections.size(); b++)
+            {
+                if(isDoubleConnection(connections.get(a), connections.get(b)))
+                {
+                    connections.remove(b);
+                }
+            }
+        }
+
+        return connections;
+    }
+
     private ArrayList<Short[]> connectVertices()
     {
         ArrayList<Short[]> connections = new ArrayList<Short[]>();
 
+        ArrayList<Line2D.Float> triangleLines = new ArrayList<Line2D.Float>();
 
         // The double-loop just goes through all possibilities to build line which goes to every vertex point of the polygon.
         // This will make sense in order to check whether the constructed line can be used to build up a triangle later.
         for(short a = 0; a < getVectorVertices().length; a++)
         {
+            //ArrayList<Short> vertexConnections = new ArrayList<Short>();
+
             // The loop-condition prevents the end point from being the start point (pointing at itself).
             for(short n = (short) ((a + 1) % getVectorVertices().length); n != a; n = (short) ((n + 1) % getVectorVertices().length))
             {
@@ -252,12 +311,33 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
                 boolean intersectsPolyLines = LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(connection, getLineShape());
 
-                if(!isPolyLine(connection) && !intersectsPolyLines && isLineCenterPointInsidePolygon(connection, this))
-                System.out.println("> [" + a + "][" + n + "] = " + start + " -> " + end);
+                if(!isPolyLine(connection) && !intersectsPolyLines && isLineCenterPointInsidePolygon(connection, this) && !intersectsTriangleLines(connection, triangleLines))
+                {
+                    triangleLines.add(connection);
+
+                    connections.add(new Short[]{a,n});
+                   // vertexConnections.add(n);
+                }
             }
+
+            //connections.add(writeVertexConnections(a, vertexConnections));
         }
 
-        return connections;
+        ArrayList<Short[]> connectionsPrepared = removeDoublesAndPrepare(connections);
+
+        for(Short[] array : connectionsPrepared)
+        {
+            System.out.print("[");
+
+            for(Short value : array)
+            {
+                System.out.print(value + ",");
+            }
+
+            System.out.println("]");
+        }
+
+        return connectionsPrepared;
     }
 
     private void prepareForRendering()

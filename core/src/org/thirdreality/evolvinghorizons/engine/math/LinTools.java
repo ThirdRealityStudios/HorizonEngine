@@ -116,12 +116,26 @@ public class LinTools
         return contains;
     }
 
+    private static boolean isSteepnessInfinite(Line2D.Float line)
+    {
+        return line.getP1().getX() == line.getP2().getX();
+    }
+
     public static boolean intersects_IgnoreEndsAndIntersectionPointsBetweenLines(Line2D.Float line, ArrayList<Line2D.Float> container)
     {
         boolean intersects = false;
 
         for(Line2D.Float comparedLine : container)
         {
+            // When the algorithm sees there is at least one line which just goes straight (infinite steepness),
+            // it will use the default java method "intersectsLine(...)" because in this case,
+            // end points would interfere directly with the other line (in most cases).
+            // It might still cause problems when the polygon has too many lines with an infinite steepness (not tested yet).
+            if(isSteepnessInfinite(comparedLine) || isSteepnessInfinite(line))
+            {
+                return comparedLine.intersectsLine(line);
+            }
+
             Vector2 intersectionVector = LinTools.getIntersectionVector(comparedLine, line).getResult();
 
             Point2D.Float intersectionPoint = null;

@@ -233,9 +233,6 @@ public class SampleApplication extends Game
 
 		Line2D.Float line = new Line2D.Float(0,100,50,100);
 
-        //if(!crossingInnerBorders)
-		System.out.println("l0 ? " + poly.isPolyLine(line0));
-
 		short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
 
 		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), triangles);//poly.getTriangles());
