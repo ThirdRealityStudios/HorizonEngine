@@ -254,9 +254,9 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     // Checks whether two vertex lines refer to the same direction.
     // This prevents double triangles.
     // Used in the algorithm to determine all triangles for a polygon correctly.
-    private boolean isDoubleConnection(Short[] a, Short[] b)
+    private boolean isDoubleConnection(ArrayList<Short> a, ArrayList<Short> b)
     {
-        return (a[0] == b[1] && a[1] == b[0]);
+        return (a.size() == 2 && b.size() == 2 && a.get(0) == b.get(1) && a.get(1) == b.get(0)) || (a.size() == 1 && b.size() == 1 && a.get(0) == b.get(0));
     }
 
     private Short[] toArray(ArrayList<Short> list)
@@ -271,14 +271,14 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return array;
     }
 
-    private Short[][] removeDoublesAndPrepare(ArrayList<Short[]> connections)
+    private Short[][] removeDoublesAndPrepare(ArrayList<ArrayList<Short>> connections)
     {
         // Removes double appearances from the connected vertices.
         for(short a = 0; a < connections.size(); a++)
         {
             for(int b = 0; b < connections.size(); b++)
             {
-                if(isDoubleConnection(connections.get(a), connections.get(b)) && (a != b))
+                if(isDoubleConnection(connections.get(a), connections.get(b)))
                 {
                     connections.remove(b);
                 }
@@ -296,7 +296,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         {
             buffer = new ArrayList<ArrayList<Short>>();
 
-            size = connections.get(connections.size() - 1)[0] + 1;
+            size = connections.get(connections.size() - 1).get(0) + 1;
 
             for (int c = 0; c < size; c++)
             {
@@ -308,11 +308,11 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         // Add the connections to the according nodes.
         for(int i = 0; i < connections.size(); i++)
         {
-            int writeIndex = connections.get(i)[0];
+            int writeIndex = connections.get(i).get(0);
 
-            for(int content = 1; content < connections.get(i).length; content++)
+            for(int content = 1; content < connections.get(i).size(); content++)
             {
-                short n = connections.get(i)[1];
+                short n = connections.get(i).get(1);
 
                 buffer.get(writeIndex).add(n);
             }
@@ -363,7 +363,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             return triangle;
         }
 
-        ArrayList<Short[]> connections = new ArrayList<Short[]>();
+        ArrayList<ArrayList<Short>> connections = new ArrayList<ArrayList<Short>>();
 
         ArrayList<Line2D.Float> triangleLines = new ArrayList<Line2D.Float>();
 
@@ -371,8 +371,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         // This will make sense in order to check whether the constructed line can be used to build up a triangle later.
         for(short a = 0; a < getVectorVertices().length; a++)
         {
-            // ArrayList<Short> vertexConnections = new ArrayList<Short>();
-
             // The loop-condition prevents the end point from being the start point (pointing at itself).
             for(short n = (short) ((a + 1) % getVectorVertices().length); n != a; n = (short) ((n + 1) % getVectorVertices().length))
             {
@@ -387,17 +385,49 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
                 {
                     triangleLines.add(connection);
 
-                    connections.add(new Short[]{a,n});
-                   // vertexConnections.add(n);
+                    ArrayList<Short> list = new ArrayList<Short>();
+                    list.add(a);
+                    list.add(n);
+
+                    connections.add(list);
+                }
+                else
+                {
+                    ArrayList<Short> list = new ArrayList<Short>();
+                    list.add(a);
+
+                    connections.add(list);
                 }
             }
-
-            //connections.add(writeVertexConnections(a, vertexConnections));
         }
 
         Short[][] connectionsPrepared = removeDoublesAndPrepare(connections);
 
+        for(int i = 0; i < connectionsPrepared.length; i++)
+        {
+            System.out.print("[");
+
+            for(int u = 0; u < connectionsPrepared[i].length; u++)
+            {
+                System.out.print(connectionsPrepared[i][u] + ",");
+            }
+
+            System.out.println("]");
+        }
+
         return connectionsPrepared;
+    }
+
+    private void print(Short[] s)
+    {
+        System.out.print("[");
+
+        for(Short sh : s)
+        {
+            System.out.print(sh + ",");
+        }
+
+        System.out.println("]");
     }
 
     private void prepareForRendering()
