@@ -228,6 +228,11 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return false;
     }
 
+    public boolean isLineCenterPointInsidePolygon(Line2D.Float line, com.badlogic.gdx.math.Polygon poly)
+    {
+        return poly.contains(center(line.getP1(), line.getP2()));
+    }
+
     private ArrayList<Short[]> connectVertices()
     {
         ArrayList<Short[]> connections = new ArrayList<Short[]>();
@@ -247,7 +252,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
                 boolean intersectsPolyLines = LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(connection, getLineShape());
 
-                if(!isPolyLine(connection) && !intersectsPolyLines)
+                if(!isPolyLine(connection) && !intersectsPolyLines && isLineCenterPointInsidePolygon(connection, this))
                 System.out.println("> [" + a + "][" + n + "] = " + start + " -> " + end);
             }
         }
