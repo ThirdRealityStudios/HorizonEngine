@@ -489,7 +489,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return array;
     }
 
-    private void print(Short[] s)
+    private void print(short[] s)
     {
         System.out.print("[");
 
@@ -572,6 +572,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         switch(vertices)
         {
+
             case 3:
             {
                 triangles = new short[]{0,1,2};
@@ -602,11 +603,14 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
                 break;
             }
+
             default:
             {
                 // Will be used if the shape is complex.
 
                 triangles = buildTriangles(connectVertices());
+
+                print(triangles);
             }
         }
     }
