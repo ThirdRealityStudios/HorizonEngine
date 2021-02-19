@@ -228,7 +228,7 @@ public class SampleApplication extends Game
 
 		//float[] vertices = new float[]{0,2.5f, 34.5f,11.5f, 27.5f,0, 54.5f,14, 62.5f,4, 74,12, 84.5f,5.5f, 116,21, 83.5f,64.5f, 64.5f,105, 35.5f,63, 27.5f,66.5f};
 
-		float[] vertices = new float[]{0,0, 10,0, 10,10, 20,10, 30,20};
+		float[] vertices = new float[]{0,0, 10,0, 10,10, 20,10, 30,40, 15,50, 0f,5f};
 
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices, true);
 

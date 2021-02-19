@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.math;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import java.awt.geom.Line2D;
@@ -500,6 +501,71 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         System.out.println("]");
     }
 
+    // Calculates all triangles for this polygon, starting from the given position (vertex) to draw them all.
+    // If nothing is returned (null), no combination of triangles was found to make up this polygon.
+    // In this case, just try another starting point. If you yet tried every starting point, this polygon is simple too complex for this algorithm.
+    // Remember, that most non-continuous polygons are too complex, e.g. having a circular-like shape is generally critical.
+    private short[] calcTrianglesSimply(int initialVertexIndex)
+    {
+        short[] triangles = new short[getVectorVertices().length*3];
+
+        int maxVertex = getVectorVertices().length;
+
+        short a = (short) (initialVertexIndex % maxVertex);
+        short b = (short) ((initialVertexIndex + 1) % maxVertex);
+        short c = (short) ((initialVertexIndex + 2) % maxVertex);
+
+        int pointer = 0;
+
+        for(int i = 0; i < maxVertex-2; i++)
+        {
+            triangles[pointer] = a;
+            triangles[pointer+1] = b;
+            triangles[pointer+2] = c;
+
+            // Checks whether the currently calculated triangle of the polygon is not outside it.
+            // In different words: the calculated triangle MUST be inside this polygon.
+            if(!contains(new short[]{a,b,c}))
+            {
+                return null;
+            }
+
+            b += 1;
+            b %= maxVertex;
+
+            c += 1;
+            c %= maxVertex;
+
+            pointer += 3;
+        }
+
+        return triangles;
+    }
+
+    // Calculates the triangles for this polygon.
+    // But note: too complex shapes (e.g. circular-like shapes) are not meant to be calculated with this method.
+    // If you do this anyway, the algorithm could fail, so you might receive a NullPointerException / a value of 'null'.
+    private short[] calcTrianglesSimply()
+    {
+        short[] triangles = new short[0];
+
+        int maxVertex = getVectorVertices().length;
+
+        for(int currentApproach = 0; currentApproach < maxVertex; currentApproach++)
+        {
+            triangles = calcTrianglesSimply(currentApproach);
+
+            // See whether the calculation of the triangles for this polygon was successful.
+            // In this case, the algorithm will just return the calculated set of triangles.
+            if(triangles != null)
+            {
+                break;
+            }
+        }
+
+        return triangles;
+    }
+
     private void calculateTriangles()
     {
         int vertices = getVectorVertices().length;
@@ -515,6 +581,24 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             case 4:
             {
                 triangles = new short[]{0,1,2, 0,2,3};
+
+                break;
+            }
+            case 5:
+            {
+                triangles = calcTrianglesSimply();
+
+                break;
+            }
+            case 6:
+            {
+                triangles = calcTrianglesSimply();
+
+                break;
+            }
+            case 7:
+            {
+                triangles = calcTrianglesSimply();
 
                 break;
             }
