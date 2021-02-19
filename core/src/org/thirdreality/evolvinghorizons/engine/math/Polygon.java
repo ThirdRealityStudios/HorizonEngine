@@ -570,48 +570,23 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     {
         int vertices = getVectorVertices().length;
 
-        switch(vertices)
+        if(vertices == 3)
         {
+            triangles = new short[]{0,1,2};
+        }
+        else if(vertices == 4)
+        {
+            triangles = new short[]{0,1,2, 0,2,3};
+        }
+        else if(vertices >= 5 && vertices <= 7)
+        {
+            triangles = calcTrianglesSimply();
+        }
+        else
+        {
+            // Will be used if the shape is complex.
 
-            case 3:
-            {
-                triangles = new short[]{0,1,2};
-
-                break;
-            }
-            case 4:
-            {
-                triangles = new short[]{0,1,2, 0,2,3};
-
-                break;
-            }
-            case 5:
-            {
-                triangles = calcTrianglesSimply();
-
-                break;
-            }
-            case 6:
-            {
-                triangles = calcTrianglesSimply();
-
-                break;
-            }
-            case 7:
-            {
-                triangles = calcTrianglesSimply();
-
-                break;
-            }
-
-            default:
-            {
-                // Will be used if the shape is complex.
-
-                triangles = buildTriangles(connectVertices());
-
-                print(triangles);
-            }
+            triangles = buildTriangles(connectVertices());
         }
     }
 

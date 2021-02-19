@@ -23,8 +23,6 @@ public class Renderer
         private Vector2 offset;
         private Vector2 origin;
 
-        private Pixmap buttonBg, buttonFt;
-
         // Every design has its own draw method in order to know how to draw each component.
         // This is a "pre-defined method".
         // Also note! The Viewport given here is only used in order to check things like, whether the context is drawn in a GWindow etc.
