@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Polygon extends com.badlogic.gdx.math.Polygon
@@ -15,14 +14,14 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private ArrayList<Line2D.Float> lineShape;
 
-    public Polygon(float[] vertices)
+    public Polygon(float[] vertices, boolean calculateTriangles)
     {
         super(vertices);
 
-        initData();
+        initData(calculateTriangles);
     }
 
-    private void initData()
+    private void initData(boolean calculateTriangles)
     {
         // Do NOT change the order here of the methods as the values calculated depend on each other!
 
@@ -30,7 +29,10 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
         lineShape = toLine();
 
-        prepareForRendering();
+        if(calculateTriangles)
+        {
+            calculateTriangles();
+        }
     }
 
     @Override
@@ -38,7 +40,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     {
         super.setVertices(vertices);
 
-        initData();
+        initData(true);
     }
 
     public Vector2[] getVectorVertices()
@@ -337,26 +339,15 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private Short[][] connectVertices()
     {
-        if(getVectorVertices().length == 3)
-        {
-            Short[][] triangle = new Short[3][1];
-
-            triangle[0][0] = 0;
-            triangle[1][0] = 1;
-            triangle[2][0] = 2;
-
-            return triangle;
-        }
-
         if(getVectorVertices().length == 4)
         {
             Short[][] triangle = new Short[4][1];
 
-            triangle[0][0] = 0;
+            triangle[0] = new Short[]{0,2};;
 
             triangle[1][0] = 1;
 
-            triangle[2] = new Short[]{2,0};
+            triangle[2][0] = 2;
 
             triangle[3][0] = 3;
 
@@ -439,7 +430,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return triangles;
     }
 
-    private ArrayList<Short[]> buildTriangles(Short[][] connectionsPrepared)
+    private short[] buildTriangles(Short[][] connectionsPrepared)
     {
         ArrayList<Short[]> triangles = new ArrayList<Short[]>();
 
@@ -464,12 +455,37 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             triangles.addAll(trianglesFound);
         }
 
-        for(Short[] s : triangles)
+        int size = 0;
+
+        // Counts the size for the triangle ArrayList to make it work more efficient (without steadily re-creating and copying an array).
+        for(Short[] sA : triangles)
         {
-            print(s);
+            for(Short s : sA)
+            {
+                size++;
+            }
         }
 
-        return triangles;
+        ArrayList<Short> trianglesConverted = new ArrayList<>(size);
+
+        // Copies every triangle node to the ArrayList.
+        for(Short[] sA : triangles)
+        {
+            for(Short s : sA)
+            {
+                trianglesConverted.add(s);
+            }
+        }
+
+        short[] array = new short[size];
+
+        // Copies every value to a normal array.
+        for(int i = 0; i < array.length; i++)
+        {
+            array[i] = trianglesConverted.get(i);
+        }
+
+        return array;
     }
 
     private void print(Short[] s)
@@ -484,11 +500,31 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         System.out.println("]");
     }
 
-    private void prepareForRendering()
+    private void calculateTriangles()
     {
-        buildTriangles(connectVertices());
+        int vertices = getVectorVertices().length;
 
-        triangles = new short[]{0,1,2};
+        switch(vertices)
+        {
+            case 3:
+            {
+                triangles = new short[]{0,1,2};
+
+                break;
+            }
+            case 4:
+            {
+                triangles = new short[]{0,1,2, 0,2,3};
+
+                break;
+            }
+            default:
+            {
+                // Will be used if the shape is complex.
+
+                triangles = buildTriangles(connectVertices());
+            }
+        }
     }
 
     public short[] getTriangles()

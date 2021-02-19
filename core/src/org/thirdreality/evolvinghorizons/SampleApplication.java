@@ -220,7 +220,7 @@ public class SampleApplication extends Game
 
 		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
 
-		float[] vertices = new float[]{50,0, 100,0, 150.1f,50, 150,100, 100,150, 50,150, 0,0};
+		//float[] vertices = new float[]{50,0, 100,0, 150.1f,50, 150,100, 100,150, 50,150, 0,0};
 
 		//float[] vertices = new float[]{0,100,50,100,66.66f,50,116.66f,100,100,150,83.33f,116.66f,50,150};
 
@@ -228,9 +228,9 @@ public class SampleApplication extends Game
 
 		//float[] vertices = new float[]{0,2.5f, 34.5f,11.5f, 27.5f,0, 54.5f,14, 62.5f,4, 74,12, 84.5f,5.5f, 116,21, 83.5f,64.5f, 64.5f,105, 35.5f,63, 27.5f,66.5f};
 
-		//float[] vertices = new float[]{0,0, 10,0, 10,10, 20,10};
+		float[] vertices = new float[]{0,0, 10,0, 10,10, 20,10, 30,20};
 
-		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices);
+		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(vertices, true);
 
 		Line2D.Float line3 = new Line2D.Float(0,0,20,10);
 		Line2D.Float line2 = new Line2D.Float(0,10,20,10);
@@ -245,12 +245,12 @@ public class SampleApplication extends Game
 
 		//short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
 
-		//PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), triangles);//poly.getTriangles());
+		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getVertices(), poly.getTriangles());//poly.getTriangles());
 
-		//PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
-		//polygonSprite.setOrigin(450, 370);
+		PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
+		polygonSprite.setOrigin(450, 370);
 
-		/*
+
 		GPolyButton gPolyButton = new GPolyButton(polygonSprite, "CLICK ME", smallerFont);
 
 		gPolyButton.setActionListener(new GActionListener()
@@ -271,10 +271,6 @@ public class SampleApplication extends Game
 		gPolyButton.getStyle().setTextAlign(1);
 
 		return gPolyButton;
-
-		 */
-
-		return null;
 	}
 
 	private GPolyButton getPolyButton1()
@@ -466,7 +462,7 @@ public class SampleApplication extends Game
 
 		layer0.add(img0);
 
-		//layer1.add(getPolyButton0());
+		layer1.add(getPolyButton0());
 		//layer1.add(getPolyButton1());
 		layer1.add(increaseScale);
 		//layer1.add(moveButton);
