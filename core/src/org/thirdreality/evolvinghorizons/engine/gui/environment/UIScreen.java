@@ -1,11 +1,13 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
+import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 import org.thirdreality.evolvinghorizons.engine.render.Renderer;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 
@@ -17,6 +19,9 @@ public abstract class UIScreen implements Screen
 
     private GComponent[] out;
     private UIScreenHandler uiScreenHandler;
+
+    // This is the navigation speed which is used to move up,down, to the left and to the right with the camera.
+    private float navigationSpeed = 0;
 
     public UIScreen()
     {
@@ -114,9 +119,50 @@ public abstract class UIScreen implements Screen
         uiScreenHandler.zoomSpeed = zoomSpeed;
     }
 
+    public void setNavigationSpeed(float speed)
+    {
+        navigationSpeed = speed;
+    }
+
+    public void navigateByWASD(float delta)
+    {
+        float x = 0;
+        float y = 0;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.W))
+        {
+            y += navigationSpeed;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.S))
+        {
+            y -= navigationSpeed;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.A))
+        {
+            x -= navigationSpeed;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.D))
+        {
+            x += navigationSpeed;
+        }
+
+        x *= delta * uiScreenHandler.zoomSpeed;
+        y *= delta * uiScreenHandler.zoomSpeed;
+
+        RenderSource.orthographicCamera.position.x += x;
+        RenderSource.orthographicCamera.position.y += y;
+    }
+
     @Override
     public void render(float delta)
     {
+        uiScreenHandler.delta = delta;
+
+        navigateByWASD(delta);
+
         Renderer.drawBlankScreen();
 
         drawAllComponents();

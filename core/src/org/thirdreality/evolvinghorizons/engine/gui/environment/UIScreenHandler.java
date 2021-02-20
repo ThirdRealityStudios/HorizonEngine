@@ -1,8 +1,11 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
@@ -33,6 +36,9 @@ public class UIScreenHandler implements InputProcessor
 
 	private UIScreen uiScreen;
 	protected float zoomSpeed = 0;
+	protected float delta = 0;
+
+	private Vector2 cursorPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
 	public UIScreenHandler(UIScreen uiScreen)
 	{
@@ -209,6 +215,9 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
+		cursorPosition.x = screenX;
+		cursorPosition.y = screenY;
+
 		GComponent focused = uiScreen.getFocusedComponent();
 
 		if(focused == null)
@@ -276,10 +285,32 @@ public class UIScreenHandler implements InputProcessor
 		return false;
 	}
 
+	private void navigateToCursor()
+	{
+		Vector3 camPosition = RenderSource.orthographicCamera.position;
+		Vector2 cursorPosition = new Vector2(Gdx.input.getX() + camPosition.x, Gdx.input.getY() + camPosition.y);
+
+		float relCursorPosX = cursorPosition.x - camPosition.x;
+		float relCursorPosY = cursorPosition.y - camPosition.y;
+
+		float xDiff = Gdx.graphics.getWidth() / 2 - relCursorPosX;
+		float yDiff = Gdx.graphics.getHeight() / 2 - relCursorPosY;
+
+		RenderSource.orthographicCamera.position.x -= xDiff * 10 * delta;
+		RenderSource.orthographicCamera.position.y += yDiff * 10 * delta;
+	}
+
 	@Override
 	public boolean scrolled(float amountX, float amountY)
 	{
-		float zoom = RenderSource.orthographicCamera.zoom + amountY * zoomSpeed;
+		float distance = amountY * zoomSpeed;
+
+		float zoom = RenderSource.orthographicCamera.zoom + distance * delta;
+
+		if(zoom >= 1f && distance < 0)
+		{
+			navigateToCursor();
+		}
 
 		// Zoom level may not be below 100% as this causes render bugs.
 		if(zoom >= 1)
