@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.math.LinTools;
+import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
-import org.thirdreality.evolvinghorizons.engine.DisplayContext;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
+import org.thirdreality.evolvinghorizons.engine.HorizonGame;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GRectangle;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
@@ -27,16 +27,13 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButt
 import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.engine.io.ComponentHandler;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SampleApplication extends Game
+public class SampleApplication extends HorizonGame
 {
 	private GRectangle rect;
 
@@ -60,154 +57,42 @@ public class SampleApplication extends Game
 
 	private Font biggerFont, smallerFont;
 
-	private Viewport primaryViewport;
-
-	// For simulating on a GWindow.
-	private Viewport viewportGWindow0;
-
-	private DisplayContext displayContext;
-
-	private ComponentHandler input;
-
-	private CopyOnWriteArrayList<Viewport> viewports;
-
-	private Screen gameScreen;
+	private UIScreen gui;
 
 	private boolean exitGame = false;
-
-	private InputProcessor gameInput;
 
 	@Override
 	public void create()
 	{
-		getPolyButton0();
-
-		gameInput = new InputProcessor()
-		{
+		gui = new UIScreen() {
 			@Override
-			public boolean keyDown(int keycode)
-			{
-				return false;
+			public void resize(int width, int height) {
+
 			}
 
 			@Override
-			public boolean keyUp(int keycode)
-			{
-				return false;
+			public void pause() {
+
 			}
 
 			@Override
-			public boolean keyTyped(char character)
-			{
-				return false;
-			}
+			public void resume() {
 
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button)
-			{
-				return false;
-			}
-
-			@Override
-			public boolean touchUp(int screenX, int screenY, int pointer, int button)
-			{
-				return false;
-			}
-
-			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer)
-			{
-				return false;
-			}
-
-			@Override
-			public boolean mouseMoved(int screenX, int screenY)
-			{
-				return false;
-			}
-
-			@Override
-			public boolean scrolled(float amountX, float amountY)
-			{
-				return false;
 			}
 		};
+
+		gui.setComponents(new GComponent[]{getPolyButton0()});
 
 		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
 		smallerFont = new Font(mcFont, 18);
 		biggerFont = new Font(mcFont, 25);
 
-		initViewport();
-
-		// You always need to have at least one input processor active currently..
-		this.input = new ComponentHandler(primaryViewport, gameInput);
-
-		Gdx.input.setInputProcessor(input);
-
-		this.displayContext = new DisplayContext();
-		this.displayContext.setViewport(primaryViewport);
-
 		initComponents();
 
 		postInit();
 
-		gameScreen = new Screen()
-		{
-			@Override
-			public void show()
-			{
-
-			}
-
-			@Override
-			public void render(float delta)
-			{
-				displayContext.render(delta);
-			}
-
-			@Override
-			public void resize(int width, int height)
-			{
-
-			}
-
-			@Override
-			public void pause()
-			{
-
-			}
-
-			@Override
-			public void resume()
-			{
-
-			}
-
-			@Override
-			public void hide()
-			{
-
-			}
-
-			@Override
-			public void dispose()
-			{
-
-			}
-		};
-
-		setScreen(gameScreen);
+		setScreen(gui);
 	}
-
-	@Override
-	public void render()
-	{
-		// Renders the screens with the superclass method.
-		super.render();
-	}
-	
-	@Override
-	public void dispose(){}
 
 	private GPolyButton getPolyButton0()
 	{
@@ -323,9 +208,6 @@ public class SampleApplication extends Game
 
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
 
-		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
-		viewportGWindow0 = new Viewport(true);
-
 		//window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
 		//window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
@@ -373,7 +255,7 @@ public class SampleApplication extends Game
 			@Override
 			public void onClick()
 			{
-				primaryViewport.getOffset().add(1, 0);
+
 			}
 		});
 
@@ -456,13 +338,6 @@ public class SampleApplication extends Game
 		img0.getLogic().setActionOnHover(false);
 	}
 
-	public void initViewport()
-	{
-		primaryViewport = new Viewport(false);
-		primaryViewport.setOffset(new Vector2(0, 75));
-		//primaryViewport.setScale(1f);
-	}
-
 	public void setupDisplayLayers()
 	{
 		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
@@ -471,40 +346,23 @@ public class SampleApplication extends Game
 
 		layer1.add(getPolyButton0());
 		//layer1.add(getPolyButton1());
-		//layer1.add(increaseScale);
-		//layer1.add(moveButton);
-		//layer1.add(checkbox1);
+		layer1.add(increaseScale);
+		layer1.add(moveButton);
+		layer1.add(checkbox1);
 
-		//layer2_shared.add(description);
-		//layer2_shared.add(exit);
+		layer2_shared.add(description);
+		layer2_shared.add(exit);
 
-		//layer2_shared.add(input3);
-		//layer2_shared.add(input2);
-		//layer2_shared.add(input1);
+		layer2_shared.add(input3);
+		layer2_shared.add(input2);
+		layer2_shared.add(input1);
 
-		//layer2_shared.add(gSB);
+		layer2_shared.add(gSB);
 		//layer2_shared.add(rect);
 
 
 		//displayContext.getViewport().getWindowManager().addWindow(window1);
 		//displayContext.getViewport().getWindowManager().addWindow(window0);
-	}
-
-	public void setupGWindow0()
-	{
-		GLayer layer5 = new GLayer(0, true);
-
-		Texture imgMountain = new Texture(Gdx.files.internal(Path.MEDIA_FOLDER + File.separator + "MountainLake.jpg"));
-
-		GImage img0 = new GImage(new Rectangle(0,0,100, 365), imgMountain);
-
-		layer5.add(img0);
-
-		viewportGWindow0.addLayer(layer5);
-		viewportGWindow0.addLayer(layer2_shared);
-		viewportGWindow0.addLayer(layer1);
-
-		//window0.setViewport(viewportGWindow0);
 	}
 
 	public void postInit()
@@ -517,12 +375,10 @@ public class SampleApplication extends Game
 
 		setupDisplayLayers();
 
-		displayContext.getViewport().addLayer(layer0);
-		displayContext.getViewport().addLayer(layer1);
-		displayContext.getViewport().addLayer(layer2_shared);
-		displayContext.getViewport().addLayer(layer3);
-		displayContext.getViewport().addLayer(layer4);
-
-		setupGWindow0();
+		//renderContext.getRenderScreen().addLayer(layer0);
+		//renderContext.getRenderScreen().addLayer(layer1);
+		//renderContext.getRenderScreen().addLayer(layer2_shared);
+		//renderContext.getRenderScreen().addLayer(layer3);
+		//renderContext.getRenderScreen().addLayer(layer4);
 	}
 }

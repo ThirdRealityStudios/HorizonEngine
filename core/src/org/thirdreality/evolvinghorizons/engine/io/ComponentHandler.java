@@ -1,9 +1,9 @@
 package org.thirdreality.evolvinghorizons.engine.io;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
@@ -11,15 +11,14 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTi
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickOption;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
+import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
 
 public class ComponentHandler implements InputProcessor
 {
 	private int keyDown, keyUp;
 	private char keyTyped;
 
-	private InputProcessor customInput;
 	private MouseUtility mouseUtility;
-	private Viewport viewport;
 
 	// Below are the components which have been saved temporarily.
 	private GTickBoxList selectionBoxFocused;
@@ -32,45 +31,33 @@ public class ComponentHandler implements InputProcessor
 
 	private GComponent lastlyFocused;
 
-	public ComponentHandler(Viewport viewport, InputProcessor input)
+	private UIScreen uiScreen;
+
+	public ComponentHandler(UIScreen uiScreen)
 	{
-		customInput = input;
-
-		this.viewport = viewport;
-
+		this.uiScreen = uiScreen;
 		this.mouseUtility = new MouseUtility();
-	}
-
-	public void setCurrentViewport(Viewport viewport)
-	{
-		this.viewport = viewport;
 	}
 
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		boolean flag = customInput.keyDown(keycode);
-
 		this.keyDown = keycode;
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode)
 	{
-		boolean flag = customInput.keyUp(keycode);
-
 		this.keyUp = keycode;
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character)
 	{
-		boolean flag = customInput.keyTyped(character);
-
 		this.keyTyped = character;
 
 		if(textfieldFocused != null)
@@ -81,19 +68,17 @@ public class ComponentHandler implements InputProcessor
 			}
 		}
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		boolean flag = customInput.touchDown(screenX, screenY, pointer, button);
-
-		GComponent focused = mouseUtility.getFocusedComponent(viewport);
+		GComponent focused = uiScreen.getFocusedComponent();
 
 		if(focused == null)
 		{
-			return flag;
+			return false;
 		}
 
 		switch(focused.getType())
@@ -141,14 +126,12 @@ public class ComponentHandler implements InputProcessor
 			}
 		}
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		boolean flag = customInput.touchUp(screenX, screenY, pointer, button);
-
 		if(lastlyFocused != null)
 		{
 			switch(lastlyFocused.getType())
@@ -207,33 +190,29 @@ public class ComponentHandler implements InputProcessor
 			}
 		}
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		boolean flag = customInput.touchDragged(screenX, screenY, pointer);
-
 		if(lastlyHoveredOption != null)
 		{
 			lastlyHoveredOption.setBackgroundColor(null);
 			lastlyHoveredOption = null;
 		}
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		boolean flag = customInput.mouseMoved(screenX, screenY);
-
-		GComponent focused = mouseUtility.getFocusedComponent(viewport);
+		GComponent focused = uiScreen.getFocusedComponent();
 
 		if(focused == null)
 		{
-			return flag;
+			return false;
 		}
 
 		switch(focused.getType())
@@ -293,14 +272,12 @@ public class ComponentHandler implements InputProcessor
 
 		lastlyFocused = focused;
 
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean scrolled(float amountX, float amountY)
 	{
-		boolean flag = customInput.scrolled(amountX, amountY);
-
-		return flag;
+		return false;
 	}
 }

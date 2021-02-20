@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.GLogic;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
@@ -32,7 +31,7 @@ public abstract class GComponent implements Serializable
 	// Relates to the offset.
 	private boolean movable = true;
 
-	private Vector2 origin, offset;
+	private Vector2 offset;
 
 	private GStyle style;
 	
@@ -124,23 +123,8 @@ public abstract class GComponent implements Serializable
 		return actions != null;
 	}
 
-	public Vector2 getOrigin()
-	{
-		return origin;
-	}
-
-	public void setOrigin(Viewport viewport)
-	{
-		this.origin = viewport.getOrigin();
-	}
-
 	public Vector2 getOffset()
 	{
 		return offset;
-	}
-
-	public void setOffset(Viewport viewport)
-	{
-		this.offset = viewport.getOffset();
 	}
 }

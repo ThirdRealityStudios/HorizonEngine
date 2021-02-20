@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.container.GLogic;
 import org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.window.GWindowButton;
@@ -34,10 +33,6 @@ public class GWindow extends GComponent
 	// To calculate it, you first you have remember the point when the window started to be re-moved,
 	// and this is where you go here... :
 	private Vector2 movementOrigin = null;
-
-	// This is the simulated viewport which you can apply per method setViewport(...).
-	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
-	private Viewport viewport;
 
 	// GWindows are prioritized, meaning the priority decides whether a window is on top of another (priority must greater) and the same principle goes for the other way around.
 	// Also, this variable is protected because it should only be used by the GWindowManager.

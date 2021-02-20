@@ -11,4 +11,6 @@ public interface Settings
     public static final Dimension SYSTEM_SCREEN = Toolkit.getDefaultToolkit().getScreenSize();
 
     public static Dimension SCREEN_SIZE = new Dimension(SYSTEM_SCREEN.width - MARGIN,SYSTEM_SCREEN.height - MARGIN);
+
+    public static int MAX_RENDERED_COMPONENTS = 128;
 }

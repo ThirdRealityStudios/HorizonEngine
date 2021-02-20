@@ -1,13 +1,14 @@
 package org.thirdreality.evolvinghorizons.engine.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.GWindow;
@@ -20,121 +21,95 @@ import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class Renderer
 {
-        private Vector2 offset;
-        private Vector2 origin;
+    private Vector2 offset;
+    private Vector2 origin;
 
-        // Every design has its own draw method in order to know how to draw each component.
-        // This is a "pre-defined method".
-        // Also note! The Viewport given here is only used in order to check things like, whether the context is drawn in a GWindow etc.
-        // Simulated viewports are hereby very restricted, especially if it's about the ability of whether a component is movable or not.
-        // The draw adapter doesn't care then because this feature is only supported within the Displays Viewport.
-        public static void drawContext(Viewport target, GComponent c)
-        {
-            // For the case there is an image supplied to the GComponent object,
-            // it is considered to be rendered.
-            // The programmer needs to know how to use the features GComponent delivers and has to ensure
-            // a supplied image will not get in conflict with other settings.
-            switch(c.getType())
-            {
-                case "image":
-                {
-                    drawImage(target, c);
-
-                    break;
-                }
-
-                case "polybutton":
-                {
-                    drawPolyButton(target, c);
-
-                    break;
-                }
-
-                case "description":
-                {
-                    drawDescription(target, c);
-
-                    break;
-                }
-
-                case "path":
-                {
-                    //drawPath(target, c);
-
-                    break;
-                }
-
-                case "textfield":
-                {
-                    drawTextfield(target, c);
-
-                    break;
-                }
-
-                case "checkbox":
-                {
-                    drawCheckbox(target, c);
-
-                    break;
-                }
-
-                case "selectionbox":
-                {
-                    drawSelectionBox(target, c);
-
-                    break;
-                }
-
-                case "rectangle":
-                {
-                    drawRectangle(target, c);
-
-                    break;
-                }
-
-                case "button":
-                {
-                    drawButton(target, c);
-
-                    break;
-                }
-
-                case "window":
-                {
-                    //drawWindow(target, c);
-                }
-
-                default:
-                {
-
-                }
-            }
-        }
-
-    // In every cycle this will set the component to the correct position,
-    // meaning it regards the current origin and offset of the Viewport.
-    private static void syncViewportPosition(Viewport viewport, GComponent component)
+    // Every design has its own draw method in order to know how to draw each component.
+    // This is a "pre-defined method".
+    // Also note! The Viewport given here is only used in order to check things like, whether the context is drawn in a GWindow etc.
+    // Simulated viewports are hereby very restricted, especially if it's about the ability of whether a component is movable or not.
+    // The draw adapter doesn't care then because this feature is only supported within the Displays Viewport.
+    public static void drawContext(GComponent c)
     {
-        Vector2 position = new Vector2(component.getStyle().getPosition());
-
-        if(viewport.getOrigin() != component.getOrigin())
+        // For the case there is an image supplied to the GComponent object,
+        // it is considered to be rendered.
+        // The programmer needs to know how to use the features GComponent delivers and has to ensure
+        // a supplied image will not get in conflict with other settings.
+        switch(c.getType())
         {
-            component.setOrigin(viewport);
-
-            position.add(viewport.getOrigin().sub(component.getOrigin()));
-        }
-
-        if(component.getStyle().isMovableForViewport())
-        {
-            if(viewport.getOffset() != component.getOffset())
+            case "image":
             {
-                component.setOffset(viewport);
+                drawImage(c);
 
-                position.add(viewport.getOffset().sub(component.getOffset()));
+                break;
+            }
+
+            case "polybutton":
+            {
+                drawPolyButton(c);
+
+                break;
+            }
+
+            case "description":
+            {
+                drawDescription(c);
+
+                break;
+            }
+
+            case "path":
+            {
+                //drawPath(c);
+
+                break;
+            }
+
+            case "textfield":
+            {
+                drawTextfield(c);
+
+                break;
+            }
+
+            case "checkbox":
+            {
+                drawCheckbox(c);
+
+                break;
+            }
+
+            case "selectionbox":
+            {
+                drawSelectionBox(c);
+
+                break;
+            }
+
+            case "rectangle":
+            {
+                drawRectangle(c);
+
+                break;
+            }
+
+            case "button":
+            {
+                drawButton(c);
+
+                break;
+            }
+
+            case "window":
+            {
+                //drawWindow(c);
+            }
+
+            default:
+            {
+
             }
         }
-
-        component.getStyle().getBounds().setPosition(position);
     }
 
     @Deprecated
@@ -171,221 +146,202 @@ public class Renderer
         return (component.getStyle().getColor() == null) ? componentFg : component.getStyle().getColor();
     }
 
-        @Deprecated
-        private static void drawRectangle(Viewport viewport, GComponent c)
+    // In the beginning this will just draw a blank screen which will erase the content of the last render cycle.
+    public static void drawBlankScreen()
+    {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+    @Deprecated
+    private static void drawRectangle(GComponent c)
+    {
+        Rectangle rect = new Rectangle(c.getStyle().getBounds());
+
+        RenderSource.getPixmap().drawRectangle((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
+        RenderSource.getTexture().draw(RenderSource.getPixmap(), 0, 0);
+    }
+
+    @Deprecated
+    private static void drawDescription(GComponent c)
+    {
+        GDescription description = (GDescription) c;
+
+        Vector2 position = new Vector2(description.getStyle().getBounds().getX(), description.getStyle().getBounds().getY());
+
+        description.getStyle().setBounds(description.createBoundsAt(position));
+
+        Font font = description.getStyle().getFont();
+
+        RenderSource.getSpriteBatch().begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(), description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+        RenderSource.getSpriteBatch().end();
+    }
+
+    private static void drawImage(GComponent c)
+    {
+        // Represents simply the outer bounds of the component.
+        Rectangle bounds = c.getStyle().getBounds();
+
+        RenderSource.getSpriteBatch().begin();
+        RenderSource.getSpriteBatch().draw(c.getStyle().getImage(), bounds.x, bounds.y, bounds.width, bounds.height);
+        RenderSource.getSpriteBatch().end();
+    }
+
+    // Needs to be updated with offset and scale ability from the Viewports settings.
+    // Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
+    @Deprecated
+    private static void drawPath(GComponent c){}
+
+    @Deprecated
+    private static void drawCheckbox(GComponent c)
+    {
+        GCheckbox checkbox = (GCheckbox) c;
+
+        RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+
+        // Represents simply the outer bounds of the component.
+        Rectangle background = new Rectangle(c.getStyle().getBounds());
+
         {
-            Rectangle rect = new Rectangle(c.getStyle().getBounds());
+            Vector2 bgPosition = new Vector2(background.x, background.y);
 
-            Vector2 pos = new Vector2(rect.x, rect.y).add(viewport.getOrigin());
-
-            if(c.getStyle().isMovableForViewport())
-            {
-                pos.add(viewport.getOffset());
-            }
-
-            rect.setPosition(pos);
-
-            RenderSource.getPixmap().drawRectangle((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
-            RenderSource.getTexture().draw(RenderSource.getPixmap(), 0, 0);
+            background.setPosition(bgPosition);
         }
 
-        @Deprecated
-        private static void drawDescription(Viewport viewport, GComponent c)
+        float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
+
+        Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
+
+        RenderSource.getShapeRenderer().setColor(ColorScheme.checkboxBg);
+        RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.width);
+
+        RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(c));
+        RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.width);
+
+        RenderSource.getShapeRenderer().end();
+
+        if(checkbox.isChecked())
         {
-            GDescription description = (GDescription) c;
+            Texture checkSymbol = c.getStyle().getImage();
 
-            syncViewportPosition(viewport, description);
-
-            Vector2 position = new Vector2(description.getStyle().getBounds().getX(), description.getStyle().getBounds().getY());
-
-            description.getStyle().setBounds(description.createBoundsAt(position));
-
-            Font font = description.getStyle().getFont();
+            // Simply the square size of the image.
+            // The image is saved with square dimensions,
+            // so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
+            float sizePx = foreground.width;
 
             RenderSource.getSpriteBatch().begin();
-            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+            RenderSource.getSpriteBatch().draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
             RenderSource.getSpriteBatch().end();
         }
+    }
 
-        private static void drawImage(Viewport viewport, GComponent c)
+    private static void drawRectangle(Rectangle bounds, float borderThicknessPx)
+    {
+        RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxBg);
+        RenderSource.getShapeRenderer().rect(bounds.x, bounds.y, bounds.width, bounds.height);
+        RenderSource.getShapeRenderer().end();
+
+        Rectangle foreground = new Rectangle(bounds.x + borderThicknessPx, bounds.y + borderThicknessPx, bounds.width - 2*borderThicknessPx, bounds.height - 2*borderThicknessPx);
+
+        RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxFg);
+        RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height);
+        RenderSource.getShapeRenderer().end();
+    }
+
+    @Deprecated
+    // Work on this (text displaying)!
+    private static void drawSelectionBox(GComponent c)
+    {
+        GTickBoxList selectionBox = (GTickBoxList) c;
+
+        drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
+
+        for(int i = 0; i < selectionBox.size(); i++)
         {
-            // Represents simply the outer bounds of the component.
-            Rectangle bounds = c.getStyle().getBounds();
+            Rectangle tickBox = selectionBox.getOption(i).getTickBox();
 
-            Vector2 position = new Vector2(bounds.x, bounds.y).add(viewport.getOrigin());
+            drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
 
-            if(c.getStyle().isMovableForViewport())
-            {
-                position.add(viewport.getOffset());
-            }
+            Rectangle textBounds = selectionBox.getOption(i).getTextBox();
+
+            float x = textBounds.x;
+            float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
 
             RenderSource.getSpriteBatch().begin();
-            RenderSource.getSpriteBatch().draw(c.getStyle().getImage(), position.x, position.y, bounds.width, bounds.height);
+            selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(), selectionBox.getText(i), x, y);
             RenderSource.getSpriteBatch().end();
-        }
 
-        // Needs to be updated with offset and scale ability from the Viewports settings.
-        // Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
-        @Deprecated
-        private static void drawPath(Viewport viewport, GComponent c){}
+            float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
 
-        @Deprecated
-        private static void drawCheckbox(Viewport viewport, GComponent c)
-        {
-            GCheckbox checkbox = (GCheckbox) c;
+            // Simply the square size of the image.
+            float sizePx = tickBox.width - 2*borderThicknessPx;
 
-            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            Color hoverColor = selectionBox.getOption(i).getBackgroundColor();
 
-            // Represents simply the outer bounds of the component.
-            Rectangle background = new Rectangle(c.getStyle().getBounds());
-
+            if(hoverColor != null)
             {
-                Vector2 bgPosition = new Vector2(background.x, background.y);
-                bgPosition.add(viewport.getOrigin());
-
-                if (c.getStyle().isMovableForViewport())
-                {
-                    bgPosition.add(viewport.getOffset());
-                }
-
-                background.setPosition(bgPosition);
+                RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+                RenderSource.getShapeRenderer().setColor(hoverColor);
+                RenderSource.getShapeRenderer().rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                RenderSource.getShapeRenderer().end();
             }
 
-            float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
-
-            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
-
-            RenderSource.getShapeRenderer().setColor(ColorScheme.checkboxBg);
-            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.width);
-
-            RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(c));
-            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.width);
-
-            RenderSource.getShapeRenderer().end();
-
-            if(checkbox.isChecked())
+            if(selectionBox.isSelected(i))
             {
-                Texture checkSymbol = c.getStyle().getImage();
-
-                // Simply the square size of the image.
-                // The image is saved with square dimensions,
-                // so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
-                float sizePx = foreground.width;
+                Texture tickSymbol = c.getStyle().getImage();
 
                 RenderSource.getSpriteBatch().begin();
-                RenderSource.getSpriteBatch().draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
+                RenderSource.getSpriteBatch().draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
                 RenderSource.getSpriteBatch().end();
             }
         }
 
-        private static void drawRectangle(Rectangle bounds, float borderThicknessPx)
-        {
-            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxBg);
-            RenderSource.getShapeRenderer().rect(bounds.x, bounds.y, bounds.width, bounds.height);
-            RenderSource.getShapeRenderer().end();
+    }
 
-            Rectangle foreground = new Rectangle(bounds.x + borderThicknessPx, bounds.y + borderThicknessPx, bounds.width - 2*borderThicknessPx, bounds.height - 2*borderThicknessPx);
+    @Deprecated
+    protected static void drawPolyButton(GComponent c)
+    {
+        GPolyButton polyButton = (GPolyButton) c;
 
-            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.getShapeRenderer().setColor(ColorScheme.selectionBoxFg);
-            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height);
-            RenderSource.getShapeRenderer().end();
-        }
+        RenderSource.getPolygonSpriteBatch().begin();
+        polyButton.getPolygonSprite().draw(RenderSource.getPolygonSpriteBatch());
+        RenderSource.getPolygonSpriteBatch().end();
+    }
 
-        @Deprecated
-        // Work on this (text displaying)!
-        private static void drawSelectionBox(Viewport viewport, GComponent c)
-        {
-            GTickBoxList selectionBox = (GTickBoxList) c;
+    private static void drawButton(GComponent component)
+    {
+        GButton button = (GButton) component;
 
-            drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
+        String value = button.getTitle();
 
-            for(int i = 0; i < selectionBox.size(); i++)
-            {
-                Rectangle tickBox = selectionBox.getOption(i).getTickBox();
+        Vector2 position = new Vector2(button.getStyle().getBounds().getX(), button.getStyle().getBounds().getY());
 
-                drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx());
+        Rectangle background = button.createBoundsAt(position);
 
-                Rectangle textBounds = selectionBox.getOption(i).getTextBox();
+        RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer().setColor(ColorScheme.buttonBg);
+        RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
 
-                float x = textBounds.x;
-                float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
+        float borderThicknessPx = button.getStyle().getBorderProperties().getBorderThicknessPx();
 
-                RenderSource.getSpriteBatch().begin();
-                selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(), selectionBox.getText(i), x, y);
-                RenderSource.getSpriteBatch().end();
+        float padding = button.getStyle().getPadding();
 
-                float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
+        Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-                // Simply the square size of the image.
-                float sizePx = tickBox.width - 2*borderThicknessPx;
+        RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(component));
+        RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
+        RenderSource.getShapeRenderer().end();
 
-                Color hoverColor = selectionBox.getOption(i).getBackgroundColor();
+        //float fontSize = textfield.getStyle().getFont().getFontSize();
 
-                if(hoverColor != null)
-                {
-                    RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-                    RenderSource.getShapeRenderer().setColor(hoverColor);
-                    RenderSource.getShapeRenderer().rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                    RenderSource.getShapeRenderer().end();
-                }
+        Font font = button.getStyle().getFont();
 
-                if(selectionBox.isSelected(i))
-                {
-                    Texture tickSymbol = c.getStyle().getImage();
-
-                    RenderSource.getSpriteBatch().begin();
-                    RenderSource.getSpriteBatch().draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                    RenderSource.getSpriteBatch().end();
-                }
-            }
-
-        }
-
-        @Deprecated
-        protected static void drawPolyButton(Viewport viewport, GComponent c)
-        {
-            GPolyButton polyButton = (GPolyButton) c;
-
-            RenderSource.getPolygonSpriteBatch().begin();
-            polyButton.getPolygonSprite().draw(RenderSource.getPolygonSpriteBatch());
-            RenderSource.getPolygonSpriteBatch().end();
-        }
-
-        private static void drawButton(Viewport viewport, GComponent component)
-        {
-            GButton button = (GButton) component;
-
-            String value = button.getTitle();
-
-            syncViewportPosition(viewport, component);
-
-            Vector2 position = new Vector2(button.getStyle().getBounds().getX(), button.getStyle().getBounds().getY());
-
-            Rectangle background = button.createBoundsAt(position);
-
-            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.getShapeRenderer().setColor(ColorScheme.buttonBg);
-            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
-
-            float borderThicknessPx = button.getStyle().getBorderProperties().getBorderThicknessPx();
-
-            float padding = button.getStyle().getPadding();
-
-            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
-
-            RenderSource.getShapeRenderer().setColor(getUpdatedForegroundColor(component));
-            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
-            RenderSource.getShapeRenderer().end();
-
-            //float fontSize = textfield.getStyle().getFont().getFontSize();
-
-            Font font = button.getStyle().getFont();
-
-            RenderSource.getSpriteBatch().begin();
-            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
-            RenderSource.getSpriteBatch().end();
+        RenderSource.getSpriteBatch().begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
+        RenderSource.getSpriteBatch().end();
             /*
             GButton button = (GButton) component;
 
@@ -420,46 +376,44 @@ public class Renderer
             RenderSource.getShapeRenderer().rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
             RenderSource.getShapeRenderer().end();
              */
-        }
+    }
 
-        @Deprecated
-        private static void drawTextfield(Viewport viewport, GComponent component)
-        {
-            GTextfield textfield = (GTextfield) component;
+    @Deprecated
+    private static void drawTextfield(GComponent component)
+    {
+        GTextfield textfield = (GTextfield) component;
 
-            String value = textfield.getInputValue();
+        String value = textfield.getInputValue();
 
-            syncViewportPosition(viewport, component);
+        Vector2 position = new Vector2(textfield.getStyle().getBounds().getX(), textfield.getStyle().getBounds().getY());
 
-            Vector2 position = new Vector2(textfield.getStyle().getBounds().getX(), textfield.getStyle().getBounds().getY());
+        Rectangle background = textfield.getStyle().getBounds();
 
-            Rectangle background = textfield.getStyle().getBounds();
+        RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldBg);
+        RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
 
-            RenderSource.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldBg);
-            RenderSource.getShapeRenderer().rect(background.x, background.y, background.width, background.height);
+        float borderThicknessPx = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
 
-            float borderThicknessPx = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
+        float padding = textfield.getStyle().getPadding();
 
-            float padding = textfield.getStyle().getPadding();
+        Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-            Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
+        RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldFg);
+        RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
+        RenderSource.getShapeRenderer().end();
 
-            RenderSource.getShapeRenderer().setColor(ColorScheme.textfieldFg);
-            RenderSource.getShapeRenderer().rect(foreground.x, foreground.y, foreground.width, foreground.height );
-            RenderSource.getShapeRenderer().end();
+        Font font = textfield.getStyle().getFont();
 
-            Font font = textfield.getStyle().getFont();
+        RenderSource.getSpriteBatch().begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
+        RenderSource.getSpriteBatch().end();
+    }
 
-            RenderSource.getSpriteBatch().begin();
-            font.getBitmapFont().draw(RenderSource.getSpriteBatch(), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
-            RenderSource.getSpriteBatch().end();
-        }
-
-        @Deprecated
-        public void drawWindow(Viewport viewport, GComponent c)
-        {
-            GWindow window = (GWindow) c;
-        }
+    @Deprecated
+    public void drawWindow(GComponent c)
+    {
+        GWindow window = (GWindow) c;
+    }
 
 }

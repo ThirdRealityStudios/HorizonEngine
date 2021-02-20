@@ -6,8 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.Viewport;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
 
 public class MouseUtility
 {
@@ -43,7 +43,7 @@ public class MouseUtility
 
 	public MouseUtility()
 	{
-		cursorLocation = getCurrentCursorLocation();
+		cursorLocation = new Vector2();
 	}
 
 	@Deprecated
@@ -86,26 +86,6 @@ public class MouseUtility
 	{
 		return new Vector2(Gdx.input.getX(), -1 * (Gdx.input.getY() - Gdx.graphics.getHeight()));
 	}
-	
-	// Tests if the cursor is on the position of a component.
-	// Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
-	// Returns 'false' if target is 'null'.
-	public static boolean isFocusing(Viewport source, GComponent target)
-	{
-		// If there is no component given or interaction is forbidden,
-		// this method assumes no component was found,
-		// pretending the cursor is not over a component.
-		if(target == null || source == null || (target != null && !target.getLogic().isInteractionAllowed()) || !source.isContained(target))
-		{
-			return false;
-		}
-
-		Vector2 position = new Vector2(source.getOffset()).add(target.getStyle().getPosition());
-
-		Rectangle componentBackground = new Rectangle(position.x, position.y, target.getStyle().getBounds().width, target.getStyle().getBounds().height);
-
-		return componentBackground.contains(getCurrentCursorLocation());
-	}
 
 	public static boolean isClickingLeft()
 	{
@@ -114,60 +94,10 @@ public class MouseUtility
 
 	@Deprecated
 	// Tests if the user is clicking a component.
-	public static boolean isClickingLeft(Viewport source, GComponent component)
+	public static boolean isClickingLeft(UIScreen source, GComponent component)
 	{
-		return isFocusing(source, component) && isClickingLeft();
+		return source.isFocusing(component) && isClickingLeft();
 	}
 	
-	// Returns the first component which is focused by the cursor.
-	// Makes the UI more efficient by breaking at the first component already.
-	// Returns null if there is no such component.
-	public static GComponent getFocusedComponent(Viewport source)
-	{
-		GComponent firstMatch = null;
-		
-		if(source != null)
-		{
-				for(GComponent selected : source.getComponentOutput())
-				{
-					boolean insideComponent = isFocusing(source, selected);
-					
-					// Returns the first component which is focused by the mouse cursor.
-					if(insideComponent)
-					{
-						// Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
-						if(selected.getLogic().isFocusable())
-						{
-							firstMatch = selected;
-						}
-						
-						break;
-					}
-			
-			}
-		}
-		
-		
-		// Returns the first component which is focused by the mouse cursor.
-		return firstMatch;
-	}
-	
-	// Checks whether the cursor is over any GUInness component.
-	// Should be avoided if used too often because of performance reasons.
-	public static boolean isFocusingAny(Viewport source, ArrayList<String> exceptionalTypes)
-	{
-		GComponent focused = getFocusedComponent(source);
-		
-		boolean assigned = focused != null;
-		
-		for(String type : exceptionalTypes)
-		{
-			if(assigned && (focused.getType().contentEquals(type)))
-			{
-				return false;
-			}
-		}
-		
-		return assigned;
-	}
+
 }
