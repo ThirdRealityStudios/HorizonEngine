@@ -11,8 +11,9 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTi
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
+import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 
-public class UIHandler implements InputProcessor
+public class UIScreenHandler implements InputProcessor
 {
 	private int keyDown, keyUp;
 	private char keyTyped;
@@ -31,8 +32,9 @@ public class UIHandler implements InputProcessor
 	private GComponent lastlyFocused;
 
 	private UIScreen uiScreen;
+	protected float zoomSpeed = 0;
 
-	public UIHandler(UIScreen uiScreen)
+	public UIScreenHandler(UIScreen uiScreen)
 	{
 		this.uiScreen = uiScreen;
 		this.mouseUtility = new MouseUtility();
@@ -277,6 +279,14 @@ public class UIHandler implements InputProcessor
 	@Override
 	public boolean scrolled(float amountX, float amountY)
 	{
+		float zoom = RenderSource.orthographicCamera.zoom + amountY * zoomSpeed;
+
+		// Zoom level may not be below 100% as this causes render bugs.
+		if(zoom >= 1)
+		{
+			RenderSource.orthographicCamera.zoom = zoom;
+		}
+
 		return false;
 	}
 }
