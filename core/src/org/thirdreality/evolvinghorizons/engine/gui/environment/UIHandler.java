@@ -1,6 +1,5 @@
-package org.thirdreality.evolvinghorizons.engine.io;
+package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
@@ -11,9 +10,9 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTi
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickOption;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
-import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
+import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
 
-public class ComponentHandler implements InputProcessor
+public class UIHandler implements InputProcessor
 {
 	private int keyDown, keyUp;
 	private char keyTyped;
@@ -33,7 +32,7 @@ public class ComponentHandler implements InputProcessor
 
 	private UIScreen uiScreen;
 
-	public ComponentHandler(UIScreen uiScreen)
+	public UIHandler(UIScreen uiScreen)
 	{
 		this.uiScreen = uiScreen;
 		this.mouseUtility = new MouseUtility();

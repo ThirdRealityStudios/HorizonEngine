@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
+import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.HorizonGame;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
@@ -82,6 +82,8 @@ public class SampleApplication extends HorizonGame
 		};
 
 		gui.setComponents(new GComponent[]{getPolyButton0()});
+
+		gui.setZoomSpeed(0.5f);
 
 		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
 		smallerFont = new Font(mcFont, 18);

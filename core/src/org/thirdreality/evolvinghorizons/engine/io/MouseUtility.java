@@ -1,13 +1,10 @@
 package org.thirdreality.evolvinghorizons.engine.io;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.render.screen.UIScreen;
+import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
 
 public class MouseUtility
 {

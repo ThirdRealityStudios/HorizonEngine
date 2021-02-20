@@ -1,40 +1,92 @@
-package org.thirdreality.evolvinghorizons.engine.render.screen;
+package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.engine.io.ComponentHandler;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 import org.thirdreality.evolvinghorizons.engine.render.Renderer;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.settings.Settings;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class UIScreen implements Screen
 {
     private static final long serialVersionUID = Meta.serialVersionUID;
 
     private GComponent[] out;
+    private UIHandler UIHandler;
+    private InputProcessor inputProcessor;
 
-    private ComponentHandler componentHandler;
-
-    private boolean isRenderingActive = false;
+    private float zoomSpeed = 0;
 
     public UIScreen()
     {
         out = new GComponent[0];
 
-        componentHandler = new ComponentHandler(this);
+        UIHandler = new UIHandler(this);
+
+        inputProcessor = new InputProcessor()
+        {
+            @Override
+            public boolean keyDown(int keycode)
+            {
+                return UIHandler.keyDown(keycode);
+            }
+
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                return UIHandler.keyUp(keycode);
+            }
+
+            @Override
+            public boolean keyTyped(char character)
+            {
+                return UIHandler.keyTyped(character);
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button)
+            {
+                return UIHandler.touchDown(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button)
+            {
+                return UIHandler.touchUp(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer)
+            {
+                return UIHandler.touchDragged(screenX, screenY, pointer);
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY)
+            {
+                return UIHandler.mouseMoved(screenX, screenY);
+            }
+
+            @Override
+            public boolean scrolled(float amountX, float amountY)
+            {
+                float zoom = RenderSource.orthographicCamera.zoom + amountY * zoomSpeed;
+
+                // Zoom level may not be below 100% as this causes render bugs.
+                if(zoom >= 1)
+                {
+                    RenderSource.orthographicCamera.zoom = zoom;
+                }
+
+                return UIHandler.scrolled(amountX, amountY);
+            }
+        };
     }
 
     public void setComponents(GComponent[] components)
@@ -120,6 +172,11 @@ public abstract class UIScreen implements Screen
         }
     }
 
+    public void setZoomSpeed(float zoomSpeed)
+    {
+        this.zoomSpeed = zoomSpeed;
+    }
+
     @Override
     public void render(float delta)
     {
@@ -131,7 +188,7 @@ public abstract class UIScreen implements Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(componentHandler);
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 
     @Override
