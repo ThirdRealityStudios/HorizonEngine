@@ -296,8 +296,10 @@ public class UIScreenHandler implements InputProcessor
 		float xDiff = Gdx.graphics.getWidth() / 2 - relCursorPosX;
 		float yDiff = Gdx.graphics.getHeight() / 2 - relCursorPosY;
 
-		RenderSource.orthographicCamera.position.x -= xDiff * 10 * delta;
-		RenderSource.orthographicCamera.position.y += yDiff * 10 * delta;
+		// This will adjust the zoom speed to the real distance travelled per time.
+		// The factor "zoomSpeed" makes the zoom-in work properly in relation to the distance travelled.
+		RenderSource.orthographicCamera.position.x -= xDiff * zoomSpeed * delta;
+		RenderSource.orthographicCamera.position.y += yDiff * zoomSpeed * delta;
 	}
 
 	@Override
@@ -307,6 +309,8 @@ public class UIScreenHandler implements InputProcessor
 
 		float zoom = RenderSource.orthographicCamera.zoom + distance * delta;
 
+		// Make sure it will only focus on the cursor when the zoom level is beyond 100% and the user zooms in.
+		// This will make the zoom feature to zoom to the point you want to go to with your mouse.
 		if(zoom >= 1f && distance < 0)
 		{
 			navigateToCursor();
