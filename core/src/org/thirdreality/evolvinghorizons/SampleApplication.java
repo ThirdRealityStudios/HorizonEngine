@@ -85,6 +85,7 @@ public class SampleApplication extends HorizonGame
 		gui.setComponents(new GComponent[]{getPolyButton0()});
 		gui.setZoomSpeed(10);
 		gui.setNavigationSpeed(100);
+		gui.allowFocusOnZoom(true);
 
 		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
 		smallerFont = new Font(mcFont, 18);

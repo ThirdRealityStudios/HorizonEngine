@@ -156,6 +156,11 @@ public abstract class UIScreen implements Screen
         RenderSource.orthographicCamera.position.y += y;
     }
 
+    public void allowFocusOnZoom(boolean allow)
+    {
+        uiScreenHandler.allowFocusOnZoom = allow;
+    }
+
     @Override
     public void render(float delta)
     {

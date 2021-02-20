@@ -36,9 +36,9 @@ public class UIScreenHandler implements InputProcessor
 
 	private UIScreen uiScreen;
 	protected float zoomSpeed = 0;
+	protected boolean allowFocusOnZoom = false;
 	protected float delta = 0;
 
-	private Vector2 cursorPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
 	public UIScreenHandler(UIScreen uiScreen)
 	{
@@ -215,9 +215,6 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		cursorPosition.x = screenX;
-		cursorPosition.y = screenY;
-
 		GComponent focused = uiScreen.getFocusedComponent();
 
 		if(focused == null)
@@ -310,8 +307,9 @@ public class UIScreenHandler implements InputProcessor
 		float zoom = RenderSource.orthographicCamera.zoom + distance * delta;
 
 		// Make sure it will only focus on the cursor when the zoom level is beyond 100% and the user zooms in.
-		// This will make the zoom feature to zoom to the point you want to go to with your mouse.
-		if(zoom >= 1f && distance < 0)
+		// This will make the zoom feature to zoom in to the point you want to go to with your mouse.
+		// The zoom-in focus feature will only if enabled (see method allowFocusOnZoom(...)).
+		if(zoom >= 1f && distance < 0 && allowFocusOnZoom)
 		{
 			navigateToCursor();
 		}
