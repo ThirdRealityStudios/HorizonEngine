@@ -39,7 +39,6 @@ public class UIScreenHandler implements InputProcessor
 	protected boolean allowFocusOnZoom = false;
 	protected float delta = 0;
 
-
 	public UIScreenHandler(UIScreen uiScreen)
 	{
 		this.uiScreen = uiScreen;
@@ -285,18 +284,13 @@ public class UIScreenHandler implements InputProcessor
 	private void navigateToCursor()
 	{
 		Vector3 camPosition = RenderSource.orthographicCamera.position;
-		Vector2 cursorPosition = new Vector2(Gdx.input.getX() + camPosition.x, Gdx.input.getY() + camPosition.y);
 
-		float relCursorPosX = cursorPosition.x - camPosition.x;
-		float relCursorPosY = cursorPosition.y - camPosition.y;
-
-		float xDiff = Gdx.graphics.getWidth() / 2 - relCursorPosX;
-		float yDiff = Gdx.graphics.getHeight() / 2 - relCursorPosY;
+		Vector2 cursorDirection = uiScreen.getCursorDirection().scl(zoomSpeed).scl(delta);
 
 		// This will adjust the zoom speed to the real distance travelled per time.
 		// The factor "zoomSpeed" makes the zoom-in work properly in relation to the distance travelled.
-		RenderSource.orthographicCamera.position.x -= xDiff * zoomSpeed * delta;
-		RenderSource.orthographicCamera.position.y += yDiff * zoomSpeed * delta;
+		RenderSource.orthographicCamera.position.x -= cursorDirection.x;
+		RenderSource.orthographicCamera.position.y += cursorDirection.y;
 	}
 
 	@Override

@@ -161,6 +161,22 @@ public abstract class UIScreen implements Screen
         uiScreenHandler.allowFocusOnZoom = allow;
     }
 
+    public Vector2 getCursorLocation()
+    {
+        return new Vector2(Gdx.input.getX(), Gdx.input.getY());
+    }
+
+    // Tells you where the cursor points to, seen from the middle of the screen.
+    public Vector2 getCursorDirection()
+    {
+        Vector2 cursor = getCursorLocation();
+
+        float xDiff = Gdx.graphics.getWidth() / 2 - cursor.x;
+        float yDiff = Gdx.graphics.getHeight() / 2 - cursor.y;
+
+        return new Vector2(xDiff, yDiff);
+    }
+
     @Override
     public void render(float delta)
     {

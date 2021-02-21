@@ -82,11 +82,6 @@ public class SampleApplication extends HorizonGame
 			}
 		};
 
-		gui.setComponents(new GComponent[]{getPolyButton0()});
-		gui.setZoomSpeed(10);
-		gui.setNavigationSpeed(100);
-		gui.allowFocusOnZoom(true);
-
 		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
 		smallerFont = new Font(mcFont, 18);
 		biggerFont = new Font(mcFont, 25);
@@ -95,7 +90,14 @@ public class SampleApplication extends HorizonGame
 
 		postInit();
 
+
+
 		setScreen(gui);
+
+		gui.setComponents(new GComponent[]{getPolyButton0(), input1});
+		gui.setZoomSpeed(10);
+		gui.setNavigationSpeed(100);
+		gui.allowFocusOnZoom(true);
 	}
 
 	private GPolyButton getPolyButton0()

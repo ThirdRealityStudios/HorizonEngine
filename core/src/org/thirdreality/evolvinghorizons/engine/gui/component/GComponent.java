@@ -40,6 +40,8 @@ public abstract class GComponent implements Serializable
 	// This contains the onClick() and onHover() methods to be run on this component.
 	private GActionListener actions;
 
+	private boolean isZoomable = false;
+
 	public GComponent(String type)
 	{
 		style = new GStyle();
@@ -126,5 +128,15 @@ public abstract class GComponent implements Serializable
 	public Vector2 getOffset()
 	{
 		return offset;
+	}
+
+	public boolean isZoomable()
+	{
+		return isZoomable;
+	}
+
+	public void setZoomable(boolean zoomable)
+	{
+		isZoomable = zoomable;
 	}
 }
