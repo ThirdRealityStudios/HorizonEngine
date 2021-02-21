@@ -129,22 +129,22 @@ public abstract class UIScreen implements Screen
         float x = 0;
         float y = 0;
 
-        if(Gdx.input.isKeyPressed(Input.Keys.W))
+        if(Gdx.input.isKeyPressed(Input.Keys.UP))
         {
             y += navigationSpeed;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.S))
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
         {
             y -= navigationSpeed;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.A))
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
         {
             x -= navigationSpeed;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.D))
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
         {
             x += navigationSpeed;
         }

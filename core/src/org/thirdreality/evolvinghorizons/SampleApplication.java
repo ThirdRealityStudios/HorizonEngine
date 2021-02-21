@@ -90,11 +90,13 @@ public class SampleApplication extends HorizonGame
 
 		postInit();
 
-
-
 		setScreen(gui);
 
-		gui.setComponents(new GComponent[]{getPolyButton0(), input1});
+		GPolyButton polyButton = getPolyButton0();
+
+		polyButton.setZoomable(true);
+
+		gui.setComponents(new GComponent[]{polyButton, input1});
 		gui.setZoomSpeed(10);
 		gui.setNavigationSpeed(100);
 		gui.allowFocusOnZoom(true);

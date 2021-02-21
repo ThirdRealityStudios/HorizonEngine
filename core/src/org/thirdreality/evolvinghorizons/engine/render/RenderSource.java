@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.thirdreality.evolvinghorizons.engine.settings.Settings;
@@ -14,9 +13,13 @@ public class RenderSource
 {
     public static final OrthographicCamera orthographicCamera = createOrthographicCamera();
 
-    private static final ShapeRenderer shapeRenderer = createShapeRenderer();
-    private static final SpriteBatch spriteBatch = createSpriteBatch();
-    private static final PolygonSpriteBatch polygonSpriteBatch = createPolygonSpriteBatch();
+    private static final ShapeRenderer shapeRenderer_zoom = createShapeRenderer(true);
+    private static final SpriteBatch spriteBatch_zoom = createSpriteBatch(true);
+    private static final PolygonSpriteBatch polygonSpriteBatch_zoom = createPolygonSpriteBatch(true);
+
+    private static final ShapeRenderer shapeRenderer = createShapeRenderer(false);
+    private static final SpriteBatch spriteBatch = createSpriteBatch(false);
+    private static final PolygonSpriteBatch polygonSpriteBatch = createPolygonSpriteBatch(false);
 
     // They both will be steadily updated.
     private static Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
@@ -33,29 +36,38 @@ public class RenderSource
         return orthographicCamera;
     }
 
-    private static ShapeRenderer createShapeRenderer()
+    private static ShapeRenderer createShapeRenderer(boolean zoomEnabled)
     {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        }
 
         return shapeRenderer;
     }
 
-    private static PolygonSpriteBatch createPolygonSpriteBatch()
+    private static PolygonSpriteBatch createPolygonSpriteBatch(boolean zoomEnabled)
     {
         PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
 
-        polygonSpriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            polygonSpriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        }
 
         return polygonSpriteBatch;
     }
 
-    private static SpriteBatch createSpriteBatch()
+    private static SpriteBatch createSpriteBatch(boolean zoomEnabled)
     {
         SpriteBatch spriteBatch = new SpriteBatch();
 
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        }
 
         return spriteBatch;
     }
@@ -71,26 +83,41 @@ public class RenderSource
         }
     }
 
-    public static ShapeRenderer getShapeRenderer()
+    public static ShapeRenderer getShapeRenderer(boolean zoomEnabled)
     {
-        orthographicCamera.update();
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            orthographicCamera.update();
+            shapeRenderer_zoom.setProjectionMatrix(orthographicCamera.combined);
+
+            return shapeRenderer_zoom;
+        }
 
         return shapeRenderer;
     }
 
-    public static SpriteBatch getSpriteBatch()
+    public static SpriteBatch getSpriteBatch(boolean zoomEnabled)
     {
-        orthographicCamera.update();
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            orthographicCamera.update();
+            spriteBatch_zoom.setProjectionMatrix(orthographicCamera.combined);
+
+            return spriteBatch_zoom;
+        }
 
         return spriteBatch;
     }
 
-    public static PolygonSpriteBatch getPolygonSpriteBatch()
+    public static PolygonSpriteBatch getPolygonSpriteBatch(boolean zoomEnabled)
     {
-        orthographicCamera.update();
-        polygonSpriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if(zoomEnabled)
+        {
+            orthographicCamera.update();
+            polygonSpriteBatch_zoom.setProjectionMatrix(orthographicCamera.combined);
+
+            return polygonSpriteBatch_zoom;
+        }
 
         return polygonSpriteBatch;
     }
