@@ -88,13 +88,4 @@ public class MouseUtility
 	{
 		return Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
 	}
-
-	@Deprecated
-	// Tests if the user is clicking a component.
-	public static boolean isClickingLeft(UIScreen source, GComponent component)
-	{
-		return source.isFocusing(component) && isClickingLeft();
-	}
-	
-
 }

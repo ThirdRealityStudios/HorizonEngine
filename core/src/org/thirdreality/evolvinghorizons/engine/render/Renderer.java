@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -305,9 +306,11 @@ public class Renderer
     {
         GPolyButton polyButton = (GPolyButton) c;
 
-        RenderSource.getPolygonSpriteBatch(c.isZoomable()).begin();
-        polyButton.getPolygonSprite().draw(RenderSource.getPolygonSpriteBatch(c.isZoomable()));
-        RenderSource.getPolygonSpriteBatch(c.isZoomable()).end();
+        PolygonSpriteBatch polygonSpriteBatch = RenderSource.getPolygonSpriteBatch(c.isZoomable());
+
+        polygonSpriteBatch.begin();
+        polyButton.getUpdatedPolygonSprite().draw(polygonSpriteBatch);
+        polygonSpriteBatch.end();
     }
 
     private static void drawButton(GComponent c)

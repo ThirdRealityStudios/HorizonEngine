@@ -3,16 +3,11 @@ package org.thirdreality.evolvinghorizons;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
-import com.badlogic.gdx.graphics.g2d.PolygonSprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
-import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreenHandler;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.HorizonGame;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
@@ -65,7 +60,7 @@ public class SampleApplication extends HorizonGame
 	@Override
 	public void create()
 	{
-		gui = new UIScreen() {
+		gui = new UIScreen(){
 			@Override
 			public void resize(int width, int height) {
 
@@ -96,23 +91,20 @@ public class SampleApplication extends HorizonGame
 
 		polyButton.setZoomable(true);
 
-		gui.setComponents(new GComponent[]{polyButton, input1});
-		gui.setZoomSpeed(10);
-		gui.setNavigationSpeed(100);
+		gSB = new GTickBoxList(new Vector2(200, 150), true, smallerFont);
+		gSB.addOption("Hello");
+		gSB.addOption("ASDF - -");
+		gSB.addOption("Hell asdas dasd".toUpperCase());
+		gSB.addOption("Hellö, it's me.");
+
+		gui.setComponents(new GComponent[]{input1, polyButton, gSB});
+		gui.setZoomAcceleration(1f);
+		gui.setNavigationSpeed(10000);
 		gui.allowFocusOnZoom(true);
 	}
 
 	private GPolyButton getPolyButton0()
 	{
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-
-		pixmap.setColor(Color.RED);
-		pixmap.fill();
-
-		Texture texture = new Texture(pixmap);
-
-		TextureRegion textureRegion = new TextureRegion(texture, 1, 1);
-
 		//float[] vertices = new float[]{50,0, 100,0, 150.1f,50, 150,100, 100,150, 50,150, 0,0};
 
 		//float[] vertices = new float[]{0,100,50,100,66.66f,50,116.66f,100,100,150,83.33f,116.66f,50,150};
@@ -128,9 +120,10 @@ public class SampleApplication extends HorizonGame
 		org.thirdreality.evolvinghorizons.engine.math.Polygon poly = new org.thirdreality.evolvinghorizons.engine.math.Polygon(germany, true);
 
 		poly.setOrigin(poly.getBoundingRectangle().x + poly.getBoundingRectangle().width / 2, poly.getBoundingRectangle().y + poly.getBoundingRectangle().height / 2);
-
 		poly.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		poly.setScale(80f,80f);
+
+		GPolyButton gPolyButton = new GPolyButton(poly, "CLICK ME", smallerFont);
 
 		Line2D.Float line3 = new Line2D.Float(0,0,20,10);
 		Line2D.Float line2 = new Line2D.Float(0,10,20,10);
@@ -142,16 +135,6 @@ public class SampleApplication extends HorizonGame
 		lines.add(line0);
 
 		Line2D.Float line = new Line2D.Float(0,100,50,100);
-
-		//short[] triangles = new short[]{0,1,6, 1,5,6, 1,3,5, 1,2,3, 3,5,4};
-
-		PolygonRegion polygonRegion = new PolygonRegion(textureRegion, poly.getTransformedVertices(), poly.getTriangles());//poly.getTriangles());
-
-		PolygonSprite polygonSprite = new PolygonSprite(polygonRegion);
-		polygonSprite.setOrigin(450, 370);
-
-
-		GPolyButton gPolyButton = new GPolyButton(polygonSprite, "CLICK ME", smallerFont);
 
 		gPolyButton.setActionListener(new GActionListener()
 		{
@@ -226,12 +209,6 @@ public class SampleApplication extends HorizonGame
 
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
-
-		gSB = new GTickBoxList(new Vector2(200, 150), true, smallerFont);
-		gSB.addOption("Hello");
-		gSB.addOption("ASDF - -");
-		gSB.addOption("Hell asdas dasd".toUpperCase());
-		gSB.addOption("Hellö, it's me.");
 
 		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
 
@@ -350,6 +327,7 @@ public class SampleApplication extends HorizonGame
 	{
 		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
 
+		/*
 		layer0.add(img0);
 
 		layer1.add(getPolyButton0());
@@ -367,6 +345,7 @@ public class SampleApplication extends HorizonGame
 
 		layer2_shared.add(gSB);
 		//layer2_shared.add(rect);
+		 */
 
 
 		//displayContext.getViewport().getWindowManager().addWindow(window1);

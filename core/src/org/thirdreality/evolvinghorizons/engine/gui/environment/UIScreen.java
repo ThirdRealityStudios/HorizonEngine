@@ -3,15 +3,13 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 import org.thirdreality.evolvinghorizons.engine.render.Renderer;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-
-import java.util.ArrayList;
 
 public abstract class UIScreen implements Screen
 {
@@ -38,13 +36,13 @@ public abstract class UIScreen implements Screen
     // Returns the first component which is focused by the cursor.
     // Makes the UI more efficient by breaking at the first component already.
     // Returns null if there is no such component.
-    public GComponent getFocusedComponent()
+    public GComponent getFocusedComponent(int screenX, int screenY)
     {
         GComponent firstMatch = null;
 
         for(GComponent selected : out)
         {
-            boolean insideComponent = isFocusing(selected);
+            boolean insideComponent = isFocusing(screenX, screenY, selected);
 
             // Returns the first component which is focused by the mouse cursor.
             if(insideComponent)
@@ -66,7 +64,7 @@ public abstract class UIScreen implements Screen
     // Tests if the cursor is on the position of a component.
     // Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
     // Returns 'false' if target is 'null'.
-    public boolean isFocusing(GComponent target)
+    public boolean isFocusing(int screenX, int screenY, GComponent target)
     {
         // If there is no component given or interaction is forbidden,
         // this method assumes no component was found,
@@ -76,30 +74,26 @@ public abstract class UIScreen implements Screen
             return false;
         }
 
-        Vector2 position = target.getStyle().getPosition();
-
-        Rectangle componentBackground = new Rectangle(position.x, position.y, target.getStyle().getBounds().width, target.getStyle().getBounds().height);
-
-        return componentBackground.contains(MouseUtility.getCurrentCursorLocation());
-    }
-
-    // Checks whether the cursor is over any GUInness component.
-    // Should be avoided if used too often because of performance reasons.
-    private boolean isFocusingAny(ArrayList<String> exceptionalTypes)
-    {
-        GComponent focused = getFocusedComponent();
-
-        boolean assigned = focused != null;
-
-        for(String type : exceptionalTypes)
+        switch(target.getType())
         {
-            if(assigned && (focused.getType().contentEquals(type)))
+            case "polybutton":
             {
-                return false;
+                GPolyButton polyButton = (GPolyButton) target;
+
+                Polygon transformed = new Polygon(polyButton.getPolygon().getTransformedVertices());
+
+                transformed.scale(RenderSource.orthographicCamera.zoom);
+
+                System.out.println("zoom: " + RenderSource.orthographicCamera.zoom);
+
+                return transformed.contains(screenX, screenY);
+            }
+
+            default:
+            {
+                return target.getStyle().getBounds().contains(screenX, screenY);
             }
         }
-
-        return assigned;
     }
 
     private void drawAllComponents()
@@ -113,10 +107,10 @@ public abstract class UIScreen implements Screen
         }
     }
 
-    // Sets the zoom speed when zooming in / out on this screen.
-    public void setZoomSpeed(float zoomSpeed)
+    // Sets the zoom acceleration when zooming in / out on this screen.
+    public void setZoomAcceleration(float zoomAcceleration)
     {
-        uiScreenHandler.zoomSpeed = zoomSpeed;
+        uiScreenHandler.zoomAcceleration = zoomAcceleration;
     }
 
     public void setNavigationSpeed(float speed)
@@ -128,6 +122,8 @@ public abstract class UIScreen implements Screen
     {
         float x = 0;
         float y = 0;
+
+        float navigationSpeed = this.navigationSpeed * RenderSource.orthographicCamera.zoom * delta;
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP))
         {
@@ -149,8 +145,8 @@ public abstract class UIScreen implements Screen
             x += navigationSpeed;
         }
 
-        x *= delta * uiScreenHandler.zoomSpeed;
-        y *= delta * uiScreenHandler.zoomSpeed;
+        x *= delta * uiScreenHandler.zoomAcceleration;
+        y *= delta * uiScreenHandler.zoomAcceleration;
 
         RenderSource.orthographicCamera.position.x += x;
         RenderSource.orthographicCamera.position.y += y;

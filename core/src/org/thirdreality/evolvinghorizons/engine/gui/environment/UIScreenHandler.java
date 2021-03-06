@@ -1,6 +1,5 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
@@ -35,7 +34,7 @@ public class UIScreenHandler implements InputProcessor
 	private GComponent lastlyFocused;
 
 	private UIScreen uiScreen;
-	protected float zoomSpeed = 0;
+	protected float zoomAcceleration = 0;
 	protected boolean allowFocusOnZoom = false;
 	protected float delta = 0;
 
@@ -77,15 +76,19 @@ public class UIScreenHandler implements InputProcessor
 		return false;
 	}
 
+	int i = 0;
+
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		GComponent focused = uiScreen.getFocusedComponent();
+		GComponent focused = uiScreen.getFocusedComponent(screenX, screenY);
 
 		if(focused == null)
 		{
 			return false;
 		}
+
+		System.out.println(i++ + ">> " + focused.getType());
 
 		switch(focused.getType())
 		{
@@ -214,7 +217,7 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		GComponent focused = uiScreen.getFocusedComponent();
+		GComponent focused = uiScreen.getFocusedComponent(screenX, screenY);
 
 		if(focused == null)
 		{
@@ -285,7 +288,9 @@ public class UIScreenHandler implements InputProcessor
 	{
 		Vector3 camPosition = RenderSource.orthographicCamera.position;
 
-		Vector2 cursorDirection = uiScreen.getCursorDirection().scl(zoomSpeed).scl(delta);
+		int zoomLevel = (int) RenderSource.orthographicCamera.zoom;
+
+		Vector2 cursorDirection = uiScreen.getCursorDirection().scl(zoomAcceleration * zoomLevel).scl(delta);
 
 		// This will adjust the zoom speed to the real distance travelled per time.
 		// The factor "zoomSpeed" makes the zoom-in work properly in relation to the distance travelled.
@@ -296,22 +301,26 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean scrolled(float amountX, float amountY)
 	{
-		float distance = amountY * zoomSpeed;
+		float zoom = RenderSource.orthographicCamera.zoom;
 
-		float zoom = RenderSource.orthographicCamera.zoom + distance * delta;
+		int zoomLevel = (int) zoom;
 
-		// Make sure it will only focus on the cursor when the zoom level is beyond 100% and the user zooms in.
-		// This will make the zoom feature to zoom in to the point you want to go to with your mouse.
-		// The zoom-in focus feature will only if enabled (see method allowFocusOnZoom(...)).
-		if(zoom >= 1f && distance < 0 && allowFocusOnZoom)
-		{
-			navigateToCursor();
-		}
+		float speed = zoomAcceleration * amountY * delta;
+
+		zoom += speed * zoomLevel;
 
 		// Zoom level may not be below 100% as this causes render bugs.
 		if(zoom >= 1)
 		{
 			RenderSource.orthographicCamera.zoom = zoom;
+
+			// Make sure it will only focus on the cursor when the zoom level is beyond 100% and the user zooms in.
+			// This will make the zoom feature to zoom in to the point you want to go to with your mouse.
+			// The zoom-in focus feature will only if enabled (see method allowFocusOnZoom(...)).
+			if(amountY < 0 && allowFocusOnZoom)
+			{
+				navigateToCursor();
+			}
 		}
 
 		return false;

@@ -114,6 +114,7 @@ public class RenderSource
         if(zoomEnabled)
         {
             orthographicCamera.update();
+
             polygonSpriteBatch_zoom.setProjectionMatrix(orthographicCamera.combined);
 
             return polygonSpriteBatch_zoom;
