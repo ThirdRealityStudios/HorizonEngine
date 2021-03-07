@@ -7,7 +7,6 @@ import org.thirdreality.evolvinghorizons.engine.settings.Settings;
 
 public class DesktopLauncher
 {
-
 	public static LwjglApplicationConfiguration CONFIG;
 	public static LwjglApplication APP;
 
