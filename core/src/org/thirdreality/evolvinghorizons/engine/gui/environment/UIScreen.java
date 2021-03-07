@@ -95,8 +95,10 @@ public abstract class UIScreen implements Screen
         {
             GComponent firstMatch = null;
 
-            for(GComponent selected : layer.getComponents())
+            for(int i = layer.getComponents().length - 1; i >= 0; i--)
             {
+                GComponent selected = layer.getComponents()[i];
+
                 boolean insideComponent = isFocusing(screenX, screenY, selected);
 
                 // Returns the first component which is focused by the mouse cursor.
@@ -262,7 +264,6 @@ public abstract class UIScreen implements Screen
         {
             GLayer layer = layers[i];
 
-            //System.out.println("> " + layer.getPriority());
             drawAllComponents(layer.getComponents());
         }
     }
