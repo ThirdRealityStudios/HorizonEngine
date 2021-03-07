@@ -298,7 +298,6 @@ public class Renderer
                 RenderSource.getSpriteBatch(c.isZoomable()).end();
             }
         }
-
     }
 
     @Deprecated

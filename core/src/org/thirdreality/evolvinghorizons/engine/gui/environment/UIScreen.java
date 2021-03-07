@@ -3,8 +3,10 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
@@ -61,11 +63,31 @@ public abstract class UIScreen implements Screen
         return firstMatch;
     }
 
+    private Vector2 getProjectedCursor()
+    {
+        Vector3 projected = RenderSource.orthographicCamera.project(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+        return new Vector2(projected.x, projected.y);
+    }
+
     // Tests if the cursor is on the position of a component.
     // Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
     // Returns 'false' if target is 'null'.
     public boolean isFocusing(int screenX, int screenY, GComponent target)
     {
+        // Only recalculate the cursor position on screen if the component is zoomed out / -in.
+        if(target.isZoomable())
+        {
+            Vector3 vect = RenderSource.orthographicCamera.unproject(new Vector3(screenX, screenY, 0));
+
+            screenX = (int) vect.x;
+            screenY = (int) vect.y;
+        }
+        else
+        {
+            screenY = Gdx.graphics.getHeight() - screenY;
+        }
+
         // If there is no component given or interaction is forbidden,
         // this method assumes no component was found,
         // pretending the cursor is not over a component.
@@ -80,13 +102,7 @@ public abstract class UIScreen implements Screen
             {
                 GPolyButton polyButton = (GPolyButton) target;
 
-                Polygon transformed = new Polygon(polyButton.getPolygon().getTransformedVertices());
-
-                transformed.scale(RenderSource.orthographicCamera.zoom);
-
-                System.out.println("zoom: " + RenderSource.orthographicCamera.zoom);
-
-                return transformed.contains(screenX, screenY);
+                return new Polygon(polyButton.getPolygon().getTransformedVertices()).contains(screenX, screenY);
             }
 
             default:
@@ -118,7 +134,7 @@ public abstract class UIScreen implements Screen
         navigationSpeed = speed;
     }
 
-    public void navigateByWASD(float delta)
+    public void navigateByKeyboard(float delta)
     {
         float x = 0;
         float y = 0;
@@ -178,7 +194,7 @@ public abstract class UIScreen implements Screen
     {
         uiScreenHandler.delta = delta;
 
-        navigateByWASD(delta);
+        navigateByKeyboard(delta);
 
         Renderer.drawBlankScreen();
 

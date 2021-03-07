@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
@@ -76,12 +77,24 @@ public class UIScreenHandler implements InputProcessor
 		return false;
 	}
 
+	private Vector2 getProjectedCursor()
+	{
+		Vector3 projected = RenderSource.orthographicCamera.project(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+		return new Vector2(projected.x, projected.y);
+	}
+
 	int i = 0;
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
 		GComponent focused = uiScreen.getFocusedComponent(screenX, screenY);
+
+		Vector2 projectedCursor = getProjectedCursor();
+
+		screenX = (int) projectedCursor.x;
+		screenY = (int) projectedCursor.y;
 
 		if(focused == null)
 		{
@@ -141,6 +154,11 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
+		Vector2 projectedCursor = getProjectedCursor();
+
+		screenX = (int) projectedCursor.x;
+		screenY = (int) projectedCursor.y;
+
 		if(lastlyFocused != null)
 		{
 			switch(lastlyFocused.getType())
@@ -218,6 +236,11 @@ public class UIScreenHandler implements InputProcessor
 	public boolean mouseMoved(int screenX, int screenY)
 	{
 		GComponent focused = uiScreen.getFocusedComponent(screenX, screenY);
+
+		Vector2 projectedCursor = getProjectedCursor();
+
+		screenX = (int) projectedCursor.x;
+		screenY = (int) projectedCursor.y;
 
 		if(focused == null)
 		{
