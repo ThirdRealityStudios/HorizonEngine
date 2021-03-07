@@ -5,16 +5,14 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.thirdreality.evolvinghorizons.SampleApplication;
 import org.thirdreality.evolvinghorizons.engine.settings.Settings;
 
-import java.awt.*;
-
-public class DesktopLauncher {
+public class DesktopLauncher
+{
 
 	public static LwjglApplicationConfiguration CONFIG;
 	public static LwjglApplication APP;
 
-	public static void main (String[] arg) {
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
+	public static void main (String[] arg)
+	{
 		CONFIG = new LwjglApplicationConfiguration();
 
 		CONFIG.width = Settings.SCREEN_SIZE.width;
