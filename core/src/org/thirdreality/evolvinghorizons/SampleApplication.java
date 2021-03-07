@@ -1,6 +1,7 @@
 package org.thirdreality.evolvinghorizons;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -94,7 +95,7 @@ public class SampleApplication extends HorizonGame
 		GPolyButton polyButton = getPolyButton0();
 		polyButton.setZoomable(true);
 
-		gSB = new GTickBoxList(new Vector2(20, 400), 0, true, smallerFont);
+		gSB = new GTickBoxList(new Vector2(20, 20), 0, true, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());
