@@ -40,9 +40,9 @@ public class GWindow extends GComponent
 	// The value -1 just means it wasn't assigned yet during runtime (for better error tracking and status checking if necessary).
 	protected int priority = -1;
 
-	public GWindow(String title, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
+	public GWindow(String title, int priority, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
 	{
-		super("window");
+		super("window", priority);
 
 		getStyle().setFont(titleFont);
 		

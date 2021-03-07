@@ -42,17 +42,21 @@ public abstract class GComponent implements Serializable
 
 	private boolean isZoomable = false;
 
-	public GComponent(String type)
+	private final int priority;
+
+	public GComponent(String type, int priority)
 	{
 		style = new GStyle();
 		logic = new GLogic();
 
 		setType(type);
+
+		this.priority = priority;
 	}
 	
-	public GComponent(String type, Rectangle bounds)
+	public GComponent(String type, int priority, Rectangle bounds)
 	{
-		this(type);
+		this(type, priority);
 
 		getStyle().setBounds(bounds);
 	}
@@ -138,5 +142,11 @@ public abstract class GComponent implements Serializable
 	public void setZoomable(boolean zoomable)
 	{
 		isZoomable = zoomable;
+	}
+
+	// Returns the priority of this component in a layer.
+	public int getPriority()
+	{
+		return priority;
 	}
 }

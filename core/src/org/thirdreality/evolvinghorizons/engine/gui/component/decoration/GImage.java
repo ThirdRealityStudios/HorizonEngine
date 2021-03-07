@@ -10,9 +10,9 @@ public class GImage extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GImage(Vector2 position, Texture content)
+	public GImage(Vector2 position, int priority, Texture content)
 	{
-		super("image");
+		super("image", priority);
 
 		int width = content.getWidth();
 		int height = content.getHeight();
@@ -23,9 +23,9 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Vector2 position, float scale, Texture content)
+	public GImage(Vector2 position, int priority, float scale, Texture content)
 	{
-		super("image");
+		super("image", priority);
 
 		int scaledWidth = (int) (scale * content.getWidth());
 		int scaledHeight = (int) (scale * content.getHeight());
@@ -36,18 +36,18 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Rectangle img, Texture content)
+	public GImage(Rectangle img, int priority, Texture content)
 	{
-		super("image");
+		super("image", priority);
 
 		getStyle().setBounds(img);
 
 		getStyle().setImage(content);
 	}
 
-	public GImage(Vector2 position, int size, boolean useAsWidth, Texture content)
+	public GImage(Vector2 position, int priority, int size, boolean useAsWidth, Texture content)
 	{
-		super("image");
+		super("image", priority);
 
 		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight()) * content.getWidth());
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth()) * content.getHeight()) : size;

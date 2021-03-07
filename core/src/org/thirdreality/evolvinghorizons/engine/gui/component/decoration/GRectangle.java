@@ -9,9 +9,9 @@ public class GRectangle extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GRectangle(Rectangle rect, Color color)
+	public GRectangle(Rectangle rect, int priority, Color color)
 	{
-		super("rectangle", rect);
+		super("rectangle", priority, rect);
 
 		getStyle().setColor(color);
 	}

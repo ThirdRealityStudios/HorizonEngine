@@ -16,9 +16,9 @@ public class GCheckbox extends GComponent
 	
 	private boolean checked;
 
-	public GCheckbox(Vector2 location, boolean checked)
+	public GCheckbox(Vector2 location, int priority, boolean checked)
 	{
-		super("checkbox", new Rectangle(location.x, location.y, 20, 20));
+		super("checkbox", priority, new Rectangle(location.x, location.y, 20, 20));
 
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
 

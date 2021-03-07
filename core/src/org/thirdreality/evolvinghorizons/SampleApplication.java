@@ -60,19 +60,23 @@ public class SampleApplication extends HorizonGame
 	@Override
 	public void create()
 	{
-		gui = new UIScreen(){
+		gui = new UIScreen()
+		{
 			@Override
-			public void resize(int width, int height) {
+			public void resize(int width, int height)
+			{
 
 			}
 
 			@Override
-			public void pause() {
+			public void pause()
+			{
 
 			}
 
 			@Override
-			public void resume() {
+			public void resume()
+			{
 
 			}
 		};
@@ -88,16 +92,21 @@ public class SampleApplication extends HorizonGame
 		setScreen(gui);
 
 		GPolyButton polyButton = getPolyButton0();
-
 		polyButton.setZoomable(true);
 
-		gSB = new GTickBoxList(new Vector2(200, 150), true, smallerFont);
+		gSB = new GTickBoxList(new Vector2(200, 150), 0, true, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());
 		gSB.addOption("Hellö, it's me.");
 
-		gui.setComponents(new GComponent[]{input1, polyButton, gSB});
+		GComponent[] layer1_components = new GComponent[]{polyButton};
+		GLayer layer1 = new GLayer(layer1_components, 1);
+
+		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB};
+		GLayer layer0 = new GLayer(layer0_components, 0);
+
+		gui.setLayers(new GLayer[]{layer0, layer1});
 		gui.setZoomAcceleration(1f);
 		gui.setNavigationSpeed(10000);
 		gui.allowFocusOnZoom(true);
@@ -123,7 +132,7 @@ public class SampleApplication extends HorizonGame
 		poly.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		poly.setScale(80f,80f);
 
-		GPolyButton gPolyButton = new GPolyButton(poly, "CLICK ME", smallerFont);
+		GPolyButton gPolyButton = new GPolyButton(poly, 0, "CLICK ME", smallerFont);
 
 		Line2D.Float line3 = new Line2D.Float(0,0,20,10);
 		Line2D.Float line2 = new Line2D.Float(0,10,20,10);
@@ -204,30 +213,15 @@ public class SampleApplication extends HorizonGame
 
 		Color transparentRed = new Color(1f, 0, 0, 0.5f);
 
-		rect = new GRectangle(new Rectangle(0, -50, 800, 136), new Color(1f, 0f, 0f, 0.1f));
+		rect = new GRectangle(new Rectangle(0, -50, 800, 136), 0, new Color(1f, 0f, 0f, 0.1f));
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
+		checkbox1 = new GCheckbox(new Vector2(20, 200), 0, true);
 
-		checkbox1.setActionListener(new GActionListener()
-		{
-			@Override
-			public void onClick()
-			{
-				layer2_shared.setEnabled(checkbox1.isChecked());
-			}
-
-			@Override
-			public void onHover()
-			{
-
-			}
-		});
-
-		moveButton = new GButton(new Vector2(150, 75), "Move Viewport right", smallerFont);
+		moveButton = new GButton(new Vector2(150, 75), 0, "Move Viewport right", smallerFont);
 
 		moveButton.setActionListener(new GActionListener()
 		{
@@ -250,7 +244,7 @@ public class SampleApplication extends HorizonGame
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		increaseScale = new GButton(new Vector2(150, 100), "increase scale", smallerFont);
+		increaseScale = new GButton(new Vector2(150, 100), 0, "increase scale", smallerFont);
 
 		increaseScale.setActionListener(new GActionListener()
 		{
@@ -275,7 +269,7 @@ public class SampleApplication extends HorizonGame
 			increaseScale.getStyle().setMovableForViewport(false);
 		}
 
-		exit = new GButton(new Vector2(20, 150), "EXIT", smallerFont);
+		exit = new GButton(new Vector2(20, 150), 0, "EXIT", smallerFont);
 
 		exit.setActionListener(new GActionListener()
 		{
@@ -296,7 +290,7 @@ public class SampleApplication extends HorizonGame
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, smallerFont);
+		input1 = new GTextfield(new Vector2(20, 300), 1, "GERMAN", 10, smallerFont);
 
 		input1.setActionListener(new GActionListener()
 		{
@@ -313,19 +307,19 @@ public class SampleApplication extends HorizonGame
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Vector2(20, 375), "DEUTSCH", 10, smallerFont);
+		input2 = new GTextfield(new Vector2(20, 375), 2, "DEUTSCH", 10, smallerFont);
 
-		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, smallerFont);
+		input3 = new GTextfield(new Vector2(20, 450), 3, "ALEMAN", 10, smallerFont);
 
 		Texture t = new Texture(Gdx.files.internal(Path.MEDIA_FOLDER + File.separator + "MountainLake.jpg"));
 
-		img0 = new GImage(new Vector2(0, 0), 600, false , t);
+		img0 = new GImage(new Vector2(0, 0), 0, 600, false , t);
 		img0.getLogic().setActionOnHover(false);
 	}
 
 	public void setupDisplayLayers()
 	{
-		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
+		description = new GDescription(new Vector2(20, 520), 0, "Money here for nothing!", smallerFont);
 
 		/*
 		layer0.add(img0);
@@ -354,12 +348,6 @@ public class SampleApplication extends HorizonGame
 
 	public void postInit()
 	{
-		layer0 = new GLayer(10, true);
-		layer1 = new GLayer(11, true);
-		layer2_shared = new GLayer(12, true);
-		layer3 = new GLayer(13, true);
-		layer4 = new GLayer(14, true);
-
 		setupDisplayLayers();
 
 		//renderContext.getRenderScreen().addLayer(layer0);

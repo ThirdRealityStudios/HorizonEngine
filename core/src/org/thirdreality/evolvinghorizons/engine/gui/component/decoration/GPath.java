@@ -15,9 +15,9 @@ public class GPath extends GComponent
 	private Polygon path;
 	private boolean fill;
 
-	public GPath(Polygon path, Color drawColor, boolean fill, Point location)
+	public GPath(Polygon path, int priority, Color drawColor, boolean fill, Point location)
 	{
-		super("path", new Rectangle(path.getBounds().x, path.getBounds().y, path.getBounds().width, path.getBounds().height));
+		super("path", priority, new Rectangle(path.getBounds().x, path.getBounds().y, path.getBounds().width, path.getBounds().height));
 		
 		//getStyle().setBounds(new Rectangle(path.getBounds()));
 		

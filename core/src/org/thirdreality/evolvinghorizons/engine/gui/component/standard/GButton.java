@@ -16,9 +16,9 @@ public class GButton extends GComponent
 
 	private GlyphLayout layout;
 	
-	public GButton(Vector2 position, String title, Font font)
+	public GButton(Vector2 position, int priority, String title, Font font)
 	{
-		super("button");
+		super("button", priority);
 
 		valueManager = new GValueManager()
 		{

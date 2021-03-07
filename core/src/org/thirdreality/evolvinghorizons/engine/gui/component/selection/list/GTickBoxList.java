@@ -27,9 +27,9 @@ public class GTickBoxList extends GComponent
 	// Is only used for the method addOption(...) .
 	int lastSelection = 0;
 
-	public GTickBoxList(Vector2 position, boolean multipleChoice, Font font)
+	public GTickBoxList(Vector2 position, int priority, boolean multipleChoice, Font font)
 	{
-		super("selectionbox");
+		super("selectionbox", priority);
 
 		getStyle().setFont(font);
 		getStyle().setImage(new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png")));

@@ -3,21 +3,24 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
+import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 import org.thirdreality.evolvinghorizons.engine.render.Renderer;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
+
+import java.util.Arrays;
 
 public abstract class UIScreen implements Screen
 {
     private static final long serialVersionUID = Meta.serialVersionUID;
 
-    private GComponent[] out;
+    protected GLayer[] layers;
     private UIScreenHandler uiScreenHandler;
 
     // This is the navigation speed which is used to move up,down, to the left and to the right with the camera.
@@ -25,14 +28,60 @@ public abstract class UIScreen implements Screen
 
     public UIScreen()
     {
-        out = new GComponent[0];
+        layers = new GLayer[0];
 
         uiScreenHandler = new UIScreenHandler(this);
     }
 
-    public void setComponents(GComponent[] components)
+    // Checks whether there is a layer in this UIScreen with the same priority.
+    private boolean isDoublePriority(GLayer compared)
     {
-        out = components;
+        for(GLayer layer : layers)
+        {
+            if(layer.getPriority() == compared.getPriority() && !layer.equals(compared))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private GLayer[] copy(GLayer[] array)
+    {
+        GLayer[] layers = new GLayer[array.length];
+
+        for(int i = 0; i < layers.length; i++)
+        {
+            layers[i] = array[i];
+        }
+
+        return layers;
+    }
+
+    public boolean setLayers(GLayer[] source)
+    {
+        GLayer[] backup = layers;
+
+        layers = copy(source);
+
+        for(GLayer layer : layers)
+        {
+            if(isDoublePriority(layer))
+            {
+                layers = backup;
+
+                System.out.println("DOUBLE PRIORITY!");
+
+                // Tell the programmer something went wrong, meaning that (at least) two layers overlap each other.
+                return false;
+            }
+        }
+
+        // Sorts the layers by their priority.
+        Arrays.sort(layers);
+
+        return true;
     }
 
     // Returns the first component which is focused by the cursor.
@@ -40,27 +89,38 @@ public abstract class UIScreen implements Screen
     // Returns null if there is no such component.
     public GComponent getFocusedComponent(int screenX, int screenY)
     {
-        GComponent firstMatch = null;
+        GComponent focused = null;
 
-        for(GComponent selected : out)
+        for(GLayer layer : layers)
         {
-            boolean insideComponent = isFocusing(screenX, screenY, selected);
+            GComponent firstMatch = null;
 
-            // Returns the first component which is focused by the mouse cursor.
-            if(insideComponent)
+            for(GComponent selected : layer.getComponents())
             {
-                // Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
-                if(selected.getLogic().isFocusable())
-                {
-                    firstMatch = selected;
-                }
+                boolean insideComponent = isFocusing(screenX, screenY, selected);
 
-                break;
+                // Returns the first component which is focused by the mouse cursor.
+                if(insideComponent)
+                {
+                    // Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
+                    if(selected.getLogic().isFocusable())
+                    {
+                        firstMatch = selected;
+                    }
+
+                    break;
+                }
             }
 
+            if(firstMatch != null)
+            {
+                // Returns the first component which is focused by the mouse cursor.
+                return firstMatch;
+            }
         }
-        // Returns the first component which is focused by the mouse cursor.
-        return firstMatch;
+
+        // Returns nothing if of course no component was found.
+        return null;
     }
 
     private Vector2 getProjectedCursor()
@@ -91,7 +151,7 @@ public abstract class UIScreen implements Screen
         // If there is no component given or interaction is forbidden,
         // this method assumes no component was found,
         // pretending the cursor is not over a component.
-        if(target == null || out == null || (target != null && !target.getLogic().isInteractionAllowed()))
+        if(target == null || layers == null || (target != null && !target.getLogic().isInteractionAllowed()))
         {
             return false;
         }
@@ -112,9 +172,9 @@ public abstract class UIScreen implements Screen
         }
     }
 
-    private void drawAllComponents()
+    private void drawAllComponents(GComponent[] components)
     {
-        for(GComponent component : out)
+        for(GComponent component : components)
         {
             if(component != null)
             {
@@ -198,7 +258,13 @@ public abstract class UIScreen implements Screen
 
         Renderer.drawBlankScreen();
 
-        drawAllComponents();
+        for(int i = layers.length - 1; i >= 0; i--)
+        {
+            GLayer layer = layers[i];
+
+            //System.out.println("> " + layer.getPriority());
+            drawAllComponents(layer.getComponents());
+        }
     }
 
     @Override

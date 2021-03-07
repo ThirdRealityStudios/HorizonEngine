@@ -3,6 +3,8 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -13,8 +15,11 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTi
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickOption;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
+import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
+
+import java.util.ArrayList;
 
 public class UIScreenHandler implements InputProcessor
 {
@@ -85,6 +90,8 @@ public class UIScreenHandler implements InputProcessor
 	}
 
 	int i = 0;
+
+	ArrayList<Vector2> points = new ArrayList<Vector2>();
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)

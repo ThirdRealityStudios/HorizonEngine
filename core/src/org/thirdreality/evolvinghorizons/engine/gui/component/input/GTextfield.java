@@ -15,16 +15,16 @@ public class GTextfield extends GComponent
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
 	private boolean active = false;
-	
+
 	private GValueManager valueManager;
 
 	private GlyphLayout layout;
 
 	private float width;
 
-	public GTextfield(Vector2 position, String title, final int maxInputSymbols, Font font)
+	public GTextfield(Vector2 position, int priority, String title, final int maxInputSymbols, Font font)
 	{
-		super("textfield");
+		super("textfield", priority);
 
 		getStyle().setFont(font);
 
@@ -75,7 +75,7 @@ public class GTextfield extends GComponent
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 		}
 	}
-	
+
 	public GValueManager getValueManager()
 	{
 		return valueManager;
