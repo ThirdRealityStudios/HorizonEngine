@@ -19,5 +19,5 @@ public interface Meta
 	 * - when there was a change and it is unknown whether the changes are still compatible with the latest version.
 	 * 		-> in this the serial version will be incremented.
 	 */
-	public static long serialVersionUID = 11L;
+	public final static long serialVersionUID = 12L;
 }
