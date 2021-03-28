@@ -25,9 +25,7 @@ public class GPolyButton extends GComponent
 	// Info: The polygon is closed automatically later..
 	public GPolyButton(Polygon polygon, int priority, String title, Font font)
 	{
-		super("polybutton", priority, new Rectangle(polygon.getBoundingRectangle().x, polygon.getBoundingRectangle().y, polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height));
-
-		getStyle().setColor(Color.RED);
+		super("polybutton");
 
 		this.polygon = polygon;
 
@@ -48,6 +46,9 @@ public class GPolyButton extends GComponent
 		};
 
 		setTitle(title);
+
+		getStyle().setColor(Color.RED);
+		getStyle().getTextureRegion().setRegion((int) polygon.getBoundingRectangle().x, (int) polygon.getBoundingRectangle().y, (int) polygon.getBoundingRectangle().width, (int) polygon.getBoundingRectangle().height);
 	}
 
 	private GValueManager getValueManager()

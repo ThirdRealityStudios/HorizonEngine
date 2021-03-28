@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
@@ -16,11 +17,12 @@ public class GCheckbox extends GComponent
 	
 	private boolean checked;
 
-	public GCheckbox(Vector2 location, int priority, boolean checked)
+	public GCheckbox(Vector2 location, boolean checked)
 	{
-		super("checkbox", priority, new Rectangle(location.x, location.y, 20, 20));
+		super("checkbox");
 
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
+		getStyle().setBounds(new Rectangle(location.x, location.y, 20, 20));
 
 		init(checked);
 	}
@@ -30,8 +32,10 @@ public class GCheckbox extends GComponent
 	private void init(boolean checked)
 	{
 		setChecked(checked);
-		
-		getStyle().setImage(new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png")));
+
+		Texture t = new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png"));
+
+		getStyle().setTexture(t);
 	}
 	
 	public boolean isChecked()

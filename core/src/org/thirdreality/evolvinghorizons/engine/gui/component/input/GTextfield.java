@@ -22,9 +22,9 @@ public class GTextfield extends GComponent
 
 	private float width;
 
-	public GTextfield(Vector2 position, int priority, String title, final int maxInputSymbols, Font font)
+	public GTextfield(Vector2 position, String title, final int maxInputSymbols, Font font)
 	{
-		super("textfield", priority);
+		super("textfield");
 
 		getStyle().setFont(font);
 
@@ -92,7 +92,7 @@ public class GTextfield extends GComponent
 		
 		active = true;
 	}
-	
+
 	protected void setInactive()
 	{
 		getStyle().setColor(null);

@@ -1,5 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.gui.layer;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,11 +43,14 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	}
 
 	// Checks whether there is a component in this layer with the same priority.
-	private boolean isDoublePriority(int priority)
+	private boolean overlaps(GComponent tested)
 	{
-		for(GComponent component : components)
+		for(GComponent current : components)
 		{
-			if(component.getPriority() == priority)
+			Rectangle boundsCurrent = new Rectangle(current.getStyle().getTextureRegion().getRegionX(), current.getStyle().getTextureRegion().getRegionY(), current.getStyle().getTextureRegion().getRegionWidth(), current.getStyle().getTextureRegion().getRegionHeight());
+			Rectangle boundsTested = new Rectangle(tested.getStyle().getTextureRegion().getRegionX(), tested.getStyle().getTextureRegion().getRegionY(), tested.getStyle().getTextureRegion().getRegionWidth(), tested.getStyle().getTextureRegion().getRegionHeight());
+
+			if(boundsCurrent.intersects(boundsTested) && current.hashCode() != tested.hashCode())
 			{
 				return true;
 			}
@@ -61,7 +65,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	{
 		for(GComponent comp : source)
 		{
-			if(isDoublePriority(comp.getPriority()))
+			if(overlaps(comp))
 			{
 				// Tell the programmer something went wrong, meaning that (at least) two components overlap each other.
 				return false;

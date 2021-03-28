@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
@@ -29,10 +30,13 @@ public class GTickBoxList extends GComponent
 
 	public GTickBoxList(Vector2 position, int priority, boolean multipleChoice, Font font)
 	{
-		super("selectionbox", priority);
+		super("selectionbox");
 
 		getStyle().setFont(font);
-		getStyle().setImage(new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png")));
+
+		Texture t = new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png"));
+
+		getStyle().setTexture(t);
 
 		getStyle().setBounds(new Rectangle(position.x, position.y, 0,0));
 

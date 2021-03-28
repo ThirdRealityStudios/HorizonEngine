@@ -8,7 +8,7 @@ public interface Settings
     public static final int MARGIN = 2*100;
 
     // Retrieves the systems screen resolution.
-    public static final Dimension SYSTEM_SCREEN = Toolkit.getDefaultToolkit().getScreenSize();
+    public static final Dimension SYSTEM_SCREEN = new Dimension(1280, 720);//Toolkit.getDefaultToolkit().getScreenSize();
 
     public static Dimension SCREEN_SIZE = new Dimension(SYSTEM_SCREEN.width - MARGIN,SYSTEM_SCREEN.height - MARGIN);
 

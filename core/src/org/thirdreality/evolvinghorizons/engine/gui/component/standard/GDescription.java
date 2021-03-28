@@ -18,9 +18,9 @@ public class GDescription extends GComponent
 
 	private GlyphLayout layout;
 
-	public GDescription(Vector2 position, int priority, String text, Font font)
+	public GDescription(Vector2 position, String text, Font font)
 	{
-		super("description", priority);
+		super("description");
 
 		getStyle().setFont(font);
 		

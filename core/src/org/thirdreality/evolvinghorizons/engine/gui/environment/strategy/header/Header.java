@@ -17,7 +17,7 @@ public class Header
 
     private final GImage[] lowerHeader;
 
-    private final int height = 50;
+    private final int height = 30;
 
     public Header(String titleCentered, HeaderValue[] upperLeftHeader, HeaderValue[] upperRightHeader, GImage[] lowerHeader)
     {
@@ -39,7 +39,9 @@ public class Header
 
         Rectangle shape = new Rectangle(x, y, Gdx.graphics.getWidth(), height);
 
-        GRectangle backgroundRectangle = new GRectangle(shape, Integer.MIN_VALUE, Color.YELLOW);
+        GRectangle backgroundRectangle = new GRectangle(shape, Color.RED);
+        backgroundRectangle.getStyle().setPadding(1);
+        backgroundRectangle.getStyle().setColor(Color.BLUE);
 
         return backgroundRectangle;
     }

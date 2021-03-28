@@ -5,6 +5,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
@@ -219,13 +220,13 @@ public class SampleApplication extends HorizonGame
 
 		Color transparentRed = new Color(1f, 0, 0, 0.5f);
 
-		rect = new GRectangle(new Rectangle(0, -50, 800, 136), 0, new Color(1f, 0f, 0f, 0.1f));
+		rect = new GRectangle(new Rectangle(0, -50, 800, 136), new Color(1f, 0f, 0f, 0.1f));
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		checkbox1 = new GCheckbox(new Vector2(20, 200), 0, true);
+		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
 
 		moveButton = new GButton(new Vector2(150, 75), 0, "Move Viewport right", smallerFont);
 
@@ -296,7 +297,7 @@ public class SampleApplication extends HorizonGame
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Vector2(20, 300), 1, "GERMAN", 10, smallerFont);
+		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, smallerFont);
 
 		input1.setActionListener(new GActionListener()
 		{
@@ -313,19 +314,20 @@ public class SampleApplication extends HorizonGame
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Vector2(20, 375), 2, "DEUTSCH", 10, smallerFont);
+		input2 = new GTextfield(new Vector2(20, 375), "DEUTSCH", 10, smallerFont);
 
-		input3 = new GTextfield(new Vector2(20, 450), 3, "ALEMAN", 10, smallerFont);
+		input3 = new GTextfield(new Vector2(20, 450), "ALEMAN", 10, smallerFont);
 
-		Texture t = new Texture(Gdx.files.internal(Path.MEDIA_FOLDER + File.separator + "MountainLake.jpg"));
+		Texture t = new Texture(Gdx.files.internal("gui" + File.separator + "header" + File.separator + "background.png"));
+		t.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-		img0 = new GImage(new Vector2(0, 0), 0, 600, false , t);
+		img0 = new GImage(new Vector2(0, 0), 0, false , t);
 		img0.getLogic().setActionOnHover(false);
 	}
 
 	public void setupDisplayLayers()
 	{
-		description = new GDescription(new Vector2(20, 520), 0, "Money here for nothing!", smallerFont);
+		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
 
 		/*
 		layer0.add(img0);

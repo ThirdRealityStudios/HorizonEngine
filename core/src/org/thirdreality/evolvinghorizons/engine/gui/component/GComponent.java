@@ -2,6 +2,9 @@ package org.thirdreality.evolvinghorizons.engine.gui.component;
 
 import java.io.Serializable;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.GLogic;
@@ -42,23 +45,12 @@ public abstract class GComponent implements Serializable
 
 	private boolean isZoomable = false;
 
-	private final int priority;
-
-	public GComponent(String type, int priority)
+	public GComponent(String type)
 	{
 		style = new GStyle();
 		logic = new GLogic();
 
 		setType(type);
-
-		this.priority = priority;
-	}
-	
-	public GComponent(String type, int priority, Rectangle bounds)
-	{
-		this(type, priority);
-
-		getStyle().setBounds(bounds);
 	}
 
 	public String getType()
@@ -142,11 +134,5 @@ public abstract class GComponent implements Serializable
 	public void setZoomable(boolean zoomable)
 	{
 		isZoomable = zoomable;
-	}
-
-	// Returns the priority of this component in a layer.
-	public int getPriority()
-	{
-		return priority;
 	}
 }

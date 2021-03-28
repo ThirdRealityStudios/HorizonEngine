@@ -3,7 +3,9 @@ package org.thirdreality.evolvinghorizons.engine.container.style;
 import java.io.Serializable;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
@@ -13,9 +15,6 @@ import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 public class GStyle implements Serializable
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-
-	// Contains the bounds of the component.
-	private Rectangle bounds;
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -58,29 +57,15 @@ public class GStyle implements Serializable
 	// e.g. the border thickness and border radiuses in pixels.
 	private GBorderProperty border;
 
-	private Texture img;
+	private TextureRegion textureRegion;
 
 	public GStyle()
 	{
 		textTransition = new Vector2();
 		border = new GBorderProperty();
-	}
 
-	// Creates a GStyle from another GStyle without modifying its values.
-	// The new GStyle will be a unique copy.
-	// Anyway, you need specify the setLocation(...) again for your purpose..
-	public GStyle(GStyle style)
-	{
-		border = style.getBorderProperties().copy();
-
-		setFont(style.getFont());
-		setImage(style.getImage());
-		setPadding(style.getPadding());
-		setColor(style.getColor());
-		setTextAlign(style.getTextAlign());
-		setTextTransition(style.getTextTransition());
-		setVisible(style.isVisible());
-		setBounds(style.getBounds());
+		// Creating a TextureRegion with no size or coordinate given.
+		textureRegion = new TextureRegion(new Texture(new Pixmap(0,0, Pixmap.Format.RGBA8888)));
 	}
 
 	public Boolean isVisible()
@@ -115,17 +100,17 @@ public class GStyle implements Serializable
 
 	public Vector2 getPosition()
 	{
-		return new Vector2(bounds.x, bounds.y);
+		return new Vector2(textureRegion.getRegionX(), textureRegion.getRegionY());
 	}
 
-	public Texture getImage()
+	public TextureRegion getTextureRegion()
 	{
-		return img;
+		return textureRegion;
 	}
 
-	public void setImage(Texture img)
+	public void setTexture(Texture t)
 	{
-		this.img = img;
+		this.textureRegion.setTexture(t);
 	}
 
 	public GBorderProperty getBorderProperties()
@@ -183,13 +168,13 @@ public class GStyle implements Serializable
 		this.isMovable = isMovable;
 	}
 
-	public Rectangle getBounds()
-	{
-		return bounds;
-	}
-
 	public void setBounds(Rectangle bounds)
 	{
-		this.bounds = bounds;
+		textureRegion.setRegion((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
+	}
+
+	public Rectangle getBounds()
+	{
+		return new Rectangle(textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 	}
 }

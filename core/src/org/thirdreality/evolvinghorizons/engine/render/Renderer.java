@@ -3,9 +3,9 @@ package org.thirdreality.evolvinghorizons.engine.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -149,11 +149,11 @@ public class Renderer
     @Deprecated
     private static void drawRectangle(GComponent c)
     {
-        Rectangle rect = new Rectangle(c.getStyle().getBounds());
+        Rectangle rect = c.getStyle().getBounds();
 
         RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(Color.YELLOW);
+        RenderSource.getShapeRenderer(c.isZoomable()).setColor(c.getStyle().getColor());
         RenderSource.getShapeRenderer(c.isZoomable()).rect(rect.x, rect.y, rect.width, rect.height);
 
         RenderSource.getShapeRenderer(c.isZoomable()).end();
@@ -181,7 +181,7 @@ public class Renderer
         Rectangle bounds = c.getStyle().getBounds();
 
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        RenderSource.getSpriteBatch(c.isZoomable()).draw(c.getStyle().getImage(), bounds.x, bounds.y, bounds.width, bounds.height);
+        RenderSource.getSpriteBatch(c.isZoomable()).draw(c.getStyle().getTextureRegion(), bounds.x, bounds.y, bounds.width, bounds.height);
         RenderSource.getSpriteBatch(c.isZoomable()).end();
     }
 
@@ -220,7 +220,7 @@ public class Renderer
 
         if(checkbox.isChecked())
         {
-            Texture checkSymbol = c.getStyle().getImage();
+            Texture checkSymbol = c.getStyle().getTextureRegion().getTexture();
 
             // Simply the square size of the image.
             // The image is saved with square dimensions,
@@ -288,7 +288,7 @@ public class Renderer
 
             if(selectionBox.isSelected(i))
             {
-                Texture tickSymbol = c.getStyle().getImage();
+                Texture tickSymbol = c.getStyle().getTextureRegion().getTexture();
 
                 RenderSource.getSpriteBatch(c.isZoomable()).begin();
                 RenderSource.getSpriteBatch(c.isZoomable()).draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
