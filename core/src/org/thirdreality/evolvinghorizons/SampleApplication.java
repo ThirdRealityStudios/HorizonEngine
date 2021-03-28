@@ -104,15 +104,15 @@ public class SampleApplication extends HorizonGame
 		gSB.addOption("Hellö, it's me.");
 
 		GComponent[] layer2_components = new GComponent[]{img0};
-		GLayer layer2 = new GLayer(layer2_components, 2);
+		GLayer layer2 = new GLayer(layer2_components, 0);
 
 		GComponent[] layer1_components = new GComponent[]{polyButton};
-		GLayer layer1 = new GLayer(layer1_components, 0);
+		GLayer layer1 = new GLayer(layer1_components, 1);
 
 		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB};
-		GLayer layer0 = new GLayer(layer0_components, 1);
+		GLayer layer0 = new GLayer(layer0_components, 2);
 
-		gui.setLayers(new GLayer[]{layer0, layer1});
+		gui.setLayers(new GLayer[]{layer0, layer1, layer2});
 		gui.setZoomAcceleration(1f);
 		gui.setNavigationSpeed(10000);
 		gui.allowFocusOnZoom(true);
