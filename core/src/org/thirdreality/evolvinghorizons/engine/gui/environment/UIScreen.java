@@ -34,7 +34,7 @@ public abstract class UIScreen implements Screen
     }
 
     // Checks whether there is a layer in this UIScreen with the same priority.
-    private boolean isDoublePriority(GLayer compared)
+    protected boolean isDoublePriority(GLayer compared)
     {
         for(GLayer layer : layers)
         {
@@ -47,31 +47,17 @@ public abstract class UIScreen implements Screen
         return false;
     }
 
-    private GLayer[] copy(GLayer[] array)
-    {
-        GLayer[] layers = new GLayer[array.length];
-
-        for(int i = 0; i < layers.length; i++)
-        {
-            layers[i] = array[i];
-        }
-
-        return layers;
-    }
-
     public boolean setLayers(GLayer[] source)
     {
         GLayer[] backup = layers;
 
-        layers = copy(source);
+        layers = Arrays.copyOf(source, source.length);
 
         for(GLayer layer : layers)
         {
             if(isDoublePriority(layer))
             {
                 layers = backup;
-
-                System.out.println("DOUBLE PRIORITY!");
 
                 // Tell the programmer something went wrong, meaning that (at least) two layers overlap each other.
                 return false;

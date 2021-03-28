@@ -100,6 +100,6 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	@Override
 	public int compareTo(GLayer layer)
 	{
-		return this.getPriority() - layer.getPriority();
+		return layer.getPriority() - this.getPriority();
 	}
 }

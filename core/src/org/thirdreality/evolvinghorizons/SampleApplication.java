@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
+import org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.StrategicUIScreen;
+import org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.header.Header;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.HorizonGame;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
@@ -54,14 +56,14 @@ public class SampleApplication extends HorizonGame
 
 	private Font biggerFont, smallerFont;
 
-	private UIScreen gui;
+	private StrategicUIScreen gui;
 
 	private boolean exitGame = false;
 
 	@Override
 	public void create()
 	{
-		gui = new UIScreen()
+		gui = new StrategicUIScreen(new Header(null, null, null, null))
 		{
 			@Override
 			public void resize(int width, int height)
@@ -101,11 +103,14 @@ public class SampleApplication extends HorizonGame
 		gSB.addOption("Hell asdas dasd".toUpperCase());
 		gSB.addOption("Hellö, it's me.");
 
+		GComponent[] layer2_components = new GComponent[]{img0};
+		GLayer layer2 = new GLayer(layer2_components, 2);
+
 		GComponent[] layer1_components = new GComponent[]{polyButton};
-		GLayer layer1 = new GLayer(layer1_components, 1);
+		GLayer layer1 = new GLayer(layer1_components, 0);
 
 		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB};
-		GLayer layer0 = new GLayer(layer0_components, 0);
+		GLayer layer0 = new GLayer(layer0_components, 1);
 
 		gui.setLayers(new GLayer[]{layer0, layer1});
 		gui.setZoomAcceleration(1f);

@@ -3,6 +3,7 @@ package org.thirdreality.evolvinghorizons.engine.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -150,8 +151,12 @@ public class Renderer
     {
         Rectangle rect = new Rectangle(c.getStyle().getBounds());
 
-        RenderSource.getPixmap().drawRectangle((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
-        RenderSource.getTexture().draw(RenderSource.getPixmap(), 0, 0);
+        RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+
+        RenderSource.getShapeRenderer(c.isZoomable()).setColor(Color.YELLOW);
+        RenderSource.getShapeRenderer(c.isZoomable()).rect(rect.x, rect.y, rect.width, rect.height);
+
+        RenderSource.getShapeRenderer(c.isZoomable()).end();
     }
 
     @Deprecated
