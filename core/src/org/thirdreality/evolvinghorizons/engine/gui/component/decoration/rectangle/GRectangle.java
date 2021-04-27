@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.decoration;
+package org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

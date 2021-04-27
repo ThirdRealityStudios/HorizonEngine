@@ -1,10 +1,10 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list;
+package org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
-public class GTickOption
+public class GTickBox
 {
     private String text;
     private boolean selected;
@@ -13,7 +13,7 @@ public class GTickOption
 
     private GStyle style;
 
-    public GTickOption(String text)
+    public GTickBox(String text)
     {
         this.text = text;
 

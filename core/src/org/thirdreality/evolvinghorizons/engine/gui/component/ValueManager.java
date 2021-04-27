@@ -1,6 +1,6 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.optional;
+package org.thirdreality.evolvinghorizons.engine.gui.component;
 
-public abstract class GValueManager
+public abstract class ValueManager
 {
 	private int maxLength = 0;
 

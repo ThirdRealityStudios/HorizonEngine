@@ -2,14 +2,9 @@ package org.thirdreality.evolvinghorizons.engine.gui.component;
 
 import java.io.Serializable;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.GLogic;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GActionListener;
 import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
 public abstract class GComponent implements Serializable
@@ -41,7 +36,7 @@ public abstract class GComponent implements Serializable
 	private GLogic logic;
 	
 	// This contains the onClick() and onHover() methods to be run on this component.
-	private GActionListener actions;
+	private ActionListener actions;
 
 	private boolean isZoomable = false;
 
@@ -106,12 +101,12 @@ public abstract class GComponent implements Serializable
 		this.logic = logic;
 	}
 
-	public void setActionListener(GActionListener actions)
+	public void setActionListener(ActionListener actions)
 	{
 		this.actions = actions;
 	}
 	
-	public GActionListener getActionListener()
+	public ActionListener getActionListener()
 	{
 		return actions;
 	}

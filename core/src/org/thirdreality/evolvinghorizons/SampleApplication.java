@@ -1,29 +1,24 @@
 package org.thirdreality.evolvinghorizons;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.StrategicUIScreen;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.header.Header;
-import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.HorizonGame;
-import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
-import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GRectangle;
-import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GActionListener;
-import org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.GWindow;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickBoxList;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GDescription;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
+import org.thirdreality.evolvinghorizons.engine.gui.component.ActionListener;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
@@ -48,8 +43,6 @@ public class SampleApplication extends HorizonGame
 	private GCheckbox checkbox1;
 
 	private GTickBoxList gSB;
-
-	private GWindow window0, window1;
 
 	private GLayer layer0, layer1, layer2_shared, layer3, layer4;
 
@@ -152,7 +145,7 @@ public class SampleApplication extends HorizonGame
 
 		Line2D.Float line = new Line2D.Float(0,100,50,100);
 
-		gPolyButton.setActionListener(new GActionListener()
+		gPolyButton.setActionListener(new ActionListener()
 		{
 			@Override
 			public void onHover()
@@ -230,7 +223,7 @@ public class SampleApplication extends HorizonGame
 
 		moveButton = new GButton(new Vector2(150, 75), 0, "Move Viewport right", smallerFont);
 
-		moveButton.setActionListener(new GActionListener()
+		moveButton.setActionListener(new ActionListener()
 		{
 			@Override
 			public void onHover()
@@ -253,7 +246,7 @@ public class SampleApplication extends HorizonGame
 
 		increaseScale = new GButton(new Vector2(150, 100), 0, "increase scale", smallerFont);
 
-		increaseScale.setActionListener(new GActionListener()
+		increaseScale.setActionListener(new ActionListener()
 		{
 			@Override
 			public void onHover()
@@ -278,7 +271,7 @@ public class SampleApplication extends HorizonGame
 
 		exit = new GButton(new Vector2(20, 150), 0, "EXIT", smallerFont);
 
-		exit.setActionListener(new GActionListener()
+		exit.setActionListener(new ActionListener()
 		{
 			@Override
 			public void onHover()
@@ -299,7 +292,7 @@ public class SampleApplication extends HorizonGame
 
 		input1 = new GTextfield(new Vector2(20, 300), "GERMAN", 10, smallerFont);
 
-		input1.setActionListener(new GActionListener()
+		input1.setActionListener(new ActionListener()
 		{
 			@Override
 			public void onClick(){}

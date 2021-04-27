@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list;
+package org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
@@ -22,7 +21,7 @@ public class GTickBoxList extends GComponent
 	// As it says, you can determine in the beginning whether this list should accept multiple selections or only one at once.
 	private final boolean multipleChoice;
 
-	private ArrayList<GTickOption> options;
+	private ArrayList<GTickBox> options;
 
 	// Remembers the last selected option (index for 'options' right above).
 	// Is only used for the method addOption(...) .
@@ -43,14 +42,14 @@ public class GTickBoxList extends GComponent
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
 		getStyle().setPadding(8);
 
-		options = new ArrayList<GTickOption>();
+		options = new ArrayList<GTickBox>();
 
 		this.multipleChoice = multipleChoice;
 	}
 
 	public void addOption(String text)
 	{
-		GTickOption option = new GTickOption(text);
+		GTickBox option = new GTickBox(text);
 
 		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
 
@@ -136,7 +135,7 @@ public class GTickBoxList extends GComponent
 		return options.size();
 	}
 
-	public GTickOption getOption(int option)
+	public GTickBox getOption(int option)
 	{
 		return options.get(option);
 	}

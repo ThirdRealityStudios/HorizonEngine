@@ -1,6 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.header;
 
-import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
 
 public class HeaderValue
 {

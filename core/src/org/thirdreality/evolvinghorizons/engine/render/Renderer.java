@@ -5,19 +5,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
-import org.thirdreality.evolvinghorizons.engine.gui.component.placeholder.GWindow;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickBoxList;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GDescription;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class Renderer
@@ -402,12 +400,6 @@ public class Renderer
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
         font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
         RenderSource.getSpriteBatch(c.isZoomable()).end();
-    }
-
-    @Deprecated
-    public void drawWindow(GComponent c)
-    {
-        GWindow window = (GWindow) c;
     }
 
 }

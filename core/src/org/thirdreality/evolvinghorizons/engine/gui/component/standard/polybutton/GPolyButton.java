@@ -1,24 +1,22 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
+package org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.engine.math.Polygon;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
+import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GPolyButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	private GValueManager valueManager;
+	private ValueManager valueManager;
 
 	private Polygon polygon;
 
@@ -29,7 +27,7 @@ public class GPolyButton extends GComponent
 
 		this.polygon = polygon;
 
-		valueManager = new GValueManager()
+		valueManager = new ValueManager()
 		{
 			@Override
 			public void setValue(String value)
@@ -51,7 +49,7 @@ public class GPolyButton extends GComponent
 		getStyle().getTextureRegion().setRegion((int) polygon.getBoundingRectangle().x, (int) polygon.getBoundingRectangle().y, (int) polygon.getBoundingRectangle().width, (int) polygon.getBoundingRectangle().height);
 	}
 
-	private GValueManager getValueManager()
+	private ValueManager getValueManager()
 	{
 		return valueManager;
 	}

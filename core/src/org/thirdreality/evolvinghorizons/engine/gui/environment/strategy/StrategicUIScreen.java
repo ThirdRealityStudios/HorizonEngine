@@ -1,12 +1,9 @@
 package org.thirdreality.evolvinghorizons.engine.gui.environment.strategy;
 
-import com.badlogic.gdx.Gdx;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.UIScreen;
 import org.thirdreality.evolvinghorizons.engine.gui.environment.strategy.header.Header;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
-import org.thirdreality.evolvinghorizons.engine.math.Polygon;
 
 import java.util.Arrays;
 

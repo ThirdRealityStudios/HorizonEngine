@@ -1,13 +1,12 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
+package org.thirdreality.evolvinghorizons.engine.gui.component.standard.description;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GDescription extends GComponent
@@ -16,7 +15,7 @@ public class GDescription extends GComponent
 	
 	private boolean interaction = true;
 	
-	private GValueManager valueManager;
+	private ValueManager valueManager;
 
 	private GlyphLayout layout;
 
@@ -36,7 +35,7 @@ public class GDescription extends GComponent
 
 		getStyle().setFont(font);
 		
-		valueManager = new GValueManager()
+		valueManager = new ValueManager()
 		{
 			@Override
 			public void setValue(String value)
@@ -57,7 +56,7 @@ public class GDescription extends GComponent
 		getStyle().setBounds(updateBoundsAt(position));
 	}
 	
-	private GValueManager getValueManager()
+	private ValueManager getValueManager()
 	{
 		return valueManager;
 	}

@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.selection;
+package org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox;
 
 import java.io.File;
 

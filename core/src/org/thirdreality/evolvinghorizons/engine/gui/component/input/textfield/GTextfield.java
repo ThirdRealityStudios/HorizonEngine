@@ -1,12 +1,12 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.input;
+package org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 
@@ -16,7 +16,7 @@ public class GTextfield extends GComponent
 	
 	private boolean active = false;
 
-	private GValueManager valueManager;
+	private ValueManager valueManager;
 
 	private GlyphLayout layout;
 
@@ -30,7 +30,7 @@ public class GTextfield extends GComponent
 
 		getStyle().setBounds(new Rectangle());
 
-		valueManager = new GValueManager()
+		valueManager = new ValueManager()
 		{
 			@Override
 			public void setValue(String value)
@@ -86,7 +86,7 @@ public class GTextfield extends GComponent
 		}
 	}
 
-	public GValueManager getValueManager()
+	public ValueManager getValueManager()
 	{
 		return valueManager;
 	}

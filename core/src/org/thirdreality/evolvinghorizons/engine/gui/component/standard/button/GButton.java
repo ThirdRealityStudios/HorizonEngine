@@ -1,21 +1,19 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
+package org.thirdreality.evolvinghorizons.engine.gui.component.standard.button;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	private GValueManager valueManager;
+	private ValueManager valueManager;
 
 	private GlyphLayout layout;
 
@@ -23,7 +21,7 @@ public class GButton extends GComponent
 	{
 		super("button");
 
-		valueManager = new GValueManager()
+		valueManager = new ValueManager()
 		{
 			@Override
 			public void setValue(String title)
@@ -44,7 +42,7 @@ public class GButton extends GComponent
 		getStyle().setBounds(createBoundsAt(position));
 	}
 
-	private GValueManager getValueManager()
+	private ValueManager getValueManager()
 	{
 		return valueManager;
 	}

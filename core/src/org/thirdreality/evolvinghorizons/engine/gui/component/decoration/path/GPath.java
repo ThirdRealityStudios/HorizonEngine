@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.decoration;
+package org.thirdreality.evolvinghorizons.engine.gui.component.decoration.path;
 
 import java.awt.Point;
 import java.awt.Polygon;

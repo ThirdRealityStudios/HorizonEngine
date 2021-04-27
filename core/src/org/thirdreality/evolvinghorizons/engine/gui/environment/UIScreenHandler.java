@@ -3,19 +3,16 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.input.GTextfield;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickBoxList;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.GTickOption;
-import org.thirdreality.evolvinghorizons.engine.gui.component.standard.GButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
-import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
 
@@ -30,7 +27,7 @@ public class UIScreenHandler implements InputProcessor
 
 	// Below are the components which have been saved temporarily.
 	private GTickBoxList selectionBoxFocused;
-	private GTickOption lastlyHoveredOption;
+	private GTickBox lastlyHoveredOption;
 
 	private GTextfield textfieldFocused;
 
@@ -205,7 +202,7 @@ public class UIScreenHandler implements InputProcessor
 						{
 							for(int i = 0; i < listBox.size(); i++)
 							{
-								GTickOption option = listBox.getOption(i);
+								GTickBox option = listBox.getOption(i);
 
 								option.setSelected(false);
 							}

@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.decoration;
+package org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
