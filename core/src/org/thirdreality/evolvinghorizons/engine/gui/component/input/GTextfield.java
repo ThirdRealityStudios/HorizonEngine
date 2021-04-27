@@ -76,6 +76,16 @@ public class GTextfield extends GComponent
 		}
 	}
 
+	public void updateBoundsAt(Vector2 position)
+	{
+		getStyle().getBounds().setSize(getTextfieldWidth() + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
+
+		if(position != null)
+		{
+			getStyle().getBounds().setPosition(position);
+		}
+	}
+
 	public GValueManager getValueManager()
 	{
 		return valueManager;
@@ -113,16 +123,6 @@ public class GTextfield extends GComponent
 	public GlyphLayout getGlyphLayout()
 	{
 		return layout;
-	}
-
-	public void updateBoundsAt(Vector2 position)
-	{
-		getStyle().getBounds().setSize(getTextfieldWidth() + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx(), getGlyphLayout().height + 2*getStyle().getPadding() + 2*getStyle().getBorderProperties().getBorderThicknessPx());
-
-		if(position != null)
-		{
-			getStyle().getBounds().setPosition(position);
-		}
 	}
 
 	// Will calcuate the maximum textfield width in pixels by pretending the whole field is full of characters.

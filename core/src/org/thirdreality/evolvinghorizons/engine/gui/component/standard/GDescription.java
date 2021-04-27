@@ -1,8 +1,10 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.optional.GValueManager;
@@ -21,6 +23,16 @@ public class GDescription extends GComponent
 	public GDescription(Vector2 position, String text, Font font)
 	{
 		super("description");
+
+		setStyle(new GStyle()
+		{
+			// Will ignore the given dimensions as they are calculated automatically.
+			@Override
+			public void setBounds(Rectangle bounds)
+			{
+				super.setBounds(updateBoundsAt(new Vector2(bounds.x, bounds.y)));
+			}
+		});
 
 		getStyle().setFont(font);
 		
@@ -42,9 +54,7 @@ public class GDescription extends GComponent
 		layout = new GlyphLayout(font.getBitmapFont(), getText());
 
 		// Only saves the position in the bounds.
-		getStyle().setBounds(createBoundsAt(position));
-
-		getStyle().getBounds().setPosition(position);
+		getStyle().setBounds(updateBoundsAt(position));
 	}
 	
 	private GValueManager getValueManager()
@@ -72,7 +82,7 @@ public class GDescription extends GComponent
 		return layout;
 	}
 
-	public Rectangle createBoundsAt(Vector2 position)
+	public Rectangle updateBoundsAt(Vector2 position)
 	{
 		return new Rectangle(position.x, position.y, getGlyphLayout().width, getGlyphLayout().height);
 	}

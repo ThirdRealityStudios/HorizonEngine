@@ -164,14 +164,14 @@ public class Renderer
     {
         GDescription description = (GDescription) c;
 
-        Vector2 position = new Vector2(description.getStyle().getBounds().getX(), description.getStyle().getBounds().getY());
+        Vector2 position = new Vector2(description.getStyle().getBounds().x, description.getStyle().getBounds().y);
 
-        description.getStyle().setBounds(description.createBoundsAt(position));
+        //description.getStyle().setBounds(description.createBoundsAt(position));
 
         Font font = description.getStyle().getFont();
 
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), description.getText(), description.getStyle().getBounds().x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), description.getStyle().getBounds().y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), description.getText(), position.x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), position.y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
         RenderSource.getSpriteBatch(c.isZoomable()).end();
     }
 
@@ -315,9 +315,7 @@ public class Renderer
 
         String value = button.getTitle();
 
-        Vector2 position = new Vector2(button.getStyle().getBounds().getX(), button.getStyle().getBounds().getY());
-
-        Rectangle background = button.createBoundsAt(position);
+        Rectangle background = c.getStyle().getBounds();
 
         RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
         RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.buttonBg);
@@ -332,8 +330,6 @@ public class Renderer
         RenderSource.getShapeRenderer(c.isZoomable()).setColor(getUpdatedForegroundColor(c));
         RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height );
         RenderSource.getShapeRenderer(c.isZoomable()).end();
-
-        //float fontSize = textfield.getStyle().getFont().getFontSize();
 
         Font font = button.getStyle().getFont();
 

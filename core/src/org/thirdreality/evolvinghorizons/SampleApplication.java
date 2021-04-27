@@ -64,7 +64,11 @@ public class SampleApplication extends HorizonGame
 	@Override
 	public void create()
 	{
-		gui = new StrategicUIScreen(new Header(null, null, null, null))
+		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
+		smallerFont = new Font(mcFont, 18);
+		biggerFont = new Font(mcFont, 25);
+
+		gui = new StrategicUIScreen(new Header("Evolving Horizons", smallerFont, null, null, null))
 		{
 			@Override
 			public void resize(int width, int height)
@@ -84,10 +88,6 @@ public class SampleApplication extends HorizonGame
 
 			}
 		};
-
-		mcFont = Gdx.files.internal("font/DEFAULT_MONO.ttf");
-		smallerFont = new Font(mcFont, 18);
-		biggerFont = new Font(mcFont, 25);
 
 		initComponents();
 
@@ -110,10 +110,10 @@ public class SampleApplication extends HorizonGame
 		GComponent[] layer1_components = new GComponent[]{polyButton};
 		GLayer layer1 = new GLayer(layer1_components, 1);
 
-		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB};
+		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB, exit};
 		GLayer layer0 = new GLayer(layer0_components, 2);
 
-		gui.setLayers(new GLayer[]{layer0, layer1, layer2});
+		gui.setLayers(new GLayer[]{layer1});
 		gui.setZoomAcceleration(1f);
 		gui.setNavigationSpeed(10000);
 		gui.allowFocusOnZoom(true);

@@ -50,7 +50,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 			Rectangle boundsCurrent = new Rectangle(current.getStyle().getTextureRegion().getRegionX(), current.getStyle().getTextureRegion().getRegionY(), current.getStyle().getTextureRegion().getRegionWidth(), current.getStyle().getTextureRegion().getRegionHeight());
 			Rectangle boundsTested = new Rectangle(tested.getStyle().getTextureRegion().getRegionX(), tested.getStyle().getTextureRegion().getRegionY(), tested.getStyle().getTextureRegion().getRegionWidth(), tested.getStyle().getTextureRegion().getRegionHeight());
 
-			if(boundsCurrent.intersects(boundsTested) && current.hashCode() != tested.hashCode())
+			if(boundsCurrent.intersects(boundsTested) || boundsCurrent.contains(boundsTested) && current.hashCode() != tested.hashCode())
 			{
 				return true;
 			}
@@ -61,14 +61,14 @@ public class GLayer implements Comparable<GLayer>, Serializable
 
 	// Is "protected" because you need to make sure no components are at the same position.
 	// To use a new CopyOnWriteArrayList of type GComponent, create a new GLayer instead.
-	public boolean setComponents(GComponent[] source)
+	public void setComponents(GComponent[] source)
 	{
 		for(GComponent comp : source)
 		{
 			if(overlaps(comp))
 			{
-				// Tell the programmer something went wrong, meaning that (at least) two components overlap each other.
-				return false;
+				// Return because (at least) two components overlap each other.
+				return;
 			}
 		}
 
@@ -78,8 +78,6 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		Arrays.sort(components);
 
 		this.components = components;
-
-		return true;
 	}
 
 	public int getPriority()

@@ -1,5 +1,8 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.standard;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +18,7 @@ public class GButton extends GComponent
 	private GValueManager valueManager;
 
 	private GlyphLayout layout;
-	
+
 	public GButton(Vector2 position, int priority, String title, Font font)
 	{
 		super("button");
@@ -29,7 +32,6 @@ public class GButton extends GComponent
 			}
 		};
 
-		//setLength(title.length());
 		getStyle().setFont(font);
 		getStyle().getBorderProperties().setBorderRadiusPx(4);
 		getStyle().setPadding(4);
@@ -38,9 +40,10 @@ public class GButton extends GComponent
 
 		layout = new GlyphLayout(font.getBitmapFont(), getTitle());
 
+		getStyle().fillBounds(Color.BLACK);
 		getStyle().setBounds(createBoundsAt(position));
 	}
-	
+
 	private GValueManager getValueManager()
 	{
 		return valueManager;

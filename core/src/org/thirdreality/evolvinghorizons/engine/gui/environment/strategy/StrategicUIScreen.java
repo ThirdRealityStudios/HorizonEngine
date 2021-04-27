@@ -19,7 +19,7 @@ public abstract class StrategicUIScreen extends UIScreen
     {
         this.defaultHeader = defaultHeader;
 
-        GComponent[] headerComponents = new GComponent[]{defaultHeader.getBackgroundRectangle()};
+        GComponent[] headerComponents = defaultHeader.genComponents();
 
         headerLayer = new GLayer(headerComponents, Integer.MAX_VALUE);
     }

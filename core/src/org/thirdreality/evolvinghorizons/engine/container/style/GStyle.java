@@ -57,12 +57,15 @@ public class GStyle implements Serializable
 	// e.g. the border thickness and border radiuses in pixels.
 	private GBorderProperty border;
 
+	protected Vector2 position;
 	private TextureRegion textureRegion;
 
 	public GStyle()
 	{
 		textTransition = new Vector2();
 		border = new GBorderProperty();
+
+		position = new Vector2();
 
 		// Creating a TextureRegion with no size or coordinate given.
 		textureRegion = new TextureRegion(new Texture(new Pixmap(0,0, Pixmap.Format.RGBA8888)));
@@ -168,13 +171,22 @@ public class GStyle implements Serializable
 		this.isMovable = isMovable;
 	}
 
+	public void fillBounds(Color color)
+	{
+		Pixmap p = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+		p.setColor(color);
+		p.fill();
+		Texture t = new Texture(p);
+	}
+
 	public void setBounds(Rectangle bounds)
 	{
+		position = new Vector2(bounds.x, bounds.y);
 		textureRegion.setRegion((int) bounds.x, (int) bounds.y, (int) bounds.width, (int) bounds.height);
 	}
 
 	public Rectangle getBounds()
 	{
-		return new Rectangle(textureRegion.getRegionX(), textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+		return new Rectangle(position.x, position.y, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 	}
 }

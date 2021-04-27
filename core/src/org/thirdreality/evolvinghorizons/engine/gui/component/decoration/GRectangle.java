@@ -25,5 +25,6 @@ public class GRectangle extends GComponent
 
 		getStyle().getTextureRegion().setTexture(t);
 		getStyle().getTextureRegion().setRegion((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
+		getStyle().setBounds(rect);
 	}
 }
