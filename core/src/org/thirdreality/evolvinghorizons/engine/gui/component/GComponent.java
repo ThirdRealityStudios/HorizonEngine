@@ -35,11 +35,6 @@ public abstract class GComponent implements Serializable
 		logic = new GLogic();
 	}
 
-	public void print()
-	{
-		System.out.println(this);
-	}
-
 	@Override
 	public String toString()
 	{

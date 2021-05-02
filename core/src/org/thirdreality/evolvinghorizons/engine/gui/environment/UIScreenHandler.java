@@ -105,8 +105,6 @@ public class UIScreenHandler implements InputProcessor
 			return false;
 		}
 
-		System.out.println(i++ + ">> " + focused.getClass());
-
 		if(focused instanceof GButton)
 		{
 			textfieldFocused = null;

@@ -482,18 +482,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
         return array;
     }
 
-    private void print(short[] s)
-    {
-        System.out.print("[");
-
-        for(Short sh : s)
-        {
-            System.out.print(sh + ",");
-        }
-
-        System.out.println("]");
-    }
-
     // Calculates all triangles for this polygon, starting from the given position (vertex) to draw them all.
     // If nothing is returned (null), no combination of triangles was found to make up this polygon.
     // In this case, just try another starting point. If you yet tried every starting point, this polygon is simple too complex for this algorithm.

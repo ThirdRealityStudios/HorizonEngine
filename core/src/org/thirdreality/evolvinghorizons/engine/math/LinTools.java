@@ -143,19 +143,13 @@ public class LinTools
                 intersectionPoint = new Point2D.Float(intersectionVector.x, intersectionVector.y);
             }
 
-            // Point2D.Float[50.0, 150.0] -> Point2D.Float[100.0, 150.0]
-
             boolean linePointsIntersect =  equals(line.getP1(), comparedLine.getP1()) || equals(line.getP2(), comparedLine.getP2()) || equals(line.getP2(), comparedLine.getP1()) || equals(line.getP1(), comparedLine.getP2()) || equals(line.getP2(), comparedLine.getP1()) || equals(line.getP1(), comparedLine.getP2());
 
             boolean lineIntersectionPointsIntersect = intersectionPoint != null && (equals(intersectionPoint, comparedLine.getP1()) || equals(intersectionPoint, comparedLine.getP2()) || equals(intersectionPoint, line.getP1()) || equals(intersectionPoint, line.getP2()));
 
             boolean intersectsInBetweenOnly = comparedLine.intersectsLine(line) && !linePointsIntersect && !lineIntersectionPointsIntersect;
 
-           // if(intersectsInBetweenOnly)
-            {
-                intersects |= intersectsInBetweenOnly;//(line.intersectsLine(comparedLine));
-                //System.out.println("> " + LinTools.getIntersectionVector(comparedLine, line).getResult() + " of " + comparedLine.getP1() + " -> " + comparedLine.getP2() + " & " + line.getP1() + " -> " + line.getP2());
-            }
+            intersects |= intersectsInBetweenOnly;
         }
 
         return intersects;
