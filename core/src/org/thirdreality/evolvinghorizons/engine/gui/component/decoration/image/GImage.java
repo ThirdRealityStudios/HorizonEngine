@@ -1,7 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
@@ -11,9 +10,13 @@ public class GImage extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
+	private GStyle style;
+
 	public GImage(Vector2 position, Texture content, boolean repeat)
 	{
 		super("image");
+
+		style = new GStyle();
 
 		getStyle().setTexture(content);
 	}
@@ -49,7 +52,27 @@ public class GImage extends GComponent
 		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight()) * content.getWidth());
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth()) * content.getHeight()) : size;
 
+		style = new GStyle();
+
 		getStyle().setTexture(content);
 		getStyle().getTextureRegion().setRegion((int) position.x, (int) position.y, scaledWidth, scaledHeight);
+	}
+
+	public GStyle getStyle()
+	{
+		return style;
+	}
+
+	public void setStyle(GStyle style)
+	{
+		this.style = style;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
+				+ "\"):\nshape = " + getStyle().getBounds() + "\nlength = "
+				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
 	}
 }

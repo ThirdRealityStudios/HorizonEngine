@@ -1,11 +1,18 @@
 package org.thirdreality.evolvinghorizons.engine.gui.layer;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
+import com.badlogic.gdx.math.Rectangle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.path.GPath;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 
@@ -42,15 +49,90 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		return components;
 	}
 
+	private Rectangle getBounds(GComponent component)
+	{
+		switch(component.getType())
+		{
+			case "image":
+			{
+				GImage image = (GImage) component;
+
+				return image.getStyle().getBounds();
+			}
+
+			case "polybutton":
+			{
+				GPolyButton polyButton = (GPolyButton) component;
+
+				return polyButton.getStyle().getBounds();
+			}
+
+			case "description":
+			{
+				GDescription description = (GDescription) component;
+
+				return description.getStyle().getBounds();
+			}
+
+			case "path":
+			{
+				GPath path = (GPath) component;
+
+				return path.getStyle().getBounds();
+			}
+
+			case "textfield":
+			{
+				GTextfield textfield = (GTextfield) component;
+
+				return textfield.getStyle().getBounds();
+			}
+
+			case "checkbox":
+			{
+				GCheckbox checkbox = (GCheckbox) component;
+
+				return checkbox.getStyle().getBounds();
+			}
+
+			case "selectionbox":
+			{
+				GTickBoxList tickBoxList = (GTickBoxList) component;
+
+				return tickBoxList.getStyle().getBounds();
+			}
+
+			case "rectangle":
+			{
+				GRectangle rectangle = (GRectangle) component;
+
+				return rectangle.getStyle().getBounds();
+			}
+
+			case "button":
+			{
+				GButton button = (GButton) component;
+
+				return button.getStyle().getBounds();
+			}
+
+			default:
+			{
+				// If the component is unknown it will tell this by returning 'null'.
+				return null;
+			}
+		}
+	}
+
 	// Checks whether there is a component in this layer with the same priority.
 	private boolean overlaps(GComponent tested)
 	{
 		for(GComponent current : components)
 		{
-			Rectangle boundsCurrent = new Rectangle(current.getStyle().getTextureRegion().getRegionX(), current.getStyle().getTextureRegion().getRegionY(), current.getStyle().getTextureRegion().getRegionWidth(), current.getStyle().getTextureRegion().getRegionHeight());
-			Rectangle boundsTested = new Rectangle(tested.getStyle().getTextureRegion().getRegionX(), tested.getStyle().getTextureRegion().getRegionY(), tested.getStyle().getTextureRegion().getRegionWidth(), tested.getStyle().getTextureRegion().getRegionHeight());
+			Rectangle boundsCurrent = getBounds(current);
+			Rectangle boundsTested = getBounds(tested);
 
-			if(boundsCurrent.intersects(boundsTested) || boundsCurrent.contains(boundsTested) && current.hashCode() != tested.hashCode())
+			if(boundsCurrent.overlaps(boundsTested) || boundsCurrent.contains(boundsTested) && current.hashCode() != tested.hashCode())
 			{
 				return true;
 			}

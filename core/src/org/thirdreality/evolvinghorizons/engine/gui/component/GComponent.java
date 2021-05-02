@@ -2,10 +2,8 @@ package org.thirdreality.evolvinghorizons.engine.gui.component;
 
 import java.io.Serializable;
 
-import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.GLogic;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
 public abstract class GComponent implements Serializable
 {
@@ -29,10 +27,6 @@ public abstract class GComponent implements Serializable
 	// Relates to the offset.
 	private boolean movable = true;
 
-	private Vector2 offset;
-
-	private GStyle style;
-	
 	private GLogic logic;
 	
 	// This contains the onClick() and onHover() methods to be run on this component.
@@ -42,7 +36,6 @@ public abstract class GComponent implements Serializable
 
 	public GComponent(String type)
 	{
-		style = new GStyle();
 		logic = new GLogic();
 
 		setType(type);
@@ -67,8 +60,8 @@ public abstract class GComponent implements Serializable
 	public String toString()
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
-				+ "\"):\nshape = " + getStyle().getBounds() + "\nlength = "
-				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
+				+ "\"):\nlength = "
+				+ "\nvalue = \"";
 	}
 
 	public Boolean isEnabled()
@@ -79,16 +72,6 @@ public abstract class GComponent implements Serializable
 	public void setEnabled(boolean enabled)
 	{
 		this.enabled = enabled;
-	}
-	
-	public GStyle getStyle()
-	{
-		return style;
-	}
-	
-	public void setStyle(GStyle style)
-	{
-		this.style = style;
 	}
 
 	public GLogic getLogic()
@@ -114,11 +97,6 @@ public abstract class GComponent implements Serializable
 	public boolean hasActionListener()
 	{
 		return actions != null;
-	}
-
-	public Vector2 getOffset()
-	{
-		return offset;
 	}
 
 	public boolean isZoomable()

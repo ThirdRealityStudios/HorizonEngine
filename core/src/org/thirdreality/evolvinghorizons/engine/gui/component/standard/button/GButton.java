@@ -12,6 +12,8 @@ import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 public class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
+
+	private GStyle style;
 	
 	private ValueManager valueManager;
 
@@ -30,6 +32,8 @@ public class GButton extends GComponent
 			}
 		};
 
+		style = new GStyle();
+
 		getStyle().setFont(font);
 		getStyle().getBorderProperties().setBorderRadiusPx(4);
 		getStyle().setPadding(4);
@@ -40,6 +44,11 @@ public class GButton extends GComponent
 
 		getStyle().fillBounds(Color.BLACK);
 		getStyle().setBounds(createBoundsAt(position));
+	}
+
+	public GStyle getStyle()
+	{
+		return style;
 	}
 
 	private ValueManager getValueManager()

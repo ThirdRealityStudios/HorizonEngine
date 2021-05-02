@@ -1,4 +1,4 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox;
+package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.settings.Path;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
@@ -21,15 +22,19 @@ public class GTickBoxList extends GComponent
 	// As it says, you can determine in the beginning whether this list should accept multiple selections or only one at once.
 	private final boolean multipleChoice;
 
-	private ArrayList<GTickBox> options;
+	private ArrayList<GTickBoxField> options;
 
 	// Remembers the last selected option (index for 'options' right above).
 	// Is only used for the method addOption(...) .
 	int lastSelection = 0;
 
+	private GStyle style;
+
 	public GTickBoxList(Vector2 position, int priority, boolean multipleChoice, Font font)
 	{
 		super("selectionbox");
+
+		style = new GStyle();
 
 		getStyle().setFont(font);
 
@@ -42,14 +47,19 @@ public class GTickBoxList extends GComponent
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
 		getStyle().setPadding(8);
 
-		options = new ArrayList<GTickBox>();
+		options = new ArrayList<GTickBoxField>();
 
 		this.multipleChoice = multipleChoice;
 	}
 
+	public GStyle getStyle()
+	{
+		return style;
+	}
+
 	public void addOption(String text)
 	{
-		GTickBox option = new GTickBox(text);
+		GTickBoxField option = new GTickBoxField(text);
 
 		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
 
@@ -84,7 +94,7 @@ public class GTickBoxList extends GComponent
 			GlyphLayout optionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), currentText);
 
 			Rectangle textBounds = new Rectangle(tickBoxBounds.x + sizeTickBox + padding, tickBoxBounds.y, optionLayout.width, optionLayout.height);
-			option.setTextBox(textBounds);
+			option.setBounds(textBounds);
 
 			float inlineWidth = textBounds.x + textBounds.width + padding - origin.x;
 
@@ -135,7 +145,7 @@ public class GTickBoxList extends GComponent
 		return options.size();
 	}
 
-	public GTickBox getOption(int option)
+	public GTickBoxField getOption(int option)
 	{
 		return options.get(option);
 	}

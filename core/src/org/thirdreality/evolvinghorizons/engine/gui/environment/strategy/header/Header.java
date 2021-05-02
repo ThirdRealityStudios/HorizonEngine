@@ -45,7 +45,8 @@ public class Header
 
         Vector2 position = new Vector2(x, y);
 
-        headerTitle.getStyle().setBounds(headerTitle.updateBoundsAt(position));
+        // Should be unnecessary as it is always re-calculated when accessing its bounds.
+        //headerTitle.getStyle().setBounds(headerTitle.updateBoundsAt(position));
 
         //headerTitle = new GDescription(position, title, font);
 

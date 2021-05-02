@@ -4,9 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.path.GPath;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.gui.layer.GLayer;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
@@ -117,6 +126,74 @@ public abstract class UIScreen implements Screen
         return new Vector2(projected.x, projected.y);
     }
 
+    private Rectangle getBounds(GComponent component)
+    {
+        switch(component.getType())
+        {
+            case "image":
+            {
+                GImage image = (GImage) component;
+
+                return image.getStyle().getBounds();
+            }
+
+            case "description":
+            {
+                GDescription description = (GDescription) component;
+
+                return description.getStyle().getBounds();
+            }
+
+            case "path":
+            {
+                GPath path = (GPath) component;
+
+                return path.getStyle().getBounds();
+            }
+
+            case "textfield":
+            {
+                GTextfield textfield = (GTextfield) component;
+
+                return textfield.getStyle().getBounds();
+            }
+
+            case "checkbox":
+            {
+                GCheckbox checkbox = (GCheckbox) component;
+
+                return checkbox.getStyle().getBounds();
+            }
+
+            case "selectionbox":
+            {
+                GTickBoxList tickBoxList = (GTickBoxList) component;
+
+                return tickBoxList.getStyle().getBounds();
+            }
+
+            case "rectangle":
+            {
+                GRectangle rectangle = (GRectangle) component;
+
+                return rectangle.getStyle().getBounds();
+            }
+
+            case "button":
+            {
+                GButton button = (GButton) component;
+
+                return button.getStyle().getBounds();
+            }
+
+            default:
+            {
+                // If the component is unknown it will tell this by returning 'null'.
+                return null;
+            }
+        }
+    }
+
     // Tests if the cursor is on the position of a component.
     // Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
     // Returns 'false' if target is 'null'.
@@ -154,7 +231,7 @@ public abstract class UIScreen implements Screen
 
             default:
             {
-                return target.getStyle().getBounds().contains(screenX, screenY);
+                return getBounds(target).contains(screenX, screenY);
             }
         }
     }

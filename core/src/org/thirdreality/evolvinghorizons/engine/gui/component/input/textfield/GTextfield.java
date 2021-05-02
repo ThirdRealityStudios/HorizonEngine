@@ -22,9 +22,13 @@ public class GTextfield extends GComponent
 
 	private float width;
 
+	private GStyle style;
+
 	public GTextfield(Vector2 position, String title, final int maxInputSymbols, Font font)
 	{
 		super("textfield");
+
+		style = new GStyle();
 
 		getStyle().setFont(font);
 
@@ -74,6 +78,11 @@ public class GTextfield extends GComponent
 		{
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 		}
+	}
+
+	public GStyle getStyle()
+	{
+		return style;
 	}
 
 	public void updateBoundsAt(Vector2 position)

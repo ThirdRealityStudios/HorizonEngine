@@ -20,6 +20,8 @@ public class GPolyButton extends GComponent
 
 	private Polygon polygon;
 
+	private GStyle style;
+
 	// Info: The polygon is closed automatically later..
 	public GPolyButton(Polygon polygon, int priority, String title, Font font)
 	{
@@ -45,8 +47,15 @@ public class GPolyButton extends GComponent
 
 		setTitle(title);
 
+		style = new GStyle();
+
 		getStyle().setColor(Color.RED);
 		getStyle().getTextureRegion().setRegion((int) polygon.getBoundingRectangle().x, (int) polygon.getBoundingRectangle().y, (int) polygon.getBoundingRectangle().width, (int) polygon.getBoundingRectangle().height);
+	}
+
+	public GStyle getStyle()
+	{
+		return style;
 	}
 
 	private ValueManager getValueManager()

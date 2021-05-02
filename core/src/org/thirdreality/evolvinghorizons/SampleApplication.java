@@ -15,7 +15,7 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectang
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.ActionListener;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
@@ -266,7 +266,7 @@ public class SampleApplication extends HorizonGame
 		// These both settings are especially interesting for creating zoom-maps, browser-related content or similar stuff.
 		// It prevents the "increase scale button" (+) to be changed by the Viewport when scrolling or zooming in/out (as an example).
 		{
-			increaseScale.getStyle().setMovableForViewport(false);
+			increaseScale.getStyle().setMovable(false);
 		}
 
 		exit = new GButton(new Vector2(20, 150), 0, "EXIT", smallerFont);

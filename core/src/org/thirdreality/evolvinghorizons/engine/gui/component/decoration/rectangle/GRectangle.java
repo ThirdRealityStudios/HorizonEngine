@@ -11,10 +11,14 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 public class GRectangle extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
+
+	private GStyle style;
+
 	public GRectangle(Rectangle rect, Color color)
 	{
 		super("rectangle");
+
+		style = new GStyle();
 
 		getStyle().setColor(color);
 
@@ -26,5 +30,10 @@ public class GRectangle extends GComponent
 		getStyle().getTextureRegion().setTexture(t);
 		getStyle().getTextureRegion().setRegion((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
 		getStyle().setBounds(rect);
+	}
+
+	public GStyle getStyle()
+	{
+		return style;
 	}
 }

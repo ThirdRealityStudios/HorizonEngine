@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
@@ -27,7 +27,7 @@ public class UIScreenHandler implements InputProcessor
 
 	// Below are the components which have been saved temporarily.
 	private GTickBoxList selectionBoxFocused;
-	private GTickBox lastlyHoveredOption;
+	private GTickBoxField lastlyHoveredOption;
 
 	private GTextfield textfieldFocused;
 
@@ -131,7 +131,9 @@ public class UIScreenHandler implements InputProcessor
 			{
 				textfieldFocused = null;
 
-				focused.getStyle().setColor(ColorScheme.checkboxPressed);
+				GCheckbox checkboxFocused = (GCheckbox) focused;
+
+				checkboxFocused.getStyle().setColor(ColorScheme.checkboxPressed);
 
 				break;
 			}
@@ -171,7 +173,9 @@ public class UIScreenHandler implements InputProcessor
 				{
 					lastlyFocused.getActionListener().onClick();
 
-					lastlyFocused.getStyle().setColor(ColorScheme.buttonFg);
+					GButton lastlyFocusedButton = (GButton) lastlyFocused;
+
+					lastlyFocusedButton.getStyle().setColor(ColorScheme.buttonFg);
 
 					break;
 				}
@@ -202,7 +206,7 @@ public class UIScreenHandler implements InputProcessor
 						{
 							for(int i = 0; i < listBox.size(); i++)
 							{
-								GTickBox option = listBox.getOption(i);
+								GTickBoxField option = listBox.getOption(i);
 
 								option.setSelected(false);
 							}

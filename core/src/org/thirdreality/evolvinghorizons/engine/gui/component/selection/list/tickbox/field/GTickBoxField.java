@@ -1,24 +1,24 @@
-package org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox;
+package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
 
-public class GTickBox
+public class GTickBoxField
 {
     private String text;
     private boolean selected;
-    private Rectangle tickBox, textBox;
+    private Rectangle tickBox, bounds;
     private Color backgroundColor;
 
     private GStyle style;
 
-    public GTickBox(String text)
+    public GTickBoxField(String text)
     {
         this.text = text;
 
         tickBox = new Rectangle();
-        textBox = new Rectangle();
+        bounds = new Rectangle();
     }
 
     public String getText()
@@ -46,19 +46,19 @@ public class GTickBox
         return tickBox;
     }
 
-    protected void setTickBox(Rectangle tickBox)
+    public void setTickBox(Rectangle tickBox)
     {
         this.tickBox = tickBox;
     }
 
-    public Rectangle getTextBox()
+    public Rectangle getBounds()
     {
-        return textBox;
+        return bounds;
     }
 
-    protected void setTextBox(Rectangle textBox)
+    public void setBounds(Rectangle bounds)
     {
-        this.textBox = textBox;
+        this.bounds = bounds;
     }
 
     public Color getBackgroundColor()

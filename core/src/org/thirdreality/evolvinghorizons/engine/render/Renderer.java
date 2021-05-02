@@ -10,9 +10,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
@@ -108,33 +110,32 @@ public class Renderer
     // Uses: to get the correct color for the component when a user clicks it or hovers across it.
     private static Color getUpdatedForegroundColor(GComponent component)
     {
-        Color componentFg = null;
-
         switch(component.getType())
         {
             case "button":
             {
-                componentFg = ColorScheme.buttonFg;
+                GButton button = (GButton) component;
 
-                break;
+                return (button.getStyle().getColor() == null) ? ColorScheme.buttonFg : button.getStyle().getColor();
             }
 
             case "textfield":
             {
-                componentFg = ColorScheme.textfieldFg;
+                GTextfield textfield = (GTextfield) component;
 
-                break;
+                return (textfield.getStyle().getColor() == null) ? ColorScheme.textfieldFg : textfield.getStyle().getColor();
             }
 
             case "checkbox":
             {
-                componentFg = ColorScheme.checkboxFg;
+                GCheckbox checkbox = (GCheckbox) component;
 
-                break;
+                return (checkbox.getStyle().getColor() == null) ? ColorScheme.checkboxFg : checkbox.getStyle().getColor();
             }
         }
 
-        return (component.getStyle().getColor() == null) ? componentFg : component.getStyle().getColor();
+        // No color found for the component type (unsupported).
+        return null;
     }
 
     // In the beginning this will just draw a blank screen which will erase the content of the last render cycle.
@@ -147,14 +148,16 @@ public class Renderer
     @Deprecated
     private static void drawRectangle(GComponent c)
     {
-        Rectangle rect = c.getStyle().getBounds();
+        GRectangle rectangle = (GRectangle) c;
 
-        RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+        Rectangle rect = rectangle.getStyle().getBounds();
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(c.getStyle().getColor());
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(rect.x, rect.y, rect.width, rect.height);
+        RenderSource.getShapeRenderer(rectangle.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).end();
+        RenderSource.getShapeRenderer(rectangle.isZoomable()).setColor(rectangle.getStyle().getColor());
+        RenderSource.getShapeRenderer(rectangle.isZoomable()).rect(rect.x, rect.y, rect.width, rect.height);
+
+        RenderSource.getShapeRenderer(rectangle.isZoomable()).end();
     }
 
     @Deprecated
@@ -169,18 +172,20 @@ public class Renderer
         Font font = description.getStyle().getFont();
 
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), description.getText(), position.x + (description.getStyle().getBounds().width / 2 - description.getGlyphLayout().width / 2), position.y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), description.getText(), position.x + (description.getStyle().getBounds().width / 2 - description.getStyle().getGlyphLayout().width / 2), position.y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
         RenderSource.getSpriteBatch(c.isZoomable()).end();
     }
 
     private static void drawImage(GComponent c)
     {
-        // Represents simply the outer bounds of the component.
-        Rectangle bounds = c.getStyle().getBounds();
+        GImage image = (GImage) c;
 
-        RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        RenderSource.getSpriteBatch(c.isZoomable()).draw(c.getStyle().getTextureRegion(), bounds.x, bounds.y, bounds.width, bounds.height);
-        RenderSource.getSpriteBatch(c.isZoomable()).end();
+        // Represents simply the outer bounds of the component.
+        Rectangle bounds = image.getStyle().getBounds();
+
+        RenderSource.getSpriteBatch(image.isZoomable()).begin();
+        RenderSource.getSpriteBatch(image.isZoomable()).draw(image.getStyle().getTextureRegion(), bounds.x, bounds.y, bounds.width, bounds.height);
+        RenderSource.getSpriteBatch(image.isZoomable()).end();
     }
 
     // Needs to be updated with offset and scale ability from the Viewports settings.
@@ -193,10 +198,10 @@ public class Renderer
     {
         GCheckbox checkbox = (GCheckbox) c;
 
-        RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
 
         // Represents simply the outer bounds of the component.
-        Rectangle background = new Rectangle(c.getStyle().getBounds());
+        Rectangle background = new Rectangle(checkbox.getStyle().getBounds());
 
         {
             Vector2 bgPosition = new Vector2(background.x, background.y);
@@ -204,30 +209,30 @@ public class Renderer
             background.setPosition(bgPosition);
         }
 
-        float borderThicknessPx = c.getStyle().getBorderProperties().getBorderThicknessPx();
+        float borderThicknessPx = checkbox.getStyle().getBorderProperties().getBorderThicknessPx();
 
         Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.width - 2*borderThicknessPx);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.checkboxBg);
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(background.x, background.y, background.width, background.width);
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).setColor(ColorScheme.checkboxBg);
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).rect(background.x, background.y, background.width, background.width);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(getUpdatedForegroundColor(c));
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.width);
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).setColor(getUpdatedForegroundColor(c));
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.width);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).end();
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).end();
 
         if(checkbox.isChecked())
         {
-            Texture checkSymbol = c.getStyle().getTextureRegion().getTexture();
+            Texture checkSymbol = checkbox.getStyle().getTextureRegion().getTexture();
 
             // Simply the square size of the image.
             // The image is saved with square dimensions,
             // so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
             float sizePx = foreground.width;
 
-            RenderSource.getSpriteBatch(c.isZoomable()).begin();
-            RenderSource.getSpriteBatch(c.isZoomable()).draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
-            RenderSource.getSpriteBatch(c.isZoomable()).end();
+            RenderSource.getSpriteBatch(checkbox.isZoomable()).begin();
+            RenderSource.getSpriteBatch(checkbox.isZoomable()).draw(checkSymbol, foreground.x, foreground.y, sizePx, sizePx);
+            RenderSource.getSpriteBatch(checkbox.isZoomable()).end();
         }
     }
 
@@ -260,14 +265,14 @@ public class Renderer
 
             drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx(), c.isZoomable());
 
-            Rectangle textBounds = selectionBox.getOption(i).getTextBox();
+            Rectangle textBounds = selectionBox.getOption(i).getBounds();
 
             float x = textBounds.x;
             float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
 
-            RenderSource.getSpriteBatch(c.isZoomable()).begin();
+            RenderSource.getSpriteBatch(selectionBox.isZoomable()).begin();
             selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), selectionBox.getText(i), x, y);
-            RenderSource.getSpriteBatch(c.isZoomable()).end();
+            RenderSource.getSpriteBatch(selectionBox.isZoomable()).end();
 
             float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -278,19 +283,19 @@ public class Renderer
 
             if(hoverColor != null)
             {
-                RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
-                RenderSource.getShapeRenderer(c.isZoomable()).setColor(hoverColor);
-                RenderSource.getShapeRenderer(c.isZoomable()).rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                RenderSource.getShapeRenderer(c.isZoomable()).end();
+                RenderSource.getShapeRenderer(selectionBox.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+                RenderSource.getShapeRenderer(selectionBox.isZoomable()).setColor(hoverColor);
+                RenderSource.getShapeRenderer(selectionBox.isZoomable()).rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                RenderSource.getShapeRenderer(selectionBox.isZoomable()).end();
             }
 
             if(selectionBox.isSelected(i))
             {
-                Texture tickSymbol = c.getStyle().getTextureRegion().getTexture();
+                Texture tickSymbol = selectionBox.getStyle().getTextureRegion().getTexture();
 
-                RenderSource.getSpriteBatch(c.isZoomable()).begin();
-                RenderSource.getSpriteBatch(c.isZoomable()).draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                RenderSource.getSpriteBatch(c.isZoomable()).end();
+                RenderSource.getSpriteBatch(selectionBox.isZoomable()).begin();
+                RenderSource.getSpriteBatch(selectionBox.isZoomable()).draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                RenderSource.getSpriteBatch(selectionBox.isZoomable()).end();
             }
         }
     }
@@ -313,7 +318,7 @@ public class Renderer
 
         String value = button.getTitle();
 
-        Rectangle background = c.getStyle().getBounds();
+        Rectangle background = button.getStyle().getBounds();
 
         RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
         RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.buttonBg);
