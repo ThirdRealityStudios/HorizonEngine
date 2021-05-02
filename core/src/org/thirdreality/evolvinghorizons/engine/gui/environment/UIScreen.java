@@ -128,70 +128,57 @@ public abstract class UIScreen implements Screen
 
     private Rectangle getBounds(GComponent component)
     {
-        switch(component.getType())
+        if(component instanceof GImage)
         {
-            case "image":
-            {
-                GImage image = (GImage) component;
+            GImage image = (GImage) component;
 
-                return image.getStyle().getBounds();
-            }
-
-            case "description":
-            {
-                GDescription description = (GDescription) component;
-
-                return description.getStyle().getBounds();
-            }
-
-            case "path":
-            {
-                GPath path = (GPath) component;
-
-                return path.getStyle().getBounds();
-            }
-
-            case "textfield":
-            {
-                GTextfield textfield = (GTextfield) component;
-
-                return textfield.getStyle().getBounds();
-            }
-
-            case "checkbox":
-            {
-                GCheckbox checkbox = (GCheckbox) component;
-
-                return checkbox.getStyle().getBounds();
-            }
-
-            case "selectionbox":
-            {
-                GTickBoxList tickBoxList = (GTickBoxList) component;
-
-                return tickBoxList.getStyle().getBounds();
-            }
-
-            case "rectangle":
-            {
-                GRectangle rectangle = (GRectangle) component;
-
-                return rectangle.getStyle().getBounds();
-            }
-
-            case "button":
-            {
-                GButton button = (GButton) component;
-
-                return button.getStyle().getBounds();
-            }
-
-            default:
-            {
-                // If the component is unknown it will tell this by returning 'null'.
-                return null;
-            }
+            return image.getStyle().getBounds();
         }
+        else if(component instanceof GDescription)
+        {
+            GDescription description = (GDescription) component;
+
+            return description.getStyle().getBounds();
+        }
+        else if(component instanceof GPath)
+        {
+            GPath path = (GPath) component;
+
+            return path.getStyle().getBounds();
+        }
+        else if(component instanceof GTextfield)
+        {
+            GTextfield textfield = (GTextfield) component;
+
+            return textfield.getStyle().getBounds();
+        }
+        else if(component instanceof GCheckbox)
+        {
+            GCheckbox checkbox = (GCheckbox) component;
+
+            return checkbox.getStyle().getBounds();
+        }
+        else if(component instanceof GTickBoxList)
+        {
+            GTickBoxList tickBoxList = (GTickBoxList) component;
+
+            return tickBoxList.getStyle().getBounds();
+        }
+        else if(component instanceof GRectangle)
+        {
+            GRectangle rectangle = (GRectangle) component;
+
+            return rectangle.getStyle().getBounds();
+        }
+        else if(component instanceof GButton)
+        {
+            GButton button = (GButton) component;
+
+            return button.getStyle().getBounds();
+        }
+
+        // If the component is unknown it will tell this by returning 'null'.
+        return null;
     }
 
     // Tests if the cursor is on the position of a component.
@@ -220,20 +207,14 @@ public abstract class UIScreen implements Screen
             return false;
         }
 
-        switch(target.getType())
+        if(target instanceof GPolyButton)
         {
-            case "polybutton":
-            {
-                GPolyButton polyButton = (GPolyButton) target;
+            GPolyButton polyButton = (GPolyButton) target;
 
-                return new Polygon(polyButton.getPolygon().getTransformedVertices()).contains(screenX, screenY);
-            }
-
-            default:
-            {
-                return getBounds(target).contains(screenX, screenY);
-            }
+            return new Polygon(polyButton.getPolygon().getTransformedVertices()).contains(screenX, screenY);
         }
+
+        return getBounds(target).contains(screenX, screenY);
     }
 
     private void drawAllComponents(GComponent[] components)

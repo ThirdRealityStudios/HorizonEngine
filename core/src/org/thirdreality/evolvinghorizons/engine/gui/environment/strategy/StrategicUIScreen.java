@@ -53,18 +53,6 @@ public abstract class StrategicUIScreen extends UIScreen
         // Sorts the layers by their priority.
         Arrays.sort(layers);
 
-        for(GLayer layerCurrent : layers)
-        {
-            for(GComponent component : layerCurrent.getComponents())
-            {
-                System.out.print(component.getType() + " ");
-            }
-
-            System.out.print(" (" + layerCurrent.getPriority() + ")");
-
-            System.out.println();
-        }
-
         return true;
     }
 }

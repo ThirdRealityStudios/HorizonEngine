@@ -105,52 +105,33 @@ public class UIScreenHandler implements InputProcessor
 			return false;
 		}
 
-		System.out.println(i++ + ">> " + focused.getType());
+		System.out.println(i++ + ">> " + focused.getClass());
 
-		switch(focused.getType())
+		if(focused instanceof GButton)
 		{
-			case "button":
+			textfieldFocused = null;
+
+			buttonFocused = (GButton) focused;
+
+			buttonFocused.getStyle().setColor(ColorScheme.buttonClicked);
+		}
+		else if(focused instanceof GTextfield)
+		{
+			textfieldFocused = (GTextfield) focused;
+		}
+		else if(focused instanceof GCheckbox)
+		{
+			textfieldFocused = null;
+
+			GCheckbox checkboxFocused = (GCheckbox) focused;
+
+			checkboxFocused.getStyle().setColor(ColorScheme.checkboxPressed);
+		}
+		else if(focused instanceof GTickBoxList)
+		{
+			if (lastlyHoveredOption != null)
 			{
-				textfieldFocused = null;
-
-				buttonFocused = (GButton) focused;
-
-				buttonFocused.getStyle().setColor(ColorScheme.buttonClicked);
-
-				break;
-			}
-
-			case "textfield":
-			{
-				textfieldFocused = (GTextfield) focused;
-
-				break;
-			}
-
-			case "checkbox":
-			{
-				textfieldFocused = null;
-
-				GCheckbox checkboxFocused = (GCheckbox) focused;
-
-				checkboxFocused.getStyle().setColor(ColorScheme.checkboxPressed);
-
-				break;
-			}
-
-			case "selectionbox":
-			{
-				if(lastlyHoveredOption != null)
-				{
-					lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
-				}
-
-				break;
-			}
-
-			default:
-			{
-
+				lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
 			}
 		}
 
@@ -167,61 +148,45 @@ public class UIScreenHandler implements InputProcessor
 
 		if(lastlyFocused != null)
 		{
-			switch(lastlyFocused.getType())
+			if(lastlyFocused instanceof GButton)
 			{
-				case "button":
+				lastlyFocused.getActionListener().onClick();
+
+				GButton lastlyFocusedButton = (GButton) lastlyFocused;
+
+				// Reset the appearance of the button after it was unfocused.
+				lastlyFocusedButton.getStyle().resetAppearance();
+			}
+			if(lastlyFocused instanceof GCheckbox)
+			{
+				textfieldFocused = null;
+
+				GCheckbox checkbox = (GCheckbox) lastlyFocused;
+
+				checkbox.getStyle().setColor(ColorScheme.checkboxFg);
+
+				checkbox.setChecked(!checkbox.isChecked());
+			}
+			if(lastlyFocused instanceof GTickBoxList)
+			{
+				GTickBoxList listBox = (GTickBoxList) lastlyFocused;
+
+				if(lastlyHoveredOption != null)
 				{
-					lastlyFocused.getActionListener().onClick();
+					// Simply assume, after releasing the mouse button, the cursor still remain over the tick box.
+					lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxHovered);
 
-					GButton lastlyFocusedButton = (GButton) lastlyFocused;
-
-					// Reset the appearance of the button after it was unfocused.
-					lastlyFocusedButton.getStyle().resetAppearance();
-
-					break;
-				}
-
-				case "checkbox":
-				{
-					textfieldFocused = null;
-
-					GCheckbox checkbox = (GCheckbox) lastlyFocused;
-
-					checkbox.getStyle().setColor(ColorScheme.checkboxFg);
-
-					checkbox.setChecked(!checkbox.isChecked());
-
-					break;
-				}
-
-				case "selectionbox":
-				{
-					GTickBoxList listBox = (GTickBoxList) lastlyFocused;
-
-					if(lastlyHoveredOption != null)
+					if(!listBox.isMultipleChoice())
 					{
-						// Simply assume, after releasing the mouse button, the cursor still remain over the tick box.
-						lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxHovered);
-
-						if(!listBox.isMultipleChoice())
+						for(int i = 0; i < listBox.size(); i++)
 						{
-							for(int i = 0; i < listBox.size(); i++)
-							{
-								GTickBoxField option = listBox.getOption(i);
+							GTickBoxField option = listBox.getOption(i);
 
-								option.setSelected(false);
-							}
+							option.setSelected(false);
 						}
-
-						lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
 					}
 
-					break;
-				}
-
-				default:
-				{
-
+					lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
 				}
 			}
 		}
@@ -262,50 +227,37 @@ public class UIScreenHandler implements InputProcessor
 			return false;
 		}
 
-		switch(focused.getType())
+		if(focused instanceof GButton)
 		{
-			case "button":
+			buttonFocused = (GButton) focused;
+
+			buttonFocused.getStyle().setColor(ColorScheme.buttonHovered);
+
+			lastlyHoveredButton = buttonFocused;
+		}
+		else if(focused instanceof GTickBoxList)
+		{
+			selectionBoxFocused = (GTickBoxList) focused;
+
+			Rectangle tickBoxBounds;
+
+			if(lastlyHoveredOption != null)
 			{
-				buttonFocused = (GButton) focused;
-
-				buttonFocused.getStyle().setColor(ColorScheme.buttonHovered);
-
-				lastlyHoveredButton = buttonFocused;
-
-				break;
+				lastlyHoveredOption.setBackgroundColor(null);
+				lastlyHoveredOption = null;
 			}
 
-			case "selectionbox":
+			for(int i = 0; i < selectionBoxFocused.size(); i++)
 			{
-				selectionBoxFocused = (GTickBoxList) focused;
+				tickBoxBounds = selectionBoxFocused.getOption(i).getTickBox();
 
-				Rectangle tickBoxBounds;
-
-				if(lastlyHoveredOption != null)
+				// See if the user hovered the current selection option.
+				if(selectionBoxFocused.isJustHovered(i) && selectionBoxFocused.getOption(i).getBackgroundColor() == null)
 				{
-					lastlyHoveredOption.setBackgroundColor(null);
-					lastlyHoveredOption = null;
+					selectionBoxFocused.getOption(i).setBackgroundColor(ColorScheme.selectionBoxHovered);
+
+					lastlyHoveredOption = selectionBoxFocused.getOption(i);
 				}
-
-				for(int i = 0; i < selectionBoxFocused.size(); i++)
-				{
-					tickBoxBounds = selectionBoxFocused.getOption(i).getTickBox();
-
-					// See if the user hovered the current selection option.
-					if(selectionBoxFocused.isJustHovered(i) && selectionBoxFocused.getOption(i).getBackgroundColor() == null)
-					{
-						selectionBoxFocused.getOption(i).setBackgroundColor(ColorScheme.selectionBoxHovered);
-
-						lastlyHoveredOption = selectionBoxFocused.getOption(i);
-					}
-				}
-
-				break;
-			}
-
-			default:
-			{
-
 			}
 		}
 

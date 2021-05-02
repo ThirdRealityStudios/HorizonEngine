@@ -9,10 +9,6 @@ public abstract class GComponent implements Serializable
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	// Determines the type of the GComponent, e.g. image, path or default.
-	// This will determine the render method later.
-	private String type;
-
 	/* Determines whether the component should be enabled or not.
 	 * If it's disabled, it is not just invisible but also you cannot interact with it anymore.
 	 * If 'null', a value will be automatically assigned later.
@@ -37,18 +33,6 @@ public abstract class GComponent implements Serializable
 	public GComponent(String type)
 	{
 		logic = new GLogic();
-
-		setType(type);
-	}
-
-	public String getType()
-	{
-		return type;
-	}
-
-	private void setType(String type)
-	{
-		this.type = type;
 	}
 
 	public void print()
@@ -59,7 +43,7 @@ public abstract class GComponent implements Serializable
 	@Override
 	public String toString()
 	{
-		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
+		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getClass()
 				+ "\"):\nlength = "
 				+ "\nvalue = \"";
 	}

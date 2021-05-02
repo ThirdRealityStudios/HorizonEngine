@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.image.GImage;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.path.GPath;
 import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
@@ -29,79 +30,41 @@ public class Renderer
     // The draw adapter doesn't care then because this feature is only supported within the Displays Viewport.
     public static void drawContext(GComponent c)
     {
-        // For the case there is an image supplied to the GComponent object,
-        // it is considered to be rendered.
-        // The programmer needs to know how to use the features GComponent delivers and has to ensure
-        // a supplied image will not get in conflict with other settings.
-        switch(c.getType())
+        if(c instanceof GImage)
         {
-            case "image":
-            {
-                drawImage(c);
-
-                break;
-            }
-
-            case "polybutton":
-            {
-                drawPolyButton(c);
-
-                break;
-            }
-
-            case "description":
-            {
-                drawDescription(c);
-
-                break;
-            }
-
-            case "path":
-            {
-                //drawPath(c);
-
-                break;
-            }
-
-            case "textfield":
-            {
-                drawTextfield(c);
-
-                break;
-            }
-
-            case "checkbox":
-            {
-                drawCheckbox(c);
-
-                break;
-            }
-
-            case "selectionbox":
-            {
-                drawSelectionBox(c);
-
-                break;
-            }
-
-            case "rectangle":
-            {
-                drawRectangle(c);
-
-                break;
-            }
-
-            case "button":
-            {
-                drawButton(c);
-
-                break;
-            }
-
-            default:
-            {
-
-            }
+            drawImage(c);
+        }
+        else if(c instanceof GPolyButton)
+        {
+            drawPolyButton(c);
+        }
+        else if(c instanceof GDescription)
+        {
+            drawDescription(c);
+        }
+        else if(c instanceof GPath)
+        {
+            //drawPath(c);
+        }
+        else if(c instanceof GTextfield)
+        {
+            drawTextfield(c);
+        }
+        else if(c instanceof GCheckbox)
+        {
+            drawCheckbox(c);
+        }
+        else if(c instanceof GTickBoxList)
+        {
+            drawSelectionBox(c);
+        }
+        else if(c instanceof GRectangle)
+        {
+            drawRectangle(c);
+        }
+        else if(c instanceof GButton)
+        {
+            drawButton(c);
         }
     }
 
@@ -110,28 +73,23 @@ public class Renderer
     // Uses: to get the correct color for the component when a user clicks it or hovers across it.
     private static Color getUpdatedForegroundColor(GComponent component)
     {
-        switch(component.getType())
+        if(component instanceof GButton)
         {
-            case "button":
-            {
-                GButton button = (GButton) component;
+            GButton button = (GButton) component;
 
-                return (button.getStyle().getColor() == null) ? ColorScheme.buttonFg : button.getStyle().getColor();
-            }
+            return (button.getStyle().getColor() == null) ? ColorScheme.buttonFg : button.getStyle().getColor();
+        }
+        else if(component instanceof GTextfield)
+        {
+            GTextfield textfield = (GTextfield) component;
 
-            case "textfield":
-            {
-                GTextfield textfield = (GTextfield) component;
+            return (textfield.getStyle().getColor() == null) ? ColorScheme.textfieldFg : textfield.getStyle().getColor();
+        }
+        else if(component instanceof GCheckbox)
+        {
+            GCheckbox checkbox = (GCheckbox) component;
 
-                return (textfield.getStyle().getColor() == null) ? ColorScheme.textfieldFg : textfield.getStyle().getColor();
-            }
-
-            case "checkbox":
-            {
-                GCheckbox checkbox = (GCheckbox) component;
-
-                return (checkbox.getStyle().getColor() == null) ? ColorScheme.checkboxFg : checkbox.getStyle().getColor();
-            }
+            return (checkbox.getStyle().getColor() == null) ? ColorScheme.checkboxFg : checkbox.getStyle().getColor();
         }
 
         // No color found for the component type (unsupported).

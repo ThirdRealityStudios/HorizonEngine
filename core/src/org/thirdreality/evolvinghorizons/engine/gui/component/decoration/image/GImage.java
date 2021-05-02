@@ -71,7 +71,7 @@ public class GImage extends GComponent
 	@Override
 	public String toString()
 	{
-		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
+		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getClass()
 				+ "\"):\nshape = " + getStyle().getBounds() + "\nlength = "
 				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
 	}
