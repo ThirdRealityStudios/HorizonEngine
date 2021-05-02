@@ -106,7 +106,7 @@ public class SampleApplication extends HorizonGame
 		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB, exit};
 		GLayer layer0 = new GLayer(layer0_components, 2);
 
-		gui.setLayers(new GLayer[]{layer1});
+		gui.setLayers(new GLayer[]{layer0, layer1});
 		gui.setZoomAcceleration(1f);
 		gui.setNavigationSpeed(10000);
 		gui.allowFocusOnZoom(true);

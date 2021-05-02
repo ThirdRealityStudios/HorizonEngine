@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
+import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GStyle extends org.thirdreality.evolvinghorizons.engine.container.style.GStyle
@@ -74,5 +75,10 @@ public class GStyle extends org.thirdreality.evolvinghorizons.engine.container.s
 	public void setColor(Color color)
 	{
 		this.color = color;
+	}
+
+	public void resetAppearance()
+	{
+		setColor(ColorScheme.buttonFg);
 	}
 }

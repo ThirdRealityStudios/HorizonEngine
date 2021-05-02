@@ -175,7 +175,8 @@ public class UIScreenHandler implements InputProcessor
 
 					GButton lastlyFocusedButton = (GButton) lastlyFocused;
 
-					lastlyFocusedButton.getStyle().setColor(ColorScheme.buttonFg);
+					// Reset the appearance of the button after it was unfocused.
+					lastlyFocusedButton.getStyle().resetAppearance();
 
 					break;
 				}
@@ -252,6 +253,12 @@ public class UIScreenHandler implements InputProcessor
 
 		if(focused == null)
 		{
+			if(lastlyHoveredButton != null)
+			{
+				// Resets the appearance of the button after it was unfocused ('focused == null').
+				lastlyHoveredButton.getStyle().resetAppearance();
+			}
+
 			return false;
 		}
 
