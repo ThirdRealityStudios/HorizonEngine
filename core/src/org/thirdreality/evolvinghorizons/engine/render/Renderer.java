@@ -167,8 +167,6 @@ public class Renderer
 
         Vector2 position = new Vector2(description.getStyle().getBounds().x, description.getStyle().getBounds().y);
 
-        //description.getStyle().setBounds(description.createBoundsAt(position));
-
         Font font = description.getStyle().getFont();
 
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
@@ -339,40 +337,6 @@ public class Renderer
         RenderSource.getSpriteBatch(c.isZoomable()).begin();
         font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
         RenderSource.getSpriteBatch(c.isZoomable()).end();
-            /*
-            GButton button = (GButton) component;
-
-            String value = button.getTitle();
-
-            Rectangle background = new Rectangle(component.getStyle().getBounds());
-
-            Vector2 position = new Vector2(background.x, background.y);
-            position.add(viewport.getOrigin());
-
-            if(component.getStyle().isMovableForViewport())
-            {
-                position.add(viewport.getOffset());
-            }
-
-            int borderThicknessPx = 1;
-
-            RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
-            RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.buttonBg);
-            RenderSource.getShapeRenderer(c.isZoomable()).rect(background.x, background.y, background.width, background.height);
-
-            // Use the color defined in the scheme when there is no specific color set directly by the button.
-            if(component.getStyle().getColor() == null)
-            {
-                RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.buttonFg);
-            }
-            else
-            {
-                RenderSource.getShapeRenderer(c.isZoomable()).setColor(component.getStyle().getColor());
-            }
-
-            RenderSource.getShapeRenderer(c.isZoomable()).rect(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
-            RenderSource.getShapeRenderer(c.isZoomable()).end();
-             */
     }
 
     @Deprecated
@@ -381,8 +345,6 @@ public class Renderer
         GTextfield textfield = (GTextfield) c;
 
         String value = textfield.getInputValue();
-
-        Vector2 position = new Vector2(textfield.getStyle().getBounds().getX(), textfield.getStyle().getBounds().getY());
 
         Rectangle background = textfield.getStyle().getBounds();
 

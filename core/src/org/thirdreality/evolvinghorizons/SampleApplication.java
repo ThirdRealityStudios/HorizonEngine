@@ -178,27 +178,6 @@ public class SampleApplication extends HorizonGame
 
 		GPolyButton gPolyButton = null;//new GPolyButton(poly, "Button", smallerFont, poly);
 
-		/*
-		gPolyButton.setActionListener(new GActionListener()
-		{
-			@Override
-			public void onHover()
-			{
-
-			}
-
-			@Override
-			public void onClick()
-			{
-				System.out.println("Clicked GPolyButton!");
-			}
-		});
-
-		gPolyButton.getStyle().setColor(Color.RED);
-		gPolyButton.getStyle().setTextAlign(1);
-		gPolyButton.getStyle().setTextTransition(new Vector2(0, -40));
-		*/
-
 		return gPolyButton;
 	}
 
@@ -207,9 +186,6 @@ public class SampleApplication extends HorizonGame
 		Rectangle windowRepresentation = new Rectangle(400, 0, 600, 400);
 
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
-
-		//window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
-		//window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
 
 		Color transparentRed = new Color(1f, 0, 0, 0.5f);
 
@@ -321,40 +297,10 @@ public class SampleApplication extends HorizonGame
 	public void setupDisplayLayers()
 	{
 		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
-
-		/*
-		layer0.add(img0);
-
-		layer1.add(getPolyButton0());
-		//layer1.add(getPolyButton1());
-		layer1.add(increaseScale);
-		layer1.add(moveButton);
-		layer1.add(checkbox1);
-
-		layer2_shared.add(description);
-		layer2_shared.add(exit);
-
-		layer2_shared.add(input3);
-		layer2_shared.add(input2);
-		layer2_shared.add(input1);
-
-		layer2_shared.add(gSB);
-		//layer2_shared.add(rect);
-		 */
-
-
-		//displayContext.getViewport().getWindowManager().addWindow(window1);
-		//displayContext.getViewport().getWindowManager().addWindow(window0);
 	}
 
 	public void postInit()
 	{
 		setupDisplayLayers();
-
-		//renderContext.getRenderScreen().addLayer(layer0);
-		//renderContext.getRenderScreen().addLayer(layer1);
-		//renderContext.getRenderScreen().addLayer(layer2_shared);
-		//renderContext.getRenderScreen().addLayer(layer3);
-		//renderContext.getRenderScreen().addLayer(layer4);
 	}
 }

@@ -3,10 +3,8 @@ package org.thirdreality.evolvinghorizons.engine.math;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
-import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LinTools
@@ -172,46 +170,4 @@ public class LinTools
     {
         return point0.getX() == point1.getX() && point0.getY() == point1.getY();
     }
-
-    /*
-    // Tells you whether two lines intersect each other.
-    // In difference to their internal method intersectsLine(...) this method will consider their start and end points,
-    // meaning it considers only intersections between them.
-    public static boolean intersectsIgnoreEnds(Line2D.Float line0, Line2D.Float line1)
-    {
-        Vector2 result = getIntersectionVector(line0, line1).getResult();
-
-        if(result == null)
-        {
-            return false;
-        }
-
-        boolean leftEquals = equals(line0.getP1(), line1.getP1());
-        boolean rightEquals = equals(line0.getP2(), line1.getP2());
-
-        boolean insideBounds = true;
-
-        if(leftEquals || rightEquals || !line0.getBounds().contains(result.x, result.y) && !line1.getBounds().contains(result.x, result.y))
-        {
-            return false;
-        }
-
-        // Result exists (!= null), so return true.
-        return true;
-    }
-     */
-
-    /*
-    public static boolean intersectsIgnoreEnds(Line2D.Float line, ArrayList<Line2D.Float> lines)
-    {
-        boolean intersects = false;
-
-        for(Line2D.Float comparedLine : lines)
-        {
-            intersects |= intersectsIgnoreEnds(line, comparedLine);
-        }
-
-        return intersects;
-    }
-     */
 }

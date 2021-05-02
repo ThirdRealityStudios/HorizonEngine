@@ -1,17 +1,11 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.standard.description;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
-import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-
-import java.io.Serializable;
 
 public class GStyle extends org.thirdreality.evolvinghorizons.engine.container.style.GStyle
 {

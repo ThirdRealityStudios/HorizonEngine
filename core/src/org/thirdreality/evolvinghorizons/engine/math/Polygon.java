@@ -1,6 +1,5 @@
 package org.thirdreality.evolvinghorizons.engine.math;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import java.awt.geom.Line2D;
@@ -221,12 +220,6 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
             {
                 return true;
             }
-            /*
-            if(comparedLine.getBounds().equals(line.getBounds()))
-            {
-                return true;
-            }
-             */
         }
 
         return false;

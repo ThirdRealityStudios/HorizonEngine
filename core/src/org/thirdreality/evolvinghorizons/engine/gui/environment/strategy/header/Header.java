@@ -50,16 +50,6 @@ public class Header
         headerTitle.getStyle().getBounds().x = x;
         headerTitle.getStyle().getBounds().y = y;
 
-        //float x = Gdx.graphics.getWidth() / 2 - headerTitle.getStyle().getBounds().width / 2;
-        //float y = Gdx.graphics.getHeight() - headerTitle.getStyle().getBounds().height;
-
-        //Vector2 position = new Vector2(x, y);
-
-        // Should be unnecessary as it is always re-calculated when accessing its bounds.
-        //headerTitle.getStyle().setBounds(headerTitle.updateBoundsAt(position));
-
-        //headerTitle = new GDescription(position, title, font);
-
         return headerTitle;
     }
 

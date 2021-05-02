@@ -1,7 +1,6 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.standard.description;
 
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;

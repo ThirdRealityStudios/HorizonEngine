@@ -5,12 +5,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.evolvinghorizons.engine.container.style.property.GBorderProperty;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
-import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-
-import java.io.Serializable;
 
 public class GStyle extends org.thirdreality.evolvinghorizons.engine.container.style.GStyle
 {
@@ -55,13 +51,6 @@ public class GStyle extends org.thirdreality.evolvinghorizons.engine.container.s
 	{
 		this.padding = padding;
 	}
-
-	/*
-	public Rectangle getBounds()
-	{
-		return new Rectangle(getBounds().x, getBounds().y, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-	}
-	 */
 
 	public Color getColor()
 	{
