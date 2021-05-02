@@ -25,6 +25,8 @@ public class GDescription extends GComponent
 		super("description");
 
 		style = new GStyle(font, text);
+
+		style.getBounds().setPosition(position);
 		
 		valueManager = new ValueManager()
 		{

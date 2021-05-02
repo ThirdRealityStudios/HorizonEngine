@@ -36,14 +36,24 @@ public class Header
         this.lowerHeader = lowerHeader;
     }
 
-    private GDescription genTitle(String title, GRectangle headerContext)
+    // Will create a title which is centered at the given bounds.
+    private GDescription genTitle(String title, Rectangle bounds)
     {
         GDescription headerTitle = new GDescription(new Vector2(), title, font);
 
-        float x = Gdx.graphics.getWidth() / 2 - headerTitle.getStyle().getBounds().width / 2;
-        float y = Gdx.graphics.getHeight() - headerTitle.getStyle().getBounds().height;
+        float textWidth = headerTitle.getStyle().getBounds().width;
+        float textHeight = headerTitle.getStyle().getBounds().height;
 
-        Vector2 position = new Vector2(x, y);
+        float x = bounds.x + bounds.width / 2 - textWidth / 2;
+        float y = bounds.y + bounds.height / 2 + textHeight / 2;
+
+        headerTitle.getStyle().getBounds().x = x;
+        headerTitle.getStyle().getBounds().y = y;
+
+        //float x = Gdx.graphics.getWidth() / 2 - headerTitle.getStyle().getBounds().width / 2;
+        //float y = Gdx.graphics.getHeight() - headerTitle.getStyle().getBounds().height;
+
+        //Vector2 position = new Vector2(x, y);
 
         // Should be unnecessary as it is always re-calculated when accessing its bounds.
         //headerTitle.getStyle().setBounds(headerTitle.updateBoundsAt(position));
@@ -73,7 +83,7 @@ public class Header
     public GComponent[] genComponents()
     {
         GRectangle headerRectangle = genBackgroundRectangle();
-        GDescription headerTitle = genTitle(title, headerRectangle);
+        GDescription headerTitle = genTitle(title, headerRectangle.getStyle().getBounds());
 
         GComponent[] components = new GComponent[]{headerRectangle, headerTitle};
 
