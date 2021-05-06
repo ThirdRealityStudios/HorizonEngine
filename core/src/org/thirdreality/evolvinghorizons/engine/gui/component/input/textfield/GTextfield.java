@@ -8,7 +8,6 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
-import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
 
 public class GTextfield extends GComponent
 {
@@ -41,9 +40,9 @@ public class GTextfield extends GComponent
 			{
 				this.value = value;
 
-				layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), getInputValue());
+				layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), GTextfield.this.getValue());
 
-				updateBoundsAt(null);
+				updateBoundsAt(new Vector2(getStyle().getBounds().getX(), getStyle().getBounds().getY()));
 			}
 		};
 
@@ -100,6 +99,7 @@ public class GTextfield extends GComponent
 		return valueManager;
 	}
 
+	/*
 	protected void setActive()
 	{
 		if(getStyle().getColor() == null)
@@ -118,13 +118,14 @@ public class GTextfield extends GComponent
 		
 		active = false;
 	}
+	*/
 
 	private boolean isActive()
 	{
 		return active;
 	}
 
-	public String getInputValue()
+	public String getValue()
 	{
 		return getValueManager().getValue();
 	}

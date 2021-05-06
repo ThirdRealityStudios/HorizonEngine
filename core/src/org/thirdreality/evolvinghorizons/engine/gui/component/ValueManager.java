@@ -1,12 +1,13 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+
 public abstract class ValueManager
 {
 	private int maxLength = 0;
 
 	protected volatile String value = "";
-
-	private volatile String bufferedValue = null;
 
 	// Will write add a new char in the variable 'value' of type String.
 	// It will save the value before in the buffer.
@@ -16,7 +17,16 @@ public abstract class ValueManager
 
 		if(noOverflow)
 		{
+			for(char c : value.toCharArray())
+			{
+				System.out.print(c + ",");
+			}
+
+			System.out.println();
+
 			setValue(getValue() + key);
+
+			System.out.println("new length " + getValue().length());
 		}
 	}
 
@@ -29,31 +39,18 @@ public abstract class ValueManager
 		// of 'value'.
 		if(getValue().length() > 0)
 		{
+			value = value.substring(0, value.length()-1);
+
+			System.out.println("new length " + getValue().length() + " [del]");
+
+			/*
 			setBufferedValue(getBufferedValue());
 
 			char[] charValues = getValue().toCharArray();
 
 			setValue(String.valueOf(charValues, 0, charValues.length - 1));
+			*/
 		}
-	}
-
-	// Tells you whether the cursor of 'value' is at the beginning,
-	// meaning 'value' is empty.
-	public boolean isCursorAtBeginning()
-	{
-		return getValue().length() == 0;
-	}
-
-	// Tells you whether the cursor of 'value' is at the end,
-	// meaning 'value' is full.
-	public boolean isCursorAtEnd()
-	{
-		return (getValue().length() + 1) > getMaxLength();
-	}
-
-	public synchronized void revert()
-	{
-		setValue(getBufferedValue());
 	}
 
 	public synchronized String getValue()
@@ -64,16 +61,6 @@ public abstract class ValueManager
 	// The implementation depends on the type,
 	// e.g. a text-field is treated differently than an image.
 	public abstract void setValue(String val);
-
-	public synchronized void setBufferedValue(String value)
-	{
-		this.bufferedValue = value;
-	}
-
-	public synchronized String getBufferedValue()
-	{
-		return bufferedValue;
-	}
 
 	public int getMaxLength()
 	{

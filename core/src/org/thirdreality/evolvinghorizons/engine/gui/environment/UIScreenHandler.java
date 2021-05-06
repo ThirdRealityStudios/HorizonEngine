@@ -66,17 +66,41 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean keyTyped(char character)
 	{
-		this.keyTyped = character;
-
-		if(textfieldFocused != null)
+		// By checking for processed control keys in the program this prevents falsified input values.
+		// The reason is, the char values retrieved from keyTyped(...) are different from the ones you would might want to compare with Input.Keys.*
+		// As a consequence, the char value of backspace would be 8 instead of the integer value 67.
+		// Hence, all control keys are checked separately with the method Gdx.input.isKeyPressed(...)
+		if(!Gdx.input.isKeyPressed(Input.Keys.BACKSPACE))
 		{
-			if(character != Input.Keys.UNKNOWN)
-			{
-				textfieldFocused.getValueManager().write(character);
-			}
+			this.keyTyped = character;
+		}
+		else
+		{
+			this.keyTyped = Input.Keys.UNKNOWN;
 		}
 
 		return false;
+	}
+
+	// Updates all components. Needs to be called frequently by the UIScreen object.
+	// Takes care especially of the input values retrieved from the keyboard.
+	public void update()
+	{
+		if(textfieldFocused != null)
+		{
+			boolean backspace = Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE);
+
+			if(backspace)
+			{
+				textfieldFocused.getValueManager().eraseLastChar();
+			}
+			else if(keyTyped != Input.Keys.UNKNOWN)
+			{
+				textfieldFocused.getValueManager().write(keyTyped);
+			}
+		}
+
+		keyTyped = Input.Keys.UNKNOWN;
 	}
 
 	private Vector2 getProjectedCursor()

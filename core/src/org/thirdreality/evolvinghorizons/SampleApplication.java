@@ -100,6 +100,7 @@ public class SampleApplication extends HorizonGame
 		GComponent[] layer2_components = new GComponent[]{img0};
 		GLayer layer2 = new GLayer(layer2_components, 0);
 
+
 		GComponent[] layer1_components = new GComponent[]{polyButton};
 		GLayer layer1 = new GLayer(layer1_components, 1);
 

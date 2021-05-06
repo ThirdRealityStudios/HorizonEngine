@@ -302,7 +302,7 @@ public class Renderer
     {
         GTextfield textfield = (GTextfield) c;
 
-        String value = textfield.getInputValue();
+        String value = textfield.getValue();
 
         Rectangle background = textfield.getStyle().getBounds();
 

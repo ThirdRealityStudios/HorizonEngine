@@ -83,8 +83,6 @@ public abstract class UIScreen implements Screen
     // Returns null if there is no such component.
     public GComponent getFocusedComponent(int screenX, int screenY)
     {
-        GComponent focused = null;
-
         for(GLayer layer : layers)
         {
             GComponent firstMatch = null;
@@ -298,6 +296,8 @@ public abstract class UIScreen implements Screen
     public void render(float delta)
     {
         uiScreenHandler.delta = delta;
+
+        uiScreenHandler.update();
 
         navigateByKeyboard(delta);
 
