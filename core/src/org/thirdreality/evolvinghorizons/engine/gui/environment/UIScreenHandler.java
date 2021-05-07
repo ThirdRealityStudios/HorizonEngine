@@ -3,6 +3,7 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -31,8 +32,7 @@ public class UIScreenHandler implements InputProcessor
 
 	private GTextfield textfieldFocused;
 
-	private GButton buttonFocused;
-	private GButton lastlyHoveredButton;
+	private GButton buttonSaved;
 
 	private GComponent lastlyFocused;
 
@@ -134,7 +134,7 @@ public class UIScreenHandler implements InputProcessor
 		if(focused == null)
 		{
 			textfieldFocused = null;
-			buttonFocused = null;
+			buttonSaved = null;
 
 			return false;
 		}
@@ -143,28 +143,19 @@ public class UIScreenHandler implements InputProcessor
 		{
 			textfieldFocused = null;
 
-			buttonFocused = (GButton) focused;
-			buttonFocused.getStyle().setColor(ColorScheme.buttonClicked);
+			buttonSaved = (GButton) focused;
+			buttonSaved.getStyle().setColor(ColorScheme.buttonClicked);
 		}
 		else if(focused instanceof GTextfield)
 		{
 			textfieldFocused = (GTextfield) focused;
 
-			buttonFocused = null;
-
-			/*
-			int index = textfieldFocused.getSelectedCharByIndex();
-
-			if(index > -1)
-			{
-				System.out.println(textfieldFocused.getValue().charAt(index));
-			}
-			 */
+			buttonSaved = null;
 		}
 		else if(focused instanceof GCheckbox)
 		{
 			textfieldFocused = null;
-			buttonFocused = null;
+			buttonSaved = null;
 
 			GCheckbox checkboxFocused = (GCheckbox) focused;
 
@@ -173,7 +164,7 @@ public class UIScreenHandler implements InputProcessor
 		else if(focused instanceof GTickBoxList)
 		{
 			textfieldFocused = null;
-			buttonFocused = null;
+			buttonSaved = null;
 
 			if (lastlyHoveredOption != null)
 			{
@@ -192,23 +183,22 @@ public class UIScreenHandler implements InputProcessor
 		screenX = (int) projectedCursor.x;
 		screenY = (int) projectedCursor.y;
 
+		if(buttonSaved != null)
+		{
+			textfieldFocused = null;
+
+			buttonSaved.getActionListener().onClick();
+
+			// Reset the appearance of the button after it was unfocused.
+			buttonSaved.getStyle().resetAppearance();
+		}
+
 		if(lastlyFocused != null)
 		{
-			if(lastlyFocused instanceof GButton)
+			if(lastlyFocused instanceof GCheckbox)
 			{
 				textfieldFocused = null;
-
-				GButton button = (GButton) lastlyFocused;
-
-				button.getActionListener().onClick();
-
-				// Reset the appearance of the button after it was unfocused.
-				button.getStyle().resetAppearance();
-			}
-			else if(lastlyFocused instanceof GCheckbox)
-			{
-				textfieldFocused = null;
-				buttonFocused = null;
+				buttonSaved = null;
 
 				GCheckbox checkbox = (GCheckbox) lastlyFocused;
 
@@ -219,7 +209,7 @@ public class UIScreenHandler implements InputProcessor
 			else if(lastlyFocused instanceof GTickBoxList)
 			{
 				textfieldFocused = null;
-				buttonFocused = null;
+				buttonSaved = null;
 
 				GTickBoxList listBox = (GTickBoxList) lastlyFocused;
 
@@ -261,35 +251,33 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		GComponent focused = uiScreen.getFocusedComponent(screenX, screenY);
+		GComponent currentComponent = uiScreen.getFocusedComponent(screenX, screenY);
 
 		Vector2 projectedCursor = getProjectedCursor();
 
 		screenX = (int) projectedCursor.x;
 		screenY = (int) projectedCursor.y;
 
-		if(focused == null)
+		if(currentComponent == null)
 		{
-			if(lastlyHoveredButton != null)
+			if(buttonSaved != null)
 			{
 				// Resets the appearance of the button after it was unfocused ('focused == null').
-				lastlyHoveredButton.getStyle().resetAppearance();
+				buttonSaved.getStyle().resetAppearance();
+
+				buttonSaved = null;
 			}
-
-			return false;
 		}
 
-		if(focused instanceof GButton)
+		if(currentComponent instanceof GButton)
 		{
-			buttonFocused = (GButton) focused;
+			buttonSaved = (GButton) currentComponent;
 
-			buttonFocused.getStyle().setColor(ColorScheme.buttonHovered);
-
-			lastlyHoveredButton = buttonFocused;
+			buttonSaved.getStyle().setColor(ColorScheme.buttonHovered);
 		}
-		else if(focused instanceof GTickBoxList)
+		else if(currentComponent instanceof GTickBoxList)
 		{
-			selectionBoxFocused = (GTickBoxList) focused;
+			selectionBoxFocused = (GTickBoxList) currentComponent;
 
 			Rectangle tickBoxBounds;
 
@@ -313,15 +301,7 @@ public class UIScreenHandler implements InputProcessor
 			}
 		}
 
-		if(focused != lastlyFocused)
-		{
-			if(buttonFocused != null)
-			{
-				buttonFocused.getStyle().setColor(ColorScheme.buttonFg);
-			}
-		}
-
-		lastlyFocused = focused;
+		lastlyFocused = currentComponent;
 
 		return false;
 	}
