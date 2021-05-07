@@ -3,8 +3,6 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
@@ -14,10 +12,9 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tic
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
 import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
 import org.thirdreality.evolvinghorizons.engine.render.RenderSource;
-
-import java.util.ArrayList;
 
 public class UIScreenHandler implements InputProcessor
 {
@@ -116,10 +113,6 @@ public class UIScreenHandler implements InputProcessor
 
 		return new Vector2(projected.x, projected.y);
 	}
-
-	int i = 0;
-
-	ArrayList<Vector2> points = new ArrayList<Vector2>();
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
@@ -248,25 +241,25 @@ public class UIScreenHandler implements InputProcessor
 		return false;
 	}
 
+	private void resetSavedButton()
+	{
+		if(buttonSaved != null)
+		{
+			// Resets the appearance of the button (when not hovering over it anymore).
+			buttonSaved.getStyle().resetAppearance();
+
+			buttonSaved = null;
+		}
+	}
+
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
 		GComponent currentComponent = uiScreen.getFocusedComponent(screenX, screenY);
 
-		Vector2 projectedCursor = getProjectedCursor();
-
-		screenX = (int) projectedCursor.x;
-		screenY = (int) projectedCursor.y;
-
 		if(currentComponent == null)
 		{
-			if(buttonSaved != null)
-			{
-				// Resets the appearance of the button after it was unfocused ('focused == null').
-				buttonSaved.getStyle().resetAppearance();
-
-				buttonSaved = null;
-			}
+			resetSavedButton();
 		}
 
 		if(currentComponent instanceof GButton)
@@ -279,8 +272,6 @@ public class UIScreenHandler implements InputProcessor
 		{
 			selectionBoxFocused = (GTickBoxList) currentComponent;
 
-			Rectangle tickBoxBounds;
-
 			if(lastlyHoveredOption != null)
 			{
 				lastlyHoveredOption.setBackgroundColor(null);
@@ -289,8 +280,6 @@ public class UIScreenHandler implements InputProcessor
 
 			for(int i = 0; i < selectionBoxFocused.size(); i++)
 			{
-				tickBoxBounds = selectionBoxFocused.getOption(i).getTickBox();
-
 				// See if the user hovered the current selection option.
 				if(selectionBoxFocused.isJustHovered(i) && selectionBoxFocused.getOption(i).getBackgroundColor() == null)
 				{
@@ -300,6 +289,10 @@ public class UIScreenHandler implements InputProcessor
 				}
 			}
 		}
+		else if(currentComponent instanceof GPolyButton)
+		{
+			resetSavedButton();
+		}
 
 		lastlyFocused = currentComponent;
 
@@ -308,8 +301,6 @@ public class UIScreenHandler implements InputProcessor
 
 	private void navigateToCursor()
 	{
-		Vector3 camPosition = RenderSource.orthographicCamera.position;
-
 		int zoomLevel = (int) RenderSource.orthographicCamera.zoom;
 
 		Vector2 cursorDirection = uiScreen.getCursorDirection().scl(zoomAcceleration * zoomLevel).scl(delta);
