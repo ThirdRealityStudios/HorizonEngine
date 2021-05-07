@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.thirdreality.evolvinghorizons.engine.math.Polygon;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
-import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
+import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GPolyButton extends GComponent

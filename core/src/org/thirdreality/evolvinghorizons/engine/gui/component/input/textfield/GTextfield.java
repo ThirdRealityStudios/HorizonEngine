@@ -1,10 +1,11 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.gui.component.ValueManager;
 import org.thirdreality.evolvinghorizons.engine.settings.Meta;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
@@ -64,13 +65,13 @@ public class GTextfield extends GComponent
 
 			getStyle().setPadding(4); // Default
 
-			// Create the GlyphLayout so the method createBounds(...) used below can determine the new bounds.
+			// Create the GlyphLayout so the method updateBoundsAt(...) used below can determine the new bounds.
 			layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), title);
 
+			// Initialize the bounds with the position given and calculate them after that.
 			updateBoundsAt(position);
 
-			// Will set the title or text which is contained yet.
-			// Will also update the "default shape".
+			// Will set the title or text which is contained at the beginning.
 			getValueManager().setValue(title);
 		}
 		else
@@ -82,6 +83,77 @@ public class GTextfield extends GComponent
 	public GStyle getStyle()
 	{
 		return style;
+	}
+
+	// Calculates all glyphs and returns them.
+	// All glyphs are returned with their location and measurements (mono-space, meaning width and height do not change here!).
+	public Rectangle[] getGlyphs()
+	{
+		Rectangle[] glyphs = new Rectangle[getValue().length()];
+
+		float glyphWidth = getTextfieldWidth() / getValueManager().getMaxLength();
+
+		Rectangle bounds = getStyle().getBounds();
+
+		float borderThicknessPx = getStyle().getBorderProperties().getBorderThicknessPx();
+		float padding = getStyle().getPadding();
+
+		Vector2 textPosition = new Vector2(bounds.x + borderThicknessPx + padding, bounds.y + (getGlyphLayout().height) / 2);
+
+		for(int i = 0; i < glyphs.length; i++)
+		{
+			glyphs[i] = new Rectangle(textPosition.x + i * glyphWidth, getStyle().getBounds().y, glyphWidth, getStyle().getBounds().height);
+		}
+
+		return glyphs;
+	}
+
+	// Returns the index of the char which was selected by mouse.
+	// Returns n+1 if the user wants to write / delete at the end of the text-field (at the very right),
+	// whereas n = length of the input value of the text-field. Make sure to prevent corresponding OutOfBounds exceptions if you use this method!
+	public int getSelectedCharByIndex()
+	{
+			Rectangle[] glyphs = getGlyphs();
+
+			Vector2 mousePosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+
+			for(int i = 0; i < glyphs.length; i++)
+			{
+				Rectangle glyph = glyphs[i];
+
+				boolean containsMousePosition = glyph.contains(mousePosition);
+
+				if(containsMousePosition)
+				{
+					boolean leftContainsMousePosition = new Rectangle(glyph.x, glyph.y, glyph.width / 2, glyph.height).contains(mousePosition);
+
+					if(leftContainsMousePosition)
+					{
+						return i;
+					}
+
+					// Return i+1 when the next char should be selected (cursor is roughly pointing on the char to the right).
+					return i+1;
+				}
+			}
+
+			// Represents the x location of the first glyph (symbol) of the text-field.
+			float glyphX = getStyle().getBounds().x + getStyle().getBorderProperties().getBorderThicknessPx() + getStyle().getPadding();
+
+			// This rectangle represents the "gap area" or left edge of the text-field.
+			Rectangle leftmostPartTextfield = new Rectangle(getStyle().getBounds().x, getStyle().getBounds().y, glyphX - getStyle().getBounds().x, getStyle().getBounds().height);
+
+			boolean clickedTextfieldBounds = leftmostPartTextfield.contains(mousePosition);
+
+			// If the user clicks on the left edge it will return the cursor index, beginning at the left of the first char.
+			if(clickedTextfieldBounds)
+			{
+				return 0;
+			}
+			else
+			{
+				return getValue().length();
+			}
 	}
 
 	public void updateBoundsAt(Vector2 position)
@@ -97,32 +169,6 @@ public class GTextfield extends GComponent
 	public ValueManager getValueManager()
 	{
 		return valueManager;
-	}
-
-	/*
-	protected void setActive()
-	{
-		if(getStyle().getColor() == null)
-		{
-			return;
-		}
-
-		getStyle().setColor(ColorScheme.textfieldActive);
-		
-		active = true;
-	}
-
-	protected void setInactive()
-	{
-		getStyle().setColor(null);
-		
-		active = false;
-	}
-	*/
-
-	private boolean isActive()
-	{
-		return active;
 	}
 
 	public String getValue()

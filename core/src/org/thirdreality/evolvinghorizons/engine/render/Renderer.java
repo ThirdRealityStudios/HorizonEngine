@@ -317,7 +317,7 @@ public class Renderer
         Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
         RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.textfieldFg);
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height );
+        RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height);
         RenderSource.getShapeRenderer(c.isZoomable()).end();
 
         Font font = textfield.getStyle().getFont();

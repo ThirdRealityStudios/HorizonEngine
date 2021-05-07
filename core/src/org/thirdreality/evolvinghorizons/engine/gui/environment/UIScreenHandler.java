@@ -70,29 +70,35 @@ public class UIScreenHandler implements InputProcessor
 		// The reason is, the char values retrieved from keyTyped(...) are different from the ones you would might want to compare with Input.Keys.*
 		// As a consequence, the char value of backspace would be 8 instead of the integer value 67.
 		// Hence, all control keys are checked separately with the method Gdx.input.isKeyPressed(...)
-		if(!Gdx.input.isKeyPressed(Input.Keys.BACKSPACE))
+		if(Gdx.input.isKeyPressed(Input.Keys.BACKSPACE))
 		{
-			this.keyTyped = character;
+			this.keyTyped = Input.Keys.UNKNOWN;
 		}
 		else
 		{
-			this.keyTyped = Input.Keys.UNKNOWN;
+			this.keyTyped = character;
 		}
 
 		return false;
 	}
 
 	// Updates all components. Needs to be called frequently by the UIScreen object.
-	// Takes care especially of the input values retrieved from the keyboard.
+	// Takes care especially of the input values retrieved from the keyboard which have an effect on the components.
 	public void update()
 	{
 		if(textfieldFocused != null)
 		{
 			boolean backspace = Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE);
 
+			// Makes sure, the text-field cursor is only being updated when the user performs a click.
+			if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
+			{
+				textfieldFocused.getValueManager().setCursor(textfieldFocused.getSelectedCharByIndex());
+			}
+
 			if(backspace)
 			{
-				textfieldFocused.getValueManager().eraseLastChar();
+				textfieldFocused.getValueManager().eraseChar();
 			}
 			else if(keyTyped != Input.Keys.UNKNOWN)
 			{
@@ -100,6 +106,7 @@ public class UIScreenHandler implements InputProcessor
 			}
 		}
 
+		// Reset the key
 		keyTyped = Input.Keys.UNKNOWN;
 	}
 
@@ -126,6 +133,9 @@ public class UIScreenHandler implements InputProcessor
 
 		if(focused == null)
 		{
+			textfieldFocused = null;
+			buttonFocused = null;
+
 			return false;
 		}
 
@@ -134,16 +144,27 @@ public class UIScreenHandler implements InputProcessor
 			textfieldFocused = null;
 
 			buttonFocused = (GButton) focused;
-
 			buttonFocused.getStyle().setColor(ColorScheme.buttonClicked);
 		}
 		else if(focused instanceof GTextfield)
 		{
 			textfieldFocused = (GTextfield) focused;
+
+			buttonFocused = null;
+
+			/*
+			int index = textfieldFocused.getSelectedCharByIndex();
+
+			if(index > -1)
+			{
+				System.out.println(textfieldFocused.getValue().charAt(index));
+			}
+			 */
 		}
 		else if(focused instanceof GCheckbox)
 		{
 			textfieldFocused = null;
+			buttonFocused = null;
 
 			GCheckbox checkboxFocused = (GCheckbox) focused;
 
@@ -151,6 +172,9 @@ public class UIScreenHandler implements InputProcessor
 		}
 		else if(focused instanceof GTickBoxList)
 		{
+			textfieldFocused = null;
+			buttonFocused = null;
+
 			if (lastlyHoveredOption != null)
 			{
 				lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
@@ -161,7 +185,7 @@ public class UIScreenHandler implements InputProcessor
 	}
 
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	public boolean touchUp(int screenX, int screenY, int pointer, int mouseButton)
 	{
 		Vector2 projectedCursor = getProjectedCursor();
 
@@ -172,16 +196,19 @@ public class UIScreenHandler implements InputProcessor
 		{
 			if(lastlyFocused instanceof GButton)
 			{
-				lastlyFocused.getActionListener().onClick();
+				textfieldFocused = null;
 
-				GButton lastlyFocusedButton = (GButton) lastlyFocused;
+				GButton button = (GButton) lastlyFocused;
+
+				button.getActionListener().onClick();
 
 				// Reset the appearance of the button after it was unfocused.
-				lastlyFocusedButton.getStyle().resetAppearance();
+				button.getStyle().resetAppearance();
 			}
-			if(lastlyFocused instanceof GCheckbox)
+			else if(lastlyFocused instanceof GCheckbox)
 			{
 				textfieldFocused = null;
+				buttonFocused = null;
 
 				GCheckbox checkbox = (GCheckbox) lastlyFocused;
 
@@ -189,8 +216,11 @@ public class UIScreenHandler implements InputProcessor
 
 				checkbox.setChecked(!checkbox.isChecked());
 			}
-			if(lastlyFocused instanceof GTickBoxList)
+			else if(lastlyFocused instanceof GTickBoxList)
 			{
+				textfieldFocused = null;
+				buttonFocused = null;
+
 				GTickBoxList listBox = (GTickBoxList) lastlyFocused;
 
 				if(lastlyHoveredOption != null)
