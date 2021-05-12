@@ -1,73 +1,35 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
-import org.thirdreality.evolvinghorizons.engine.container.style.GStyle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 
 public class GTickBoxField
 {
-    private String text;
-    private boolean selected;
-    private Rectangle tickBox, bounds;
-    private Color backgroundColor;
+    private GDescription description;
+    private GCheckbox checkbox;
 
     private GStyle style;
 
-    public GTickBoxField(String text)
+    public GTickBoxField(GDescription title, GCheckbox checkbox)
     {
-        this.text = text;
+        this.description = title;
+        this.checkbox = checkbox;
 
-        tickBox = new Rectangle();
-        bounds = new Rectangle();
+        style = new GStyle();
     }
 
-    public String getText()
+    public GDescription getDescription()
     {
-        return text;
+        return description;
     }
 
-    public void setText(String text)
+    public GCheckbox getCheckbox()
     {
-        this.text = text;
+        return checkbox;
     }
 
-    public boolean isSelected()
+    public GStyle getStyle()
     {
-        return selected;
-    }
-
-    public void setSelected(boolean selected)
-    {
-        this.selected = selected;
-    }
-
-    public Rectangle getTickBox()
-    {
-        return tickBox;
-    }
-
-    public void setTickBox(Rectangle tickBox)
-    {
-        this.tickBox = tickBox;
-    }
-
-    public Rectangle getBounds()
-    {
-        return bounds;
-    }
-
-    public void setBounds(Rectangle bounds)
-    {
-        this.bounds = bounds;
-    }
-
-    public Color getBackgroundColor()
-    {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(Color backgroundColor)
-    {
-        this.backgroundColor = backgroundColor;
+        return style;
     }
 }

@@ -14,8 +14,6 @@ public class GImage extends GComponent
 
 	public GImage(Vector2 position, Texture content, boolean repeat)
 	{
-		super("image");
-
 		style = new GStyle();
 
 		getStyle().setTexture(content);
@@ -23,8 +21,6 @@ public class GImage extends GComponent
 
 	public GImage(Vector2 position, float scale, Texture content)
 	{
-		super("image");
-
 		int scaledWidth = (int) (scale * content.getWidth());
 		int scaledHeight = (int) (scale * content.getHeight());
 
@@ -39,16 +35,12 @@ public class GImage extends GComponent
 
 	public GImage(Rectangle size, Texture content)
 	{
-		super("image");
-
 		getStyle().setTexture(content);
 		getStyle().setBounds(size);
 	}
 
 	public GImage(Vector2 position, int size, boolean useAsWidth, Texture content)
 	{
-		super("image");
-
 		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight()) * content.getWidth());
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth()) * content.getHeight()) : size;
 

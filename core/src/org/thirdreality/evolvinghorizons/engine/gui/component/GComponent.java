@@ -30,7 +30,7 @@ public abstract class GComponent implements Serializable
 
 	private boolean isZoomable = false;
 
-	public GComponent(String type)
+	public GComponent()
 	{
 		logic = new GLogic();
 	}

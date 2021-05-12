@@ -160,7 +160,7 @@ public abstract class UIScreen implements Screen
         {
             GTickBoxList tickBoxList = (GTickBoxList) component;
 
-            return tickBoxList.getStyle().getBounds();
+            return tickBoxList.getBackground().getStyle().getBounds();
         }
         else if(component instanceof GRectangle)
         {

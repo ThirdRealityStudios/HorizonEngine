@@ -25,8 +25,6 @@ public class GPolyButton extends GComponent
 	// Info: The polygon is closed automatically later..
 	public GPolyButton(Polygon polygon, int priority, String title, Font font)
 	{
-		super("polybutton");
-
 		this.polygon = polygon;
 
 		valueManager = new ValueManager()

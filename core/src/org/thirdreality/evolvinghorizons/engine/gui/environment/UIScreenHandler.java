@@ -3,6 +3,7 @@ package org.thirdreality.evolvinghorizons.engine.gui.environment;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
@@ -24,8 +25,8 @@ public class UIScreenHandler implements InputProcessor
 	private MouseUtility mouseUtility;
 
 	// Below are the components which have been saved temporarily.
-	private GTickBoxList selectionBoxFocused;
-	private GTickBoxField lastlyHoveredOption;
+	private GTickBoxList tickBoxListFocused;
+	private GTickBoxField savedOption;
 
 	private GTextfield textfieldFocused;
 
@@ -159,10 +160,13 @@ public class UIScreenHandler implements InputProcessor
 			textfieldFocused = null;
 			buttonSaved = null;
 
-			if (lastlyHoveredOption != null)
+			/*
+			if(lastlyHoveredOption != null)
 			{
 				lastlyHoveredOption.setBackgroundColor(ColorScheme.selectionBoxClicked);
 			}
+
+			 */
 		}
 
 		return false;
@@ -206,6 +210,7 @@ public class UIScreenHandler implements InputProcessor
 
 				GTickBoxList listBox = (GTickBoxList) lastlyFocused;
 
+				/*
 				if(lastlyHoveredOption != null)
 				{
 					// Simply assume, after releasing the mouse button, the cursor still remain over the tick box.
@@ -223,6 +228,8 @@ public class UIScreenHandler implements InputProcessor
 
 					lastlyHoveredOption.setSelected(!lastlyHoveredOption.isSelected());
 				}
+
+				 */
 			}
 		}
 
@@ -232,11 +239,14 @@ public class UIScreenHandler implements InputProcessor
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
+		/*
 		if(lastlyHoveredOption != null)
 		{
 			lastlyHoveredOption.setBackgroundColor(null);
 			lastlyHoveredOption = null;
 		}
+
+		 */
 
 		return false;
 	}
@@ -270,8 +280,9 @@ public class UIScreenHandler implements InputProcessor
 		}
 		else if(currentComponent instanceof GTickBoxList)
 		{
-			selectionBoxFocused = (GTickBoxList) currentComponent;
+			tickBoxListFocused = (GTickBoxList) currentComponent;
 
+			/*
 			if(lastlyHoveredOption != null)
 			{
 				lastlyHoveredOption.setBackgroundColor(null);
@@ -288,6 +299,8 @@ public class UIScreenHandler implements InputProcessor
 					lastlyHoveredOption = selectionBoxFocused.getOption(i);
 				}
 			}
+
+			 */
 		}
 		else if(currentComponent instanceof GPolyButton)
 		{

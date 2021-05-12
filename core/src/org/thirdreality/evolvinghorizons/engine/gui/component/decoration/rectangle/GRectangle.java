@@ -16,8 +16,6 @@ public class GRectangle extends GComponent
 
 	public GRectangle(Rectangle rect, Color color)
 	{
-		super("rectangle");
-
 		style = new GStyle();
 
 		getStyle().setColor(color);

@@ -16,6 +16,7 @@ import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectang
 import org.thirdreality.evolvinghorizons.engine.gui.component.input.textfield.GTextfield;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
 import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.GTickBoxList;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.button.GButton;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.component.standard.polybutton.GPolyButton;
@@ -32,39 +33,39 @@ public class Renderer
     {
         if(c instanceof GImage)
         {
-            drawImage(c);
+            drawImage((GImage) c);
         }
         else if(c instanceof GPolyButton)
         {
-            drawPolyButton(c);
+            drawPolyButton((GPolyButton) c);
         }
         else if(c instanceof GDescription)
         {
-            drawDescription(c);
+            drawDescription((GDescription) c);
         }
         else if(c instanceof GPath)
         {
-            //drawPath(c);
+            //drawPath((GPath) c);
         }
         else if(c instanceof GTextfield)
         {
-            drawTextfield(c);
+            drawTextfield((GTextfield) c);
         }
         else if(c instanceof GCheckbox)
         {
-            drawCheckbox(c);
+            drawCheckbox((GCheckbox) c);
         }
         else if(c instanceof GTickBoxList)
         {
-            drawSelectionBox(c);
+            drawTickBoxList((GTickBoxList) c);
         }
         else if(c instanceof GRectangle)
         {
-            drawRectangle(c);
+            drawRectangle((GRectangle) c);
         }
         else if(c instanceof GButton)
         {
-            drawButton(c);
+            drawButton((GButton) c);
         }
     }
 
@@ -103,11 +104,8 @@ public class Renderer
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    @Deprecated
-    private static void drawRectangle(GComponent c)
+    private static void drawRectangle(GRectangle rectangle)
     {
-        GRectangle rectangle = (GRectangle) c;
-
         Rectangle rect = rectangle.getStyle().getBounds();
 
         RenderSource.getShapeRenderer(rectangle.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
@@ -118,24 +116,19 @@ public class Renderer
         RenderSource.getShapeRenderer(rectangle.isZoomable()).end();
     }
 
-    @Deprecated
-    private static void drawDescription(GComponent c)
+    private static void drawDescription(GDescription description)
     {
-        GDescription description = (GDescription) c;
-
         Vector2 position = new Vector2(description.getStyle().getBounds().x, description.getStyle().getBounds().y);
 
         Font font = description.getStyle().getFont();
 
-        RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), description.getText(), position.x + (description.getStyle().getBounds().width / 2 - description.getStyle().getGlyphLayout().width / 2), position.y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
-        RenderSource.getSpriteBatch(c.isZoomable()).end();
+        RenderSource.getSpriteBatch(description.isZoomable()).begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(description.isZoomable()), description.getText(), position.x, position.y); //+ (description.getStyle().getBounds().width / 2 - description.getStyle().getGlyphLayout().width / 2), position.y + (description.getStyle().getBounds().height / 2 - description.getStyle().getFont().getBitmapFont().getData().xHeight / 2));
+        RenderSource.getSpriteBatch(description.isZoomable()).end();
     }
 
-    private static void drawImage(GComponent c)
+    private static void drawImage(GImage image)
     {
-        GImage image = (GImage) c;
-
         // Represents simply the outer bounds of the component.
         Rectangle bounds = image.getStyle().getBounds();
 
@@ -147,13 +140,11 @@ public class Renderer
     // Needs to be updated with offset and scale ability from the Viewports settings.
     // Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
     @Deprecated
-    private static void drawPath(GComponent c){}
+    private static void drawPath(GPath path){}
 
     @Deprecated
-    private static void drawCheckbox(GComponent c)
+    private static void drawCheckbox(GCheckbox checkbox)
     {
-        GCheckbox checkbox = (GCheckbox) c;
-
         RenderSource.getShapeRenderer(checkbox.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
 
         // Represents simply the outer bounds of the component.
@@ -172,7 +163,7 @@ public class Renderer
         RenderSource.getShapeRenderer(checkbox.isZoomable()).setColor(ColorScheme.checkboxBg);
         RenderSource.getShapeRenderer(checkbox.isZoomable()).rect(background.x, background.y, background.width, background.width);
 
-        RenderSource.getShapeRenderer(checkbox.isZoomable()).setColor(getUpdatedForegroundColor(c));
+        RenderSource.getShapeRenderer(checkbox.isZoomable()).setColor(getUpdatedForegroundColor(checkbox));
         RenderSource.getShapeRenderer(checkbox.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.width);
 
         RenderSource.getShapeRenderer(checkbox.isZoomable()).end();
@@ -207,78 +198,78 @@ public class Renderer
         RenderSource.getShapeRenderer(isZoomable).end();
     }
 
-    @Deprecated
-    // Work on this (text displaying)!
-    private static void drawSelectionBox(GComponent c)
+    private static void drawTickBoxList(GTickBoxList tickBoxList)
     {
-        GTickBoxList selectionBox = (GTickBoxList) c;
+        drawRectangle(tickBoxList.getBackground());
 
-        drawRectangle(selectionBox.getStyle().getBounds(), selectionBox.getStyle().getBorderProperties().getBorderThicknessPx(), c.isZoomable());
-
-        for(int i = 0; i < selectionBox.size(); i++)
+        for(int i = 0; i < tickBoxList.size(); i++)
         {
-            Rectangle tickBox = selectionBox.getOption(i).getTickBox();
+            GCheckbox checkbox = tickBoxList.getOption(i).getCheckbox();
 
-            drawRectangle(tickBox, selectionBox.getStyle().getBorderProperties().getBorderThicknessPx(), c.isZoomable());
+            drawCheckbox(checkbox);
 
-            Rectangle textBounds = selectionBox.getOption(i).getBounds();
+            GTickBoxField option = tickBoxList.getOption(i);
 
-            float x = textBounds.x;
-            float y = textBounds.y + (textBounds.height + textBounds.height) / 2;
+            float checkboxSize = option.getCheckbox().getStyle().getBounds().width;
+            float tickBoxPadding = tickBoxList.getStyle().getPadding();
 
-            RenderSource.getSpriteBatch(selectionBox.isZoomable()).begin();
-            selectionBox.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), selectionBox.getText(i), x, y);
-            RenderSource.getSpriteBatch(selectionBox.isZoomable()).end();
+            Vector2 textPosition = new Vector2(option.getStyle().getBounds().getX(), option.getStyle().getBounds().getY() + option.getStyle().getBounds().height);
+            textPosition.x += checkboxSize + tickBoxPadding;
 
-            float borderThicknessPx = selectionBox.getStyle().getBorderProperties().getBorderThicknessPx();
+            drawDescription(tickBoxList.getOption(i).getDescription());
+
+            //RenderSource.getSpriteBatch(tickBoxList.isZoomable()).begin();
+            //tickBoxList.getStyle().getFont().getBitmapFont().draw(RenderSource.getSpriteBatch(tickBoxList.isZoomable()), tickBoxList.getOption(i).getDescription(), textPosition.x, textPosition.y);
+            //RenderSource.getSpriteBatch(tickBoxList.isZoomable()).end();
+
+            /*
+            float borderThicknessPx = tickBoxList.getStyle().getBorderProperties().getBorderThicknessPx();
 
             // Simply the square size of the image.
             float sizePx = tickBox.width - 2*borderThicknessPx;
 
-            Color hoverColor = selectionBox.getOption(i).getBackgroundColor();
+            Color hoverColor = tickBoxList.getOption(i).getBackgroundColor();
 
             if(hoverColor != null)
             {
-                RenderSource.getShapeRenderer(selectionBox.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
-                RenderSource.getShapeRenderer(selectionBox.isZoomable()).setColor(hoverColor);
-                RenderSource.getShapeRenderer(selectionBox.isZoomable()).rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                RenderSource.getShapeRenderer(selectionBox.isZoomable()).end();
+                RenderSource.getShapeRenderer(tickBoxList.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+                RenderSource.getShapeRenderer(tickBoxList.isZoomable()).setColor(hoverColor);
+                RenderSource.getShapeRenderer(tickBoxList.isZoomable()).rect(tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                RenderSource.getShapeRenderer(tickBoxList.isZoomable()).end();
             }
 
-            if(selectionBox.isSelected(i))
+            if(tickBoxList.isSelected(i))
             {
-                Texture tickSymbol = selectionBox.getStyle().getTextureRegion().getTexture();
+                Texture tickSymbol = tickBoxList.getStyle().getTextureRegion().getTexture();
 
-                RenderSource.getSpriteBatch(selectionBox.isZoomable()).begin();
-                RenderSource.getSpriteBatch(selectionBox.isZoomable()).draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
-                RenderSource.getSpriteBatch(selectionBox.isZoomable()).end();
+                RenderSource.getSpriteBatch(tickBoxList.isZoomable()).begin();
+                RenderSource.getSpriteBatch(tickBoxList.isZoomable()).draw(tickSymbol, tickBox.x + borderThicknessPx, tickBox.y + borderThicknessPx, sizePx, sizePx);
+                RenderSource.getSpriteBatch(tickBoxList.isZoomable()).end();
             }
+
+             */
         }
     }
 
     @Deprecated
-    protected static void drawPolyButton(GComponent c)
+    protected static void drawPolyButton(GPolyButton polyButton)
     {
-        GPolyButton polyButton = (GPolyButton) c;
-
-        PolygonSpriteBatch polygonSpriteBatch = RenderSource.getPolygonSpriteBatch(c.isZoomable());
+        PolygonSpriteBatch polygonSpriteBatch = RenderSource.getPolygonSpriteBatch(polyButton.isZoomable());
 
         polygonSpriteBatch.begin();
         polyButton.getUpdatedPolygonSprite().draw(polygonSpriteBatch);
         polygonSpriteBatch.end();
     }
 
-    private static void drawButton(GComponent c)
+    private static void drawButton(GButton button)
     {
-        GButton button = (GButton) c;
-
         String value = button.getTitle();
 
         Rectangle background = button.getStyle().getBounds();
 
-        RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.buttonBg);
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(background.x, background.y, background.width, background.height);
+        RenderSource.getShapeRenderer(button.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer(button.isZoomable()).setColor(ColorScheme.buttonBg);
+        RenderSource.getShapeRenderer(button.isZoomable()).rect(background.x, background.y, background.width, background.height);
 
         float borderThicknessPx = button.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -286,29 +277,27 @@ public class Renderer
 
         Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(getUpdatedForegroundColor(c));
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height );
-        RenderSource.getShapeRenderer(c.isZoomable()).end();
+        RenderSource.getShapeRenderer(button.isZoomable()).setColor(getUpdatedForegroundColor(button));
+        RenderSource.getShapeRenderer(button.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height );
+        RenderSource.getShapeRenderer(button.isZoomable()).end();
 
         Font font = button.getStyle().getFont();
 
-        RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
-        RenderSource.getSpriteBatch(c.isZoomable()).end();
+        RenderSource.getSpriteBatch(button.isZoomable()).begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(button.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + button.getGlyphLayout().height) / 2);
+        RenderSource.getSpriteBatch(button.isZoomable()).end();
     }
 
     @Deprecated
-    private static void drawTextfield(GComponent c)
+    private static void drawTextfield(GTextfield textfield)
     {
-        GTextfield textfield = (GTextfield) c;
-
         String value = textfield.getValue();
 
         Rectangle background = textfield.getStyle().getBounds();
 
-        RenderSource.getShapeRenderer(c.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.textfieldBg);
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(background.x, background.y, background.width, background.height);
+        RenderSource.getShapeRenderer(textfield.isZoomable()).begin(ShapeRenderer.ShapeType.Filled);
+        RenderSource.getShapeRenderer(textfield.isZoomable()).setColor(ColorScheme.textfieldBg);
+        RenderSource.getShapeRenderer(textfield.isZoomable()).rect(background.x, background.y, background.width, background.height);
 
         float borderThicknessPx = textfield.getStyle().getBorderProperties().getBorderThicknessPx();
 
@@ -316,15 +305,15 @@ public class Renderer
 
         Rectangle foreground = new Rectangle(background.x + borderThicknessPx, background.y + borderThicknessPx, background.width - 2*borderThicknessPx, background.height - 2*borderThicknessPx);
 
-        RenderSource.getShapeRenderer(c.isZoomable()).setColor(ColorScheme.textfieldFg);
-        RenderSource.getShapeRenderer(c.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height);
-        RenderSource.getShapeRenderer(c.isZoomable()).end();
+        RenderSource.getShapeRenderer(textfield.isZoomable()).setColor(ColorScheme.textfieldFg);
+        RenderSource.getShapeRenderer(textfield.isZoomable()).rect(foreground.x, foreground.y, foreground.width, foreground.height);
+        RenderSource.getShapeRenderer(textfield.isZoomable()).end();
 
         Font font = textfield.getStyle().getFont();
 
-        RenderSource.getSpriteBatch(c.isZoomable()).begin();
-        font.getBitmapFont().draw(RenderSource.getSpriteBatch(c.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
-        RenderSource.getSpriteBatch(c.isZoomable()).end();
+        RenderSource.getSpriteBatch(textfield.isZoomable()).begin();
+        font.getBitmapFont().draw(RenderSource.getSpriteBatch(textfield.isZoomable()), value, background.x + borderThicknessPx + padding, background.y + (background.height + textfield.getGlyphLayout().height) / 2);
+        RenderSource.getSpriteBatch(textfield.isZoomable()).end();
     }
 
 }

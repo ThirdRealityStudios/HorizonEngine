@@ -18,14 +18,12 @@ public class GCheckbox extends GComponent
 
 	private GStyle style;
 
-	public GCheckbox(Vector2 location, boolean checked)
+	public GCheckbox(boolean checked)
 	{
-		super("checkbox");
-
 		style = new GStyle();
 
 		getStyle().getBorderProperties().setBorderThicknessPx(1);
-		getStyle().setBounds(new Rectangle(location.x, location.y, 20, 20));
+		getStyle().setBounds(new Rectangle(0, 0, 20, 20));
 
 		init(checked);
 	}

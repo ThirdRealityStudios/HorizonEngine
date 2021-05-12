@@ -91,7 +91,7 @@ public class SampleApplication extends HorizonGame
 		GPolyButton polyButton = getPolyButton0();
 		polyButton.setZoomable(true);
 
-		gSB = new GTickBoxList(new Vector2(20, 20), 0, true, smallerFont);
+		gSB = new GTickBoxList(new Vector2(20, 20), true, smallerFont);
 		gSB.addOption("Hello");
 		gSB.addOption("ASDF - -");
 		gSB.addOption("Hell asdas dasd".toUpperCase());
@@ -100,11 +100,10 @@ public class SampleApplication extends HorizonGame
 		GComponent[] layer2_components = new GComponent[]{img0};
 		GLayer layer2 = new GLayer(layer2_components, 0);
 
-
 		GComponent[] layer1_components = new GComponent[]{polyButton};
 		GLayer layer1 = new GLayer(layer1_components, 1);
 
-		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB, exit};
+		GComponent[] layer0_components = new GComponent[]{input1, input2, input3, gSB, exit, checkbox1};
 		GLayer layer0 = new GLayer(layer0_components, 2);
 
 		gui.setLayers(new GLayer[]{layer0, layer1});
@@ -196,7 +195,8 @@ public class SampleApplication extends HorizonGame
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 
-		checkbox1 = new GCheckbox(new Vector2(20, 200), true);
+		checkbox1 = new GCheckbox(true);
+		checkbox1.getStyle().getBounds().setPosition(new Vector2(20, 200));
 
 		moveButton = new GButton(new Vector2(150, 75), 0, "Move Viewport right", smallerFont);
 
@@ -297,7 +297,8 @@ public class SampleApplication extends HorizonGame
 
 	public void setupDisplayLayers()
 	{
-		description = new GDescription(new Vector2(20, 520), "Money here for nothing!", smallerFont);
+		description = new GDescription("Money here for nothing!", smallerFont);
+		description.getStyle().getBounds().setPosition(new Vector2(20, 520));
 	}
 
 	public void postInit()

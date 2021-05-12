@@ -20,8 +20,6 @@ public class GPath extends GComponent
 
 	public GPath(Polygon path, int priority, Color drawColor, boolean fill, Point location)
 	{
-		super("path");
-
 		style = new GStyle();
 
 		setPath(path);

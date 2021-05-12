@@ -19,14 +19,10 @@ public class GDescription extends GComponent
 
 	private GStyle style;
 
-	public GDescription(Vector2 position, String text, Font font)
+	public GDescription(String text, Font font)
 	{
-		super("description");
-
 		style = new GStyle(font, text);
 
-		style.getBounds().setPosition(position);
-		
 		valueManager = new ValueManager()
 		{
 			@Override

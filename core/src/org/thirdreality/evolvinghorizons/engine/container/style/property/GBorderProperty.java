@@ -1,5 +1,7 @@
 package org.thirdreality.evolvinghorizons.engine.container.style.property;
 
+import com.badlogic.gdx.graphics.Color;
+
 // Mainly a container to indicate all different kinds of border properties in pixels (px)
 // and to improve the readibility of the GStyle class.
 public class GBorderProperty
@@ -24,6 +26,8 @@ public class GBorderProperty
 	 *	Also: if you want the setting to be ignored you can set it to 'null' again!
 	 */
 	private Integer borderRadiusPxLT, borderRadiusPxRT, borderRadiusPxBL, borderRadiusPxBR;
+
+	private Color borderColor;
 
 	public GBorderProperty(){}
 
@@ -97,6 +101,16 @@ public class GBorderProperty
 	public int getBorderThicknessPx()
 	{
 		return borderThicknessPx;
+	}
+
+	public void setBorderColor(Color color)
+	{
+		borderColor = color;
+	}
+
+	public Color getBorderColor()
+	{
+		return borderColor;
 	}
 	
 	// Creates a copy of these border properties.

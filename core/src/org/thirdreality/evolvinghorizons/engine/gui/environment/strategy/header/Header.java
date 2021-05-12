@@ -39,7 +39,7 @@ public class Header
     // Will create a title which is centered at the given bounds.
     private GDescription genTitle(String title, Rectangle bounds)
     {
-        GDescription headerTitle = new GDescription(new Vector2(), title, font);
+        GDescription headerTitle = new GDescription(title, font);
 
         float textWidth = headerTitle.getStyle().getBounds().width;
         float textHeight = headerTitle.getStyle().getBounds().height;

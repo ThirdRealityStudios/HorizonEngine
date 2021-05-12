@@ -1,143 +1,94 @@
 package org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
-import org.thirdreality.evolvinghorizons.engine.settings.Meta;
-import org.thirdreality.evolvinghorizons.engine.settings.Path;
-import org.thirdreality.evolvinghorizons.engine.io.MouseUtility;
+import org.thirdreality.evolvinghorizons.engine.gui.ColorScheme;
+import org.thirdreality.evolvinghorizons.engine.gui.component.decoration.rectangle.GRectangle;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.checkbox.GCheckbox;
 import org.thirdreality.evolvinghorizons.engine.gui.component.GComponent;
+import org.thirdreality.evolvinghorizons.engine.gui.component.selection.list.tickbox.field.GTickBoxField;
+import org.thirdreality.evolvinghorizons.engine.gui.component.standard.description.GDescription;
 import org.thirdreality.evolvinghorizons.engine.gui.font.Font;
 
 public class GTickBoxList extends GComponent
 {
-	private static final long serialVersionUID = Meta.serialVersionUID;
-
-	// As it says, you can determine in the beginning whether this list should accept multiple selections or only one at once.
-	private final boolean multipleChoice;
-
+	private GRectangle background;
 	private ArrayList<GTickBoxField> options;
 
-	// Remembers the last selected option (index for 'options' right above).
-	// Is only used for the method addOption(...) .
-	int lastSelection = 0;
+	private int height;
 
 	private GStyle style;
 
-	public GTickBoxList(Vector2 position, int priority, boolean multipleChoice, Font font)
+	public GTickBoxList(Vector2 position, boolean multipleChoice, Font font)
 	{
-		super("selectionbox");
-
-		style = new GStyle();
-
-		getStyle().setFont(font);
-
-		Texture t = new Texture(Gdx.files.internal(Path.ICON_FOLDER + File.separator + "check_sign.png"));
-
-		getStyle().setTexture(t);
-
-		getStyle().setBounds(new Rectangle(position.x, position.y, 0,0));
-
-		getStyle().getBorderProperties().setBorderThicknessPx(1);
-		getStyle().setPadding(8);
+		background = new GRectangle(new Rectangle(position.x, position.y, 0, 0), ColorScheme.selectionBoxFg);
+		background.getStyle().getBorderProperties().setBorderColor(ColorScheme.selectionBoxBg);
 
 		options = new ArrayList<GTickBoxField>();
 
-		this.multipleChoice = multipleChoice;
+		style = new GStyle();
+		getStyle().setFont(font);
 	}
 
-	public GStyle getStyle()
+	private Vector2 sizeOf(String title)
 	{
-		return style;
+		GlyphLayout layout = new GlyphLayout(getStyle().getFont().getBitmapFont(), title);
+
+		Vector2 size = new Vector2(layout.width, layout.height);
+
+		return size;
 	}
 
-	public void addOption(String text)
+	public void addOption(String title)
 	{
-		GTickBoxField option = new GTickBoxField(text);
+		Vector2 size = sizeOf(title);
 
-		GlyphLayout firstOptionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), text);
+		Rectangle bounds = getBackground().getStyle().getBounds();
+		int borderThickness = getBackground().getStyle().getBorderProperties().getBorderThicknessPx();
 
-		// Will be used down in the for-loop to determine the possible largest width for this GTickBoxList.
-		// The value will further depend on the font size, text length, tick box size and border-related settings,
-		// such as the padding.
-		// The border-thickness will not have an effect here as it is not used and meant to have such an effect on the bounds of something.
-		float width = 0;
+		height += getStyle().getPadding();
 
-		float sizeTickBox = firstOptionLayout.height;
+		Vector2 positionOption = new Vector2(bounds.x + borderThickness + getStyle().getPadding(), bounds.y + height);
 
-		Vector2 origin = getStyle().getPosition();
-		Vector2 tickBoxPosition = new Vector2(origin).add(getStyle().getPadding(), 0);
+		GCheckbox checkbox = new GCheckbox(false);
+		checkbox.getStyle().setBounds(new Rectangle(positionOption.x, positionOption.y, size.y, size.y));
 
-		float padding = getStyle().getPadding();
+		GDescription description = new GDescription(title, getStyle().getFont());
+		description.getStyle().getBounds().setPosition(positionOption);
+		description.getStyle().getBounds().x += 2*getStyle().getPadding();
+		description.getStyle().getBounds().y += size.y;
 
-		// Updates all corresponding bounds for the tick boxes and their related texts.
-		// Also updates the outer bounds (background size and position) of this GTickBoxList.
-		for(int i = 0; i < options.size(); i++)
-		{
-			// Update tick box position for the next one.
-			tickBoxPosition.y += padding;
+		GTickBoxField option = new GTickBoxField(description, checkbox);
 
-			Rectangle tickBoxBounds = new Rectangle(tickBoxPosition.x, tickBoxPosition.y, sizeTickBox, sizeTickBox);
-			option.setTickBox(tickBoxBounds);
-
-			// Update tick box position for the next one.
-			tickBoxPosition.y += tickBoxBounds.height;
-
-			String currentText = getText(i);
-
-			GlyphLayout optionLayout = new GlyphLayout(getStyle().getFont().getBitmapFont(), currentText);
-
-			Rectangle textBounds = new Rectangle(tickBoxBounds.x + sizeTickBox + padding, tickBoxBounds.y, optionLayout.width, optionLayout.height);
-			option.setBounds(textBounds);
-
-			float inlineWidth = textBounds.x + textBounds.width + padding - origin.x;
-
-			if(inlineWidth >= width)
-			{
-				width = inlineWidth;
-			}
-		}
-
-		tickBoxPosition.y += getStyle().getPadding();
-
-		float height = tickBoxPosition.y - origin.y;
-
-		Rectangle gBoxBounds = new Rectangle(origin.x, origin.y, width, height);
-
-		getStyle().setBounds(gBoxBounds);
-
-		if(!multipleChoice && options.size() > 0 && options.get(lastSelection) != null && options.get(lastSelection).isSelected() && option.isSelected())
-		{
-			options.get(lastSelection).setSelected(false);
-		}
+		// Creates the bounds of the option, meaning it includes the checkbox and the title next to it.
+		option.getStyle().setBounds(new Rectangle(positionOption.x, positionOption.y, size.y + getStyle().getPadding() + size.x, size.y));
 
 		options.add(option);
+
+		height += size.y;
+
+		getBackground().getStyle().getBounds().height = height + getStyle().getPadding();
+
+		float optionWidth = option.getStyle().getBounds().width + 2*getStyle().getPadding();
+		float listWidth = getBackground().getStyle().getBounds().width;
+
+		if(optionWidth > listWidth)
+		{
+			getBackground().getStyle().getBounds().width = optionWidth;
+		}
 	}
 
-	public String getText(int option)
+	public GTickBoxField getOption(int index)
 	{
-		return options.get(option).getText();
+		return options.get(index);
 	}
 
-	public boolean isMultipleChoice()
+	public GRectangle getBackground()
 	{
-		return multipleChoice;
-	}
-
-	public boolean isSelected(int option)
-	{
-		return options.get(option).isSelected();
-	}
-
-	public boolean isJustHovered(int option)
-	{
-		return options.get(option).getTickBox().contains(MouseUtility.getCurrentCursorLocation());
+		return background;
 	}
 
 	public int size()
@@ -145,8 +96,21 @@ public class GTickBoxList extends GComponent
 		return options.size();
 	}
 
-	public GTickBoxField getOption(int option)
+	public GStyle getStyle()
 	{
-		return options.get(option);
+		return style;
+	}
+
+	public GComponent[] getItems()
+	{
+		GComponent[] items = new GComponent[options.size() * 2];
+
+		for(int i = 0; i < options.size(); i++)
+		{
+			items[i*2] = options.get(i).getCheckbox();
+			items[i*2 + 1] = options.get(i).getDescription();
+		}
+
+		return items;
 	}
 }

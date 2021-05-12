@@ -25,6 +25,8 @@ public class GLayer implements Comparable<GLayer>, Serializable
 
 	private int priority;
 
+	private boolean containsTickBoxList;
+
 	public GLayer(GComponent[] components, int priority)
 	{
 		this.components = components;
@@ -39,6 +41,11 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		for(int i = 0; i < components.length; i++)
 		{
 			components[i] = array[i];
+
+			if(components[i] instanceof GTickBoxList)
+			{
+				containsTickBoxList = true;
+			}
 		}
 
 		return components;
@@ -91,7 +98,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		{
 			GTickBoxList tickBoxList = (GTickBoxList) component;
 
-			return tickBoxList.getStyle().getBounds();
+			return tickBoxList.getBackground().getStyle().getBounds();
 		}
 		else if(component instanceof GRectangle)
 		{
@@ -164,6 +171,12 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		{
 			return false;
 		}
+	}
+
+	// Used internally to check faster for tick box lists as they require a special treatment by the UIScreen class.
+	public boolean containsTickBoxList()
+	{
+		return containsTickBoxList;
 	}
 
 	@Override
