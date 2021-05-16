@@ -7,6 +7,7 @@ import org.thirdreality.horizonengine.core.action.ActionTrigger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class GameManager
 {
@@ -20,8 +21,6 @@ public class GameManager
 
     // A temporary list of the layers which have not been processed yet (when adding new ones).
     private ArrayList<GameLayer> gameLayersUnprocessed;
-
-    private static final int MAX_Z_INDEX = 64;
 
     public GameManager()
     {
@@ -47,7 +46,7 @@ public class GameManager
 
                 gameLayersUnprocessed.add(unprocessedGameLayer);
             }
-            else if(!gameObjectsReady.containsEntry(zIndex, unsortedObject))
+            else if(!gameObjectsReady.containsValue(unsortedObject))
             {
                 gameObjectsReady.put(zIndex, unsortedObject);
             }
@@ -94,15 +93,20 @@ public class GameManager
     public void printReadyGameObjects()
     {
         System.out.println("---");
-        System.out.println("Size: " + gameObjectsReady.size());
 
-        for(int i = 0; i < gameObjectsReady.size(); i++)
+        Iterator iterator = gameObjectsReady.keySet().iterator();
+
+        while(iterator.hasNext())
         {
-            Collection<GameObject> objects = gameObjectsReady.get(i);
+            Integer key = (Integer) iterator.next();
+
+            Collection<GameObject> objects = gameObjectsReady.get(key);
+
+            //System.out.println(i + " | size: " + objects.size());
 
             for(GameObject object : objects)
             {
-                Gdx.app.log("Ready objects", "[zIndex: " + i + "] " + object.getAlias());
+                Gdx.app.log("Ready objects", "[zIndex: " + key + "] " + object.getAlias());
             }
         }
     }

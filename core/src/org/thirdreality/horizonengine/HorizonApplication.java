@@ -72,9 +72,9 @@ public abstract class HorizonApplication
         Gdx.app.exit();
     }
 
-    public abstract void pre();
+    protected abstract void pre();
 
-    public abstract void loop();
+    protected abstract void loop();
 
-    public abstract void post();
+    protected abstract void post();
 }
