@@ -7,7 +7,7 @@ import org.thirdreality.horizonengine.core.console.trouble.Troubleshooting;
 
 public abstract class HorizonApplication
 {
-    // Will be initialized by the GameManager itself.
+    // Will be initialized within the class HorizonEngine when starting a new HorizonApplication.
     public GameManager manager;
 
     private final String LOG_INFO = "INFO",
