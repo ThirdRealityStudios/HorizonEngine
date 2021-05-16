@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.settings;
+package org.thirdreality.horizonengine.io;
 
 import java.io.File;
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.settings.DataSize;
-import org.thirdreality.horizonengine.settings.Meta;
+import org.thirdreality.horizonengine.Meta;
 import org.thirdreality.horizonengine.core.console.trouble.Error;
 import org.thirdreality.horizonengine.core.console.trouble.Troubleshooting;
 

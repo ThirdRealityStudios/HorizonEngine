@@ -1,14 +1,14 @@
-package org.thirdreality.horizonengine.settings;
+package org.thirdreality.horizonengine;
 
 public interface Meta
 {
 	/*
 	 * This will provide all classes with a serial version ID.
 	 * The serial version ID is used for several cases:
-	 * - to save performance on runtime, so the JRE doesn't need to generate one.
+	 * - to save some performance on runtime, so the JRE doesn't need to generate one.
 	 * - to guarantee compatibility when serialized classes of older versions are loaded again.
 	 * 		-> This will then ensure if the read class is still compatible with the latest version.
-	 * 		-> For example, you save the object of a GButton on your hard-drive.
+	 * 		-> For example, you save the object of a button on your hard-drive.
 	 * 		   The save file will then contain information about the title or font size etc.
 	 * 		   Now the version has changed and let's say, the font size attribute was removed lately.
 	 * 		   If you would now load the file again on runtime this would result in an error
@@ -19,5 +19,5 @@ public interface Meta
 	 * - when there was a change and it is unknown whether the changes are still compatible with the latest version.
 	 * 		-> in this the serial version will be incremented.
 	 */
-	public final static long serialVersionUID = 14L;
+	public final static long serialVersionUID = 15L;
 }
