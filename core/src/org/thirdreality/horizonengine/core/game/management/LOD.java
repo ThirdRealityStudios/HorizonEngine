@@ -9,6 +9,7 @@ import org.thirdreality.horizonengine.core.game.environment.GameObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 // A class to create a level-of-detail.
 // The LOD defines itself by a range when it should go active (measured by the distance of the camera).
@@ -40,6 +41,16 @@ public class LOD
         gameObjectsUnsorted.addAll(objects);
 
         update();
+    }
+
+    public Collection<GameObject> getObjects(int zIndex)
+    {
+        return gameObjectsReady.asMap().get(zIndex);
+    }
+
+    public Set<Integer> getZIndices()
+    {
+        return gameObjectsReady.asMap().keySet();
     }
 
     private void update(Iterator<GameObject> unsortedObjects, int zIndex)
