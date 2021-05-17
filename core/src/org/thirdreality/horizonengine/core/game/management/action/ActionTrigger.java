@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.core.action;
+package org.thirdreality.horizonengine.core.game.management.action;
 
 import com.badlogic.gdx.InputProcessor;
 

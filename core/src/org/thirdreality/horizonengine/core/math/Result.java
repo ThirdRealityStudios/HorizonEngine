@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.math;
+package org.thirdreality.horizonengine.core.math;
 
 public class Result<ResultType>
 {

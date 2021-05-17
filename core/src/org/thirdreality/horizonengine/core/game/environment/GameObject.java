@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import org.thirdreality.horizonengine.Meta;
-import org.thirdreality.horizonengine.core.action.Action;
+import org.thirdreality.horizonengine.core.game.management.action.Action;
 
 public abstract class GameObject implements Serializable
 {

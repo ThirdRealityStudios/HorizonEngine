@@ -1,7 +1,7 @@
 package org.thirdreality.horizonengine.core.game.management;
 
 import com.badlogic.gdx.Gdx;
-import org.thirdreality.horizonengine.core.action.ActionTrigger;
+import org.thirdreality.horizonengine.core.game.management.action.ActionTrigger;
 
 public class GameManager
 {
