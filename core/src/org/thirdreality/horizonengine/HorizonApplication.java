@@ -1,7 +1,7 @@
 package org.thirdreality.horizonengine;
 
 import com.badlogic.gdx.Gdx;
-import org.thirdreality.horizonengine.core.GameManager;
+import org.thirdreality.horizonengine.core.game.management.GameManager;
 import org.thirdreality.horizonengine.core.console.trouble.Error;
 import org.thirdreality.horizonengine.core.console.trouble.Troubleshooting;
 

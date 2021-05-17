@@ -1,7 +1,8 @@
-package org.thirdreality.horizonengine.core;
+package org.thirdreality.horizonengine.core.game.environment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import org.thirdreality.horizonengine.HorizonEngine;
@@ -59,9 +60,9 @@ public class GameLayer extends GameObject implements Serializable
 		return members.get(memberIndex);
 	}
 
-	protected ArrayList<GameObject> getMembers()
+	public Iterator<GameObject> getMembersIterated()
 	{
-		return members;
+		return members.iterator();
 	}
 
 	public void deleteMembers()

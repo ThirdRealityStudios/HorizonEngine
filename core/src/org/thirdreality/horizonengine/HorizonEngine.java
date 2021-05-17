@@ -3,8 +3,8 @@ package org.thirdreality.horizonengine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.thirdreality.horizonengine.core.GameManager;
-import org.thirdreality.horizonengine.core.screen.DefaultScreen;
+import org.thirdreality.horizonengine.core.game.management.GameManager;
+import org.thirdreality.horizonengine.core.game.GameScreen;
 
 public abstract class HorizonEngine
 {
@@ -23,7 +23,7 @@ public abstract class HorizonEngine
 
             app.pre();
 
-            setScreen(new DefaultScreen()
+            setScreen(new GameScreen()
             {
                 @Override
                 public void render(float delta)

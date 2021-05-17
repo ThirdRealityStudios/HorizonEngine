@@ -1,4 +1,6 @@
-package org.thirdreality.horizonengine.core;
+package org.thirdreality.horizonengine.core.game.management;
+
+import org.thirdreality.horizonengine.core.game.environment.GameObject;
 
 import java.util.ArrayList;
 import java.util.TreeMap;

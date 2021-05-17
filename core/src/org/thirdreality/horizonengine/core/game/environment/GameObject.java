@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.core;
+package org.thirdreality.horizonengine.core.game.environment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.horizonengine.Meta;
 import org.thirdreality.horizonengine.core.action.Action;
-import org.thirdreality.horizonengine.math.Polygon;
 
 public abstract class GameObject implements Serializable
 {

@@ -1,8 +1,10 @@
-package org.thirdreality.horizonengine.core;
+package org.thirdreality.horizonengine.core.game.management;
 
 import com.badlogic.gdx.Gdx;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.thirdreality.horizonengine.core.game.environment.GameLayer;
+import org.thirdreality.horizonengine.core.game.environment.GameObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,11 +42,11 @@ public class LOD
         update();
     }
 
-    private void update(ArrayList<GameObject> unsortedObjects, int zIndex)
+    private void update(Iterator<GameObject> unsortedObjects, int zIndex)
     {
-        for(int object = 0; object < unsortedObjects.size(); object++)
+        while(unsortedObjects.hasNext())
         {
-            GameObject unsortedObject = unsortedObjects.get(object);
+            GameObject unsortedObject = unsortedObjects.next();
 
             if(unsortedObject instanceof GameLayer)
             {
@@ -63,13 +65,13 @@ public class LOD
     {
         if(!gameObjectsUnsorted.isEmpty())
         {
-            update(gameObjectsUnsorted, 0);
+            update(gameObjectsUnsorted.iterator(), 0);
 
             for (int layer = 0; layer < gameLayersUnprocessed.size(); layer++)
             {
                 GameLayer currentGameLayer = gameLayersUnprocessed.get(layer);
 
-                update(currentGameLayer.getMembers(), currentGameLayer.getZIndex());
+                update(currentGameLayer.getMembersIterated(), currentGameLayer.getZIndex());
             }
         }
     }

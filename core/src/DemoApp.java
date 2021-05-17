@@ -1,9 +1,9 @@
 import com.badlogic.gdx.graphics.g2d.Batch;
 import org.thirdreality.horizonengine.HorizonApplication;
 import org.thirdreality.horizonengine.HorizonEngine;
-import org.thirdreality.horizonengine.core.GameLayer;
-import org.thirdreality.horizonengine.core.GameObject;
-import org.thirdreality.horizonengine.core.LOD;
+import org.thirdreality.horizonengine.core.game.environment.GameLayer;
+import org.thirdreality.horizonengine.core.game.environment.GameObject;
+import org.thirdreality.horizonengine.core.game.management.LOD;
 
 import java.util.ArrayList;
 
