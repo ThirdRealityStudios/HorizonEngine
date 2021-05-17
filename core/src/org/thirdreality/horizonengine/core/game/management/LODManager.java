@@ -3,6 +3,7 @@ package org.thirdreality.horizonengine.core.game.management;
 import org.thirdreality.horizonengine.core.game.environment.GameObject;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class LODManager
@@ -18,7 +19,7 @@ public class LODManager
         DEFAULT_ACCESS_KEY = 0;
     }
 
-    public LOD addObjectsDirectly(ArrayList<GameObject> objects)
+    public LOD addToDefaultLevel(ArrayList<GameObject> objects)
     {
         LOD lod;
 
@@ -41,18 +42,23 @@ public class LODManager
         return lod;
     }
 
-    public void add(LOD level)
+    public void addLevel(LOD level)
     {
         lodObjects.put(level.getMinDistance(), level);
     }
 
-    public void remove(Float minDistance)
+    public void removeLevel(Float minDistance)
     {
         lodObjects.remove(minDistance);
     }
 
-    public LOD get(Float minDistance)
+    public LOD getLevel(Float minDistance)
     {
         return lodObjects.get(minDistance);
+    }
+
+    public Set<Float> getDistances()
+    {
+        return lodObjects.keySet();
     }
 }

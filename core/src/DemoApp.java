@@ -99,7 +99,7 @@ public class DemoApp
 
 				objectsNearby.add(gameLayer1);
 
-				LOD lodNearby = horizonApp.manager.lod.addObjectsDirectly(objectsNearby);
+				LOD lodNearby = horizonApp.manager.lod.addToDefaultLevel(objectsNearby);
 
 				GameObject object5 = new GameObject() {
 					@Override
@@ -124,7 +124,7 @@ public class DemoApp
 				LOD lodFar = new LOD(200);
 				lodFar.addObjects(objectsFar);
 
-				horizonApp.manager.lod.add(lodFar);
+				horizonApp.manager.lod.addLevel(lodFar);
 
 				lodNearby.printReadyGameObjects();
 				lodFar.printReadyGameObjects();
