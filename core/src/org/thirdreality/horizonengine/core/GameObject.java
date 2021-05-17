@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.thirdreality.horizonengine.Meta;
 import org.thirdreality.horizonengine.core.action.Action;
+import org.thirdreality.horizonengine.math.Polygon;
 
 public abstract class GameObject implements Serializable
 {
@@ -19,8 +20,7 @@ public abstract class GameObject implements Serializable
 	// If no alias was specifically set, the component will automatically create its own alias.
 	private String alias;
 
-	protected Rectangle bounds;
-
+	// Used to render this object.
 	protected Texture texture;
 
 	// Contains all actions which are triggered when pressing the corresponding key.
@@ -32,8 +32,6 @@ public abstract class GameObject implements Serializable
 	public GameObject()
 	{
 		alias = createFirstAlias();
-
-		bounds = new Rectangle();
 
 		keyActions = new ArrayList<Action<Input.Keys>>();
 		mouseActions = new ArrayList<Action<Input.Buttons>>();
@@ -54,6 +52,7 @@ public abstract class GameObject implements Serializable
 		return alias;
 	}
 
+	/*
 	public void setPosition(Vector2 position)
 	{
 		bounds.setPosition(position);
@@ -63,6 +62,8 @@ public abstract class GameObject implements Serializable
 	{
 		return new Vector2(bounds.x, bounds.y);
 	}
+
+	 */
 
 	public ArrayList<Action<Input.Keys>> getKeyActions()
 	{

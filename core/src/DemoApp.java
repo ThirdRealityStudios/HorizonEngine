@@ -1,9 +1,9 @@
 import com.badlogic.gdx.graphics.g2d.Batch;
-import org.lwjgl.Sys;
 import org.thirdreality.horizonengine.HorizonApplication;
 import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.GameLayer;
 import org.thirdreality.horizonengine.core.GameObject;
+import org.thirdreality.horizonengine.core.LOD;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class DemoApp
 			@Override
 			public void pre()
 			{
-				ArrayList<GameObject> objects = new ArrayList<GameObject>();
+				ArrayList<GameObject> objectsNearby = new ArrayList<GameObject>();
 
 				GameObject object0 = new GameObject()
 				{
@@ -57,9 +57,9 @@ public class DemoApp
 				};
 				object2.setAlias("Object 2");
 
-				objects.add(object0);
-				objects.add(object1);
-				objects.add(object2);
+				objectsNearby.add(object0);
+				objectsNearby.add(object1);
+				objectsNearby.add(object2);
 
 				GameObject object3 = new GameObject()
 				{
@@ -75,7 +75,7 @@ public class DemoApp
 				gameLayer0.setAlias("Game Layer 0");
 				gameLayer0.add(object3);
 
-				objects.add(gameLayer0);
+				objectsNearby.add(gameLayer0);
 
 				GameObject object4 = new GameObject()
 				{
@@ -97,14 +97,37 @@ public class DemoApp
 
 				gameLayer1.add(gameLayer2);
 
-				objects.add(gameLayer1);
+				objectsNearby.add(gameLayer1);
 
-				horizonApp.manager.addGameObjects(objects);
+				LOD lodNearby = horizonApp.manager.lod.addObjectsDirectly(objectsNearby);
 
-				horizonApp.manager.update();
-				horizonApp.manager.printReadyGameObjects();
+				GameObject object5 = new GameObject() {
+					@Override
+					public void render(Batch batch) {
 
-				System.out.println("END");
+					}
+				};
+				object5.setAlias("Object 5");
+
+				GameObject object6 = new GameObject() {
+					@Override
+					public void render(Batch batch) {
+
+					}
+				};
+				object6.setAlias("Object 6");
+
+				ArrayList<GameObject> objectsFar = new ArrayList<GameObject>();
+				objectsFar.add(object5);
+				objectsFar.add(object6);
+
+				LOD lodFar = new LOD(200);
+				lodFar.addObjects(objectsFar);
+
+				horizonApp.manager.lod.add(lodFar);
+
+				lodNearby.printReadyGameObjects();
+				lodFar.printReadyGameObjects();
 			}
 
 			@Override
@@ -116,7 +139,7 @@ public class DemoApp
 			@Override
 			public void post()
 			{
-
+				System.out.println("End of procasdasd");
 			}
 		};
 
