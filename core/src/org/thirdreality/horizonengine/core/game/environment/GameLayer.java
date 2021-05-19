@@ -43,7 +43,7 @@ public class GameLayer extends GameObject implements Serializable
 
 			if(gameLayer.getZIndex() <= getZIndex())
 			{
-				HorizonEngine.app.errorExit(Error.INVALID_GAME_LAYER_ZINDEX, Troubleshooting.INVALID_GAME_LAYER_ZINDEX);
+				HorizonEngine.errorExit(Error.INVALID_GAME_LAYER_ZINDEX, Troubleshooting.INVALID_GAME_LAYER_ZINDEX);
 			}
 		}
 

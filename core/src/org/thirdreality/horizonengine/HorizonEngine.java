@@ -1,52 +1,76 @@
 package org.thirdreality.horizonengine;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.thirdreality.horizonengine.core.game.management.GameManager;
-import org.thirdreality.horizonengine.core.game.GameScreen;
+import org.thirdreality.horizonengine.core.console.trouble.Error;
+import org.thirdreality.horizonengine.core.console.trouble.Troubleshooting;
 
-public abstract class HorizonEngine
+public class HorizonEngine
 {
-    public static HorizonApplication app;
+    private static LwjglApplication currentApp;
 
-    public static LwjglApplicationConfiguration LWJGLConfig;
-    public static LwjglApplication LWJGLApp;
+    private static final String LOG_INFO = "INFO",
+            LOG_WARNING = "WARNING",
+            LOG_ERROR = "ERROR",
+            LOG_ERROR_EXITING = "ERROR / EXITING",
+            LOG_TROUBLESHOOTING = "TROUBLESHOOTING";
 
-    private static class GdxApplication extends Game
+    public static void info(String information)
     {
-        @Override
-        public void create()
-        {
-            // Everything needs to be called here (not in the constructor) due to the dependence to the Gdx resources.
-            app.manager = new GameManager();
-
-            app.pre();
-
-            setScreen(new GameScreen()
-            {
-                @Override
-                public void render(float delta)
-                {
-                    app.loop();
-                }
-            });
-        }
+        Gdx.app.log(LOG_INFO, information);
     }
 
-    public static void start(HorizonApplication horizonApp)
+    public static void warning(String warning)
     {
-        app = horizonApp;
+        Gdx.app.error(LOG_WARNING, warning);
+    }
 
-        LWJGLConfig = new LwjglApplicationConfiguration();
+    public static void error(Error error)
+    {
+        Gdx.app.error(LOG_ERROR + " | " + error.ordinal(), Error.getMessage(error));
+    }
 
-        LWJGLConfig.width = 1024;
-        LWJGLConfig.height = 768;
+    public static void error(Error error, String additionalInfo)
+    {
+        Gdx.app.error(LOG_ERROR + " | " + error.ordinal(), Error.getMessage(error) + " " + additionalInfo);
+    }
 
-        LWJGLConfig.resizable = false;
-        LWJGLConfig.fullscreen = false;
-        LWJGLConfig.title = "Horizon Engine - Demo";
+    public static void errorExit(Error error)
+    {
+        Gdx.app.error(LOG_ERROR_EXITING + " | " + error.ordinal(), Error.getMessage(error));
+        exit();
+    }
 
-        LWJGLApp = new LwjglApplication(new GdxApplication(), LWJGLConfig);
+    public static void errorExit(Error error, String additionalInfo)
+    {
+        Gdx.app.error(LOG_ERROR_EXITING + " | " + error.ordinal(), Error.getMessage(error) + " " + additionalInfo);
+        exit();
+    }
+
+    public static void troubleshoot(String hintOrAdvice)
+    {
+        Gdx.app.error(LOG_TROUBLESHOOTING, hintOrAdvice);
+    }
+
+    public static void troubleshoot(Troubleshooting troubleshooting)
+    {
+        troubleshoot(Troubleshooting.getHelp(troubleshooting));
+    }
+
+    public static void errorExit(Error error, Troubleshooting troubleshooting)
+    {
+        Gdx.app.error(LOG_ERROR_EXITING, Error.getMessage(error));
+        troubleshoot(troubleshooting);
+        exit();
+    }
+
+    public static void exit()
+    {
+        Gdx.app.exit();
+    }
+
+    public static void start(HorizonApp app)
+    {
+        currentApp = new LwjglApplication(app.caller, app.LWJGLConfig);
     }
 }
