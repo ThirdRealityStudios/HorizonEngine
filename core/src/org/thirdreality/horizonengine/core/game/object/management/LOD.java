@@ -1,7 +1,7 @@
 package org.thirdreality.horizonengine.core.game.object.management;
 
 import com.badlogic.gdx.graphics.Texture;
-import org.thirdreality.horizonengine.core.math.Polygon;
+import org.thirdreality.horizonengine.core.tools.math.Polygon;
 
 public class LOD
 {

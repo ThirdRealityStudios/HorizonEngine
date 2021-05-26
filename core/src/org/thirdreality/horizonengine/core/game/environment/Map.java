@@ -6,7 +6,9 @@ import org.thirdreality.horizonengine.core.game.Scene;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 public class Map extends Scene
 {
@@ -71,6 +73,11 @@ public class Map extends Scene
         String key = createTileKey(kX, kY);
 
         return tiles.get(key);
+    }
+
+    public Iterator<String> getKeys()
+    {
+        return tiles.keySet().iterator();
     }
 
     public Iterator<Tile> getTilesByIterator()

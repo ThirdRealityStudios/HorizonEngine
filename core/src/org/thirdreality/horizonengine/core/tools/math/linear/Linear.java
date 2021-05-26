@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.core.math;
+package org.thirdreality.horizonengine.core.tools.math.linear;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -7,7 +7,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class LinTools
+public class Linear
 {
     // Calculates the time when both linear functions intersect each other.
     // If there is no intersection, null is returned.
@@ -134,7 +134,7 @@ public class LinTools
                 return comparedLine.intersectsLine(line);
             }
 
-            Vector2 intersectionVector = LinTools.getIntersectionVector(comparedLine, line).getResult();
+            Vector2 intersectionVector = Linear.getIntersectionVector(comparedLine, line).getResult();
 
             Point2D.Float intersectionPoint = null;
 

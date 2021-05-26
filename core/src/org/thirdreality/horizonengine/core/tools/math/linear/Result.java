@@ -1,5 +1,6 @@
-package org.thirdreality.horizonengine.core.math;
+package org.thirdreality.horizonengine.core.tools.math.linear;
 
+// Used internally by the class LinTools.
 public class Result<ResultType>
 {
     public final boolean isInfinite;

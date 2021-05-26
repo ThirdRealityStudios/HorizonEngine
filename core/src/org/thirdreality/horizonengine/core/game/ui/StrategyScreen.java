@@ -10,12 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.thirdreality.horizonengine.HorizonEngine;
-import org.thirdreality.horizonengine.core.game.HorizonGame;
 import org.thirdreality.horizonengine.core.game.Metrics;
 import org.thirdreality.horizonengine.core.game.environment.Map;
 import org.thirdreality.horizonengine.core.game.environment.Tile;
 import org.thirdreality.horizonengine.core.game.object.action.ActionTrigger;
+import org.thirdreality.horizonengine.core.tools.render.Clipping;
 
 import java.util.ArrayList;
 
@@ -80,9 +79,6 @@ public class StrategyScreen implements Screen
 
     private void updateCamera()
     {
-        viewport.getCamera().position.x += 25;
-        viewport.getCamera().position.y += 25;
-
         viewport.getCamera().update();
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -110,34 +106,33 @@ public class StrategyScreen implements Screen
 
     private void drawClippingRect(Rectangle clipRect)
     {
-        HorizonEngine.info("clip rect: " + clipRect);
-
         batch.begin();
         batch.draw(textureCamera, clipRect.x, clipRect.y, clipRect.width, clipRect.height);//, Metrics.EARTH_EQUATOR_LENGTH_KM, Metrics.EARTH_EQUATOR_LENGTH_KM);
         batch.end();
     }
 
-    public void drawSquare(Vector2 position)
+    public void drawSquare(Rectangle object)
     {
-        float size = 2000;
-
         batch.begin();
-        batch.draw(textureSquare, position.x, position.y, size, size);//, Metrics.EARTH_EQUATOR_LENGTH_KM, Metrics.EARTH_EQUATOR_LENGTH_KM);
+        batch.draw(textureSquare, object.x, object.y, object.width, object.height);//, Metrics.EARTH_EQUATOR_LENGTH_KM, Metrics.EARTH_EQUATOR_LENGTH_KM);
         batch.end();
     }
 
     private void renderUI()
     {
-        Rectangle clipRect = HorizonGame.getClippedBounds(viewport, 720, 400);
+        Rectangle clipRect = Clipping.getClippingBounds(viewport, 720, 400);
 
         drawMapBackground();
         drawClippingRect(clipRect);
 
-        if(clipRect.contains(new Vector2(Gdx.input.getX(), Gdx.input.getY())))
-        {
-            Vector2 position = new Vector2(0,0);
+        Vector2 position = new Vector2(0,0);
+        float size = 2000;
 
-            drawSquare(position);
+        Rectangle object = new Rectangle(position.x, position.y, size, size);
+
+        if(!Clipping.isClippable(clipRect, object))
+        {
+            drawSquare(object);
         }
     }
 

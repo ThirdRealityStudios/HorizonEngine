@@ -1,6 +1,7 @@
-package org.thirdreality.horizonengine.core.math;
+package org.thirdreality.horizonengine.core.tools.math;
 
 import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.horizonengine.core.tools.math.linear.Linear;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -214,7 +215,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
     {
         for(Line2D.Float comparedLine : getLineShape())
         {
-            boolean hasSameSteepness = LinTools.getSteepness(comparedLine) == LinTools.getSteepness(line);
+            boolean hasSameSteepness = Linear.getSteepness(comparedLine) == Linear.getSteepness(line);
 
             if(line.intersectsLine(comparedLine) && hasSameSteepness)
             {
@@ -232,7 +233,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
     private boolean intersectsTriangleLines(Line2D.Float triangleLine, ArrayList<Line2D.Float> triangleLines)
     {
-        return LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(triangleLine, triangleLines);
+        return Linear.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(triangleLine, triangleLines);
     }
 
     private Short[] writeVertexConnections(short a, ArrayList<Short> vertexConnections)
@@ -364,7 +365,7 @@ public class Polygon extends com.badlogic.gdx.math.Polygon
 
                 Line2D.Float connection = new Line2D.Float(start, end);
 
-                boolean intersectsPolyLines = LinTools.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(connection, getLineShape());
+                boolean intersectsPolyLines = Linear.intersects_IgnoreEndsAndIntersectionPointsBetweenLines(connection, getLineShape());
 
                 if(!isPolyLine(connection) && !intersectsPolyLines && isLineCenterPointInsidePolygon(connection, this) && !intersectsTriangleLines(connection, triangleLines))
                 {
