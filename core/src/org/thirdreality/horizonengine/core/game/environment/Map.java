@@ -1,14 +1,11 @@
 package org.thirdreality.horizonengine.core.game.environment;
 
-import com.badlogic.gdx.utils.viewport.Viewport;
 import org.thirdreality.horizonengine.core.game.object.GameObject;
 import org.thirdreality.horizonengine.core.game.Scene;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 
 public class Map extends Scene
 {
@@ -32,7 +29,7 @@ public class Map extends Scene
     {
         tiles.clear();
 
-        for(GameObject o : objects.values())
+        for(GameObject o : getObjects().values())
         {
             // Calculate which Tile the GameObject will be at.
             int kX = (int) (o.getPosition().x / Tile.size);
@@ -60,12 +57,6 @@ public class Map extends Scene
         super.initialize(objects);
 
         initializeTiles();
-    }
-
-    @Override
-    public void render(Viewport viewport)
-    {
-        //getNearTiles(viewport);
     }
 
     public Tile getTile(int kX, int kY)

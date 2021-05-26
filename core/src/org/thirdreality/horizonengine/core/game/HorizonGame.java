@@ -1,28 +1,39 @@
 package org.thirdreality.horizonengine.core.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import org.thirdreality.horizonengine.HorizonEngine;
+import org.thirdreality.horizonengine.core.game.environment.Map;
 import org.thirdreality.horizonengine.core.game.ui.StrategyScreen;
 
 public abstract class HorizonGame extends Game
 {
-    public StrategyScreen strategyScreen;
+    private StrategyScreen strategyScreen;
+
+    private Map map;
 
     public abstract void init();
 
     @Override
     public void create()
     {
-        strategyScreen = new StrategyScreen();
+        strategyScreen = new StrategyScreen(map);
 
         setScreen(strategyScreen);
 
         init();
 
         HorizonEngine.info("Initialized HorizonGame!");
+    }
+
+    // Sets the game map.
+    public void setMap(Map map)
+    {
+        this.map = map;
+    }
+
+    // Gets the game map.
+    public Map getMap()
+    {
+        return map;
     }
 }

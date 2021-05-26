@@ -12,11 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.thirdreality.horizonengine.core.game.Metrics;
 import org.thirdreality.horizonengine.core.game.environment.Map;
-import org.thirdreality.horizonengine.core.game.environment.Tile;
 import org.thirdreality.horizonengine.core.game.object.action.ActionTrigger;
 import org.thirdreality.horizonengine.core.tools.render.Clipping;
-
-import java.util.ArrayList;
 
 // The Screen which is used in-game (having loaded a game with a map).
 public class StrategyScreen implements Screen
@@ -28,14 +25,14 @@ public class StrategyScreen implements Screen
 
     private SpriteBatch batch;
 
-    private Map map;
+    private Map renderedMap;
 
     private Texture textureMapBackground, textureCamera, textureSquare;
 
-    private Vector3 origin;
-
-    public StrategyScreen()
+    public StrategyScreen(Map renderedMap)
     {
+        this.renderedMap = renderedMap;
+
         float worldSize = Metrics.EARTH_EQUATOR_LENGTH_KM;
 
         camera = new OrthographicCamera(worldSize, worldSize);
@@ -51,7 +48,7 @@ public class StrategyScreen implements Screen
 
         initSampleTexture();
 
-        map = new Map();
+        renderedMap = new Map();
     }
 
     private void initSampleTexture()
@@ -88,13 +85,6 @@ public class StrategyScreen implements Screen
     public void show()
     {
 
-    }
-
-    public ArrayList<Tile> getNearTiles(Viewport viewport)
-    {
-
-
-        return null;
     }
 
     private void drawMapBackground()
@@ -142,6 +132,11 @@ public class StrategyScreen implements Screen
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
     }
 
+    private void renderMap()
+    {
+
+    }
+
     @Override
     public void render(float delta)
     {
@@ -152,7 +147,7 @@ public class StrategyScreen implements Screen
 
         clearScreen();
 
-        map.render(viewport);
+        renderMap();
 
         renderUI();
 

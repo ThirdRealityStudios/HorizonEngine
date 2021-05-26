@@ -10,7 +10,7 @@ import java.util.TreeMap;
 public abstract class Scene
 {
     // Used for direct access by the user, e.g. to make direct changes to the object.
-    protected TreeMap<String, GameObject> objects;
+    private TreeMap<String, GameObject> objects;
 
     public Scene()
     {
@@ -30,5 +30,8 @@ public abstract class Scene
         saveObjects(objects);
     }
 
-    public abstract void render(Viewport viewport);
+    protected TreeMap<String, GameObject> getObjects()
+    {
+        return objects;
+    }
 }

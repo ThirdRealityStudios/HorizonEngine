@@ -33,9 +33,9 @@ public class DemoApp
 		{
 			public void init()
 			{
-				Map map = createMap();
+				setMap(createMap());
 
-				HorizonEngine.info("Created Map contains " + map.amountOfTiles() + " Tile(s)");
+				HorizonEngine.info("Created Map contains " + getMap().amountOfTiles() + " Tile(s)");
 			}
 		};
 
