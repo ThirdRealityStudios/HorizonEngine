@@ -43,10 +43,9 @@ public class StrategyScreen implements Screen
 
         float worldSize = Metrics.EARTH_EQUATOR_LENGTH_KM;
 
-        camera = new OrthographicCamera(worldSize, worldSize);
-        camera.position.x = 0;
+        float ratio = (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
 
-        viewport = new FitViewport(worldSize, worldSize, camera);
+        viewport = new FitViewport(worldSize * ratio, worldSize);
         viewport.apply();
 
         batch = new SpriteBatch();
