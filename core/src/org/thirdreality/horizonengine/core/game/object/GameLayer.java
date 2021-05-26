@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import org.thirdreality.horizonengine.HorizonEngine;
-import org.thirdreality.horizonengine.settings.DataSize;
 import org.thirdreality.horizonengine.Meta;
 import org.thirdreality.horizonengine.core.console.trouble.Error;
 import org.thirdreality.horizonengine.core.console.trouble.Troubleshooting;
@@ -24,7 +23,7 @@ public class GameLayer extends GameObject implements Serializable
 
 	public GameLayer(int zIndex)
 	{
-		this.members = new ArrayList<GameObject>(DataSize.INIT_SIZE_GAME_LAYER);
+		this.members = new ArrayList<GameObject>(24);
 
 		this.zIndex = zIndex;
 	}

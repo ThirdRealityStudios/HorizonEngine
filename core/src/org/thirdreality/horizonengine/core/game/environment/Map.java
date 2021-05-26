@@ -1,5 +1,7 @@
 package org.thirdreality.horizonengine.core.game.environment;
 
+import com.badlogic.gdx.math.Vector2;
+import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.game.object.GameObject;
 import org.thirdreality.horizonengine.core.game.Scene;
 
@@ -20,26 +22,35 @@ public class Map extends Scene
         tiles = new TreeMap<String, Tile>();
     }
 
-    private String createTileKey(int kX, int kY)
-    {
-        return kX + "_" + kY;
-    }
-
     private void initializeTiles()
     {
         tiles.clear();
 
         for(GameObject o : getObjects().values())
         {
-            // Calculate which Tile the GameObject will be at.
-            int kX = (int) (o.getPosition().x / Tile.size);
-            int kY = (int) (o.getPosition().y / Tile.size);
+            Vector2 position = o.getPosition();
 
-            String key = createTileKey(kX, kY);
+            if(position.x < 0)
+            {
+                position.x -= Tile.size;
+            }
+
+            if(position.y < 0)
+            {
+                position.y -= Tile.size;
+            }
+
+            // Calculate which Tile the GameObject will be at.
+            int kX = (int) (position.x / Tile.size);
+            int kY = (int) (position.y / Tile.size);
+
+            String key = Tile.createKey(kX, kY);
 
             if(!tiles.containsKey(key))
             {
                 Tile createdTile = new Tile(kX, kY);
+
+                HorizonEngine.info("Tile created: " + createdTile.getAlias());
 
                 tiles.put(key, createdTile);
             }
@@ -59,10 +70,8 @@ public class Map extends Scene
         initializeTiles();
     }
 
-    public Tile getTile(int kX, int kY)
+    public Tile getTile(String key)
     {
-        String key = createTileKey(kX, kY);
-
         return tiles.get(key);
     }
 
@@ -74,6 +83,11 @@ public class Map extends Scene
     public Iterator<Tile> getTilesByIterator()
     {
         return tiles.values().iterator();
+    }
+
+    public boolean containsTile(String key)
+    {
+        return tiles.containsKey(key);
     }
 
     public int amountOfTiles()

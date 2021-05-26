@@ -29,6 +29,11 @@ public class LODGroup
         lods.remove(lod.getMinDistance());
     }
 
+    public LOD getLOD(float minDistance)
+    {
+        return lods.get(minDistance);
+    }
+
     public Iterator<LOD> getLODsByIterator()
     {
         return lods.values().iterator();

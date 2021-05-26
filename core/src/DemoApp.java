@@ -74,8 +74,10 @@ public class DemoApp
 	{
 		ArrayList<GameObject> objects = new ArrayList<GameObject>();
 
-		objects.add(createEmptyObject("Object_0", new Vector2(100, 100)));
-		objects.add(createEmptyObject("Object_1", new Vector2(0, 100)));
+		objects.add(createEmptyObject("Object_0", new Vector2(11000, 250)));
+		objects.add(createEmptyObject("Object_1", new Vector2(0, 0)));
+		objects.add(createEmptyObject("Object_2", new Vector2(-1200, 2500)));
+		//objects.add(createEmptyObject("Object_1", new Vector2(1100, 100)));
 
 		return objects;
 	}

@@ -16,11 +16,11 @@ public abstract class HorizonGame extends Game
     @Override
     public void create()
     {
+        init();
+
         strategyScreen = new StrategyScreen(map);
 
         setScreen(strategyScreen);
-
-        init();
 
         HorizonEngine.info("Initialized HorizonGame!");
     }
