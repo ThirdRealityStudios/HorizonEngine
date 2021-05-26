@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.core.game.management.action;
+package org.thirdreality.horizonengine.core.game.object.action;
 
 public enum EventTime
 {

@@ -2,6 +2,7 @@ package org.thirdreality.horizonengine;
 
 import com.badlogic.gdx.Game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.lwjgl.Sys;
 import org.thirdreality.horizonengine.core.game.HorizonGame;
@@ -15,6 +16,8 @@ public class HorizonApp
 
     private HorizonGame game;
 
+    private boolean isLibGDXInitialized = false;
+
     public HorizonApp(String title, int width, int height)
     {
         LWJGLConfig = new LwjglApplicationConfiguration();
@@ -25,6 +28,7 @@ public class HorizonApp
         LWJGLConfig.height = height;
 
         LWJGLConfig.resizable = false;
+        LWJGLConfig.fullscreen = false;
 
         caller = new Game()
         {
@@ -35,6 +39,15 @@ public class HorizonApp
                 // Does nothing currently. If so, it may NOT call any method of "game" as this runs asynchronously by LibGDX!
                 // Especially no create-method may be called here (would execute twice as the initialization with setGame(..) is usually faster).
                 // Beware of uncontrolled / arbitrary behaviour if you do so anyway!
+
+                isLibGDXInitialized = true;
+
+                boolean gameNotInitializedBefore = game != null;
+
+                if(gameNotInitializedBefore)
+                {
+                    game.create();
+                }
             }
 
             @Override
@@ -89,13 +102,16 @@ public class HorizonApp
         // Make sure the last game saves everything and shuts down correctly.
         if(this.game != null)
         {
-            game.dispose();
+            this.game.dispose();
+        }
+
+        if(isLibGDXInitialized)
+        {
+            game.create();
         }
 
         // Uses the new game.
         this.game = game;
-
-        game.create();
     }
 
     public HorizonGame getGame()

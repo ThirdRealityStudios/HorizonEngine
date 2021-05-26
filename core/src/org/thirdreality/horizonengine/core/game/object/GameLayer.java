@@ -1,4 +1,4 @@
-package org.thirdreality.horizonengine.core.game.environment;
+package org.thirdreality.horizonengine.core.game.object;
 
 import java.io.Serializable;
 import java.util.ArrayList;
