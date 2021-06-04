@@ -34,11 +34,8 @@ public class HorizonApp
         {
             private void initSettings()
             {
-                Settings.SYSTEM_SCREEN.width = width;
-                Settings.SYSTEM_SCREEN.height = height;
-
-                Settings.CLIPPING_BOUNDS.width = (int) (width * 0.75f);
-                Settings.CLIPPING_BOUNDS.height = (int) (height * 0.75f);
+                Settings.CLIPPING_BOUNDS.width = (int) (LWJGLConfig.width * 0.75f);
+                Settings.CLIPPING_BOUNDS.height = (int) (LWJGLConfig.height * 0.75f);
             }
 
             @Deprecated

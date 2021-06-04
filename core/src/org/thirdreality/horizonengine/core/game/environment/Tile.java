@@ -67,8 +67,6 @@ public class Tile extends GameObject
 
         Rectangle rect = lod.getPolygon().getBoundingRectangle();
 
-        batch.begin();
         batch.draw(lod.getTexture(), rect.x, rect.y, rect.width, rect.height);
-        batch.end();
     }
 }
