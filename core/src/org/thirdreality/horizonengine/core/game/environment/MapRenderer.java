@@ -30,15 +30,13 @@ public class MapRenderer
         return map;
     }
 
-    private ArrayList<String> getNearKeys(Viewport viewport)
+    private ArrayList<String> getNearKeys(Rectangle clippingBounds)
     {
-        Rectangle clipRect = Clipping.getClippingBounds(viewport);
+        int kXMin = (int) (clippingBounds.x / Tile.size);
+        int kYMin = (int) (clippingBounds.y / Tile.size);
 
-        int kXMin = (int) (clipRect.x / Tile.size);
-        int kYMin = (int) (clipRect.y / Tile.size);
-
-        float kWidth = clipRect.width / Tile.size;
-        float kHeight = clipRect.height / Tile.size;
+        float kWidth = clippingBounds.width / Tile.size;
+        float kHeight = clippingBounds.height / Tile.size;
 
         float kXMax = (int) (kXMin + kWidth);
         float kYMax = (int) (kYMin + kHeight);
@@ -67,9 +65,27 @@ public class MapRenderer
     {
         nearTiles.clear();
 
-        for(String key : getNearKeys(viewport))
+        Rectangle clippingBounds = Clipping.getClippingBounds(viewport);
+
+        HorizonEngine.info("Position: " + viewport.getCamera().position);
+        HorizonEngine.info("Clip: " + clippingBounds);
+
+        for(String key : getNearKeys(clippingBounds))
         {
-            nearTiles.add(map.getTile(key));
+            Tile tile = map.getTile(key);
+
+            Rectangle tileBounds = tile.getLODGroup().getLOD(0).getPolygon().getBoundingRectangle();
+
+            boolean condition = clippingBounds.overlaps(tileBounds);
+
+            if(condition)
+            {
+                HorizonEngine.info("Tile: " + tileBounds);
+
+                System.out.println();
+
+                nearTiles.add(tile);
+            }
         }
 
         return nearTiles;
@@ -81,7 +97,7 @@ public class MapRenderer
         {
             ArrayList<Tile> nearTiles = getNearTiles(viewport);
 
-            HorizonEngine.info("Tiles near: " + nearTiles.size());
+            //HorizonEngine.info("Tiles near: " + nearTiles.size());
 
             for(Tile tile : nearTiles)
             {

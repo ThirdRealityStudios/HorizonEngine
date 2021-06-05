@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.*;
-import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.game.environment.Map;
 import org.thirdreality.horizonengine.core.game.environment.MapRenderer;
 import org.thirdreality.horizonengine.core.game.object.action.ActionTrigger;
@@ -33,6 +32,7 @@ public class StrategyScreen implements Screen
         this.mapRenderer = new MapRenderer(map);
 
         mapCamera = new OrthographicCamera();
+        mapCamera.zoom = 1f;
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), mapCamera);
         viewport.apply();
 
@@ -46,20 +46,11 @@ public class StrategyScreen implements Screen
             @Override
             public boolean keyDown(int keycode)
             {
-                float distance = 10f;
+                float distance = 50f;
 
                 switch(keycode)
                 {
                     case Input.Keys.LEFT:
-                    {
-                        mapCamera.position.x += distance;
-
-                        updateView();
-
-                        break;
-                    }
-
-                    case Input.Keys.RIGHT:
                     {
                         mapCamera.position.x -= distance;
 
@@ -68,16 +59,25 @@ public class StrategyScreen implements Screen
                         break;
                     }
 
+                    case Input.Keys.RIGHT:
+                    {
+                        mapCamera.position.x += distance;
+
+                        updateView();
+
+                        break;
+                    }
+
                     case Input.Keys.UP:
                     {
-                        mapCamera.position.y -= distance;
+                        mapCamera.position.y += distance;
 
                         break;
                     }
 
                     case Input.Keys.DOWN:
                     {
-                        mapCamera.position.y += distance;
+                        mapCamera.position.y -= distance;
 
                         break;
                     }
@@ -157,13 +157,13 @@ public class StrategyScreen implements Screen
 
         updateView();
 
-        Rectangle clippingBounds = Clipping.getClippingBounds(viewport);
+        Rectangle clippingBoundsRender = Clipping.getClippingBoundsRender(viewport);
 
         clearScreen();
 
         screenBatch.begin();
         drawMapBackground();
-        drawClippingRect(clippingBounds);
+        drawClippingRect(clippingBoundsRender);
         screenBatch.end();
 
         mapBatch.begin();
