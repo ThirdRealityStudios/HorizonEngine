@@ -157,7 +157,7 @@ public class StrategyScreen implements Screen
 
         updateView();
 
-        Rectangle clippingBounds = Clipping.getClippingBounds(viewport, screenCamera);
+        Rectangle clippingBounds = Clipping.getClippingBounds(viewport);
 
         clearScreen();
 

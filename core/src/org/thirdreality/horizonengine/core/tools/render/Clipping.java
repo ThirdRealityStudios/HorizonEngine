@@ -26,7 +26,7 @@ public class Clipping
 
     // Returns a Rectangle describing the part on the Map which the user currently looks at.
     // Will automatically "shrink" the Rectangle if it is outside the bounds of the Map (see 'worldWidth' and 'worldHeight' of Viewport).
-    public static Rectangle getClippingBounds(Viewport viewport, Camera screen)
+    public static Rectangle getClippingBounds(Viewport viewport)
     {
         Dimension clippingSize = new Dimension((int) (Gdx.graphics.getWidth() * 0.75f), (int) (Gdx.graphics.getHeight() * 0.75f));
 

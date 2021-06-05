@@ -30,9 +30,9 @@ public class MapRenderer
         return map;
     }
 
-    private ArrayList<String> getNearKeys(Viewport viewport, Camera screen)
+    private ArrayList<String> getNearKeys(Viewport viewport)
     {
-        Rectangle clipRect = Clipping.getClippingBounds(viewport, screen);
+        Rectangle clipRect = Clipping.getClippingBounds(viewport);
 
         int kXMin = (int) (clipRect.x / Tile.size);
         int kYMin = (int) (clipRect.y / Tile.size);
@@ -63,11 +63,11 @@ public class MapRenderer
 
     // Returns all Tiles which are seen inside the given bounds on screen.
     // Helps to improve performance if there is a lot of game content.
-    private ArrayList<Tile> getNearTiles(Viewport viewport, Camera screen)
+    private ArrayList<Tile> getNearTiles(Viewport viewport)
     {
         nearTiles.clear();
 
-        for(String key : getNearKeys(viewport, screen))
+        for(String key : getNearKeys(viewport))
         {
             nearTiles.add(map.getTile(key));
         }
@@ -79,7 +79,7 @@ public class MapRenderer
     {
         if(map != null)
         {
-            ArrayList<Tile> nearTiles = getNearTiles(viewport, screen);
+            ArrayList<Tile> nearTiles = getNearTiles(viewport);
 
             HorizonEngine.info("Tiles near: " + nearTiles.size());
 
