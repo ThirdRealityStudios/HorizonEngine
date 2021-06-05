@@ -2,10 +2,8 @@ package org.thirdreality.horizonengine;
 
 import com.badlogic.gdx.Game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.thirdreality.horizonengine.core.game.HorizonGame;
-import org.thirdreality.horizonengine.settings.Settings;
 
 public class HorizonApp
 {
@@ -32,12 +30,6 @@ public class HorizonApp
 
         caller = new Game()
         {
-            private void initSettings()
-            {
-                Settings.CLIPPING_BOUNDS.width = (int) (LWJGLConfig.width * 0.75f);
-                Settings.CLIPPING_BOUNDS.height = (int) (LWJGLConfig.height * 0.75f);
-            }
-
             @Deprecated
             @Override
             public void create()
@@ -47,8 +39,6 @@ public class HorizonApp
                 // Beware of uncontrolled / arbitrary behaviour if you do so anyway!
 
                 isLibGDXInitialized = true;
-
-                initSettings();
 
                 boolean gameNotInitializedBefore = game != null;
 
@@ -99,8 +89,6 @@ public class HorizonApp
             {
                 if(game != null)
                 {
-                    initSettings();
-
                     game.resize(width, height);
                 }
             }

@@ -1,17 +1,18 @@
 package org.thirdreality.horizonengine.core.game.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.*;
+import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.game.environment.Map;
 import org.thirdreality.horizonengine.core.game.environment.MapRenderer;
 import org.thirdreality.horizonengine.core.game.object.action.ActionTrigger;
 import org.thirdreality.horizonengine.core.tools.render.Clipping;
-import org.thirdreality.horizonengine.settings.Settings;
 
 // The Screen which is used in-game (having loaded a game with a map).
 public class StrategyScreen implements Screen
@@ -40,7 +41,52 @@ public class StrategyScreen implements Screen
         screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         screenBatch = new SpriteBatch();
 
-        actionTrigger = new ActionTrigger();
+        actionTrigger = new ActionTrigger()
+        {
+            @Override
+            public boolean keyDown(int keycode)
+            {
+                float distance = 10f;
+
+                switch(keycode)
+                {
+                    case Input.Keys.LEFT:
+                    {
+                        mapCamera.position.x += distance;
+
+                        updateView();
+
+                        break;
+                    }
+
+                    case Input.Keys.RIGHT:
+                    {
+                        mapCamera.position.x -= distance;
+
+                        updateView();
+
+                        break;
+                    }
+
+                    case Input.Keys.UP:
+                    {
+                        mapCamera.position.y -= distance;
+
+                        break;
+                    }
+
+                    case Input.Keys.DOWN:
+                    {
+                        mapCamera.position.y += distance;
+
+                        break;
+                    }
+                }
+
+                return false;
+            }
+
+        };
 
         Gdx.input.setInputProcessor(actionTrigger);
 
@@ -72,12 +118,11 @@ public class StrategyScreen implements Screen
 
     private void updateView()
     {
-        mapBatch.setProjectionMatrix(mapCamera.projection);
-        mapCamera.zoom *= 1.01f;
         mapCamera.update();
+        mapBatch.setProjectionMatrix(mapCamera.combined);
 
-        screenBatch.setProjectionMatrix(screenCamera.projection);
         screenCamera.update();
+        screenBatch.setProjectionMatrix(screenCamera.combined);
     }
 
     @Override
@@ -112,7 +157,7 @@ public class StrategyScreen implements Screen
 
         updateView();
 
-        Rectangle clippingBounds = Clipping.getClippingBounds(viewport, Settings.CLIPPING_BOUNDS.width, Settings.CLIPPING_BOUNDS.height);
+        Rectangle clippingBounds = Clipping.getClippingBounds(viewport, screenCamera);
 
         clearScreen();
 
@@ -122,7 +167,7 @@ public class StrategyScreen implements Screen
         screenBatch.end();
 
         mapBatch.begin();
-        mapRenderer.render(mapBatch, clippingBounds);
+        mapRenderer.render(mapBatch, viewport, screenCamera);
         mapBatch.end();
     }
 
