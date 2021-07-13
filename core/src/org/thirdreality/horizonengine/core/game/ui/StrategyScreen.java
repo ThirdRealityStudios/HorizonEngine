@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.*;
 import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.game.environment.Map;
@@ -31,20 +30,20 @@ public class StrategyScreen implements Screen
 
     public StrategyScreen(Map map)
     {
-        this.mapRenderer = new MapRenderer(map);
-
-        mapCamera = new OrthographicCamera();
-        mapCamera.zoom = 1f;
-
-       // mapCamera.position = viewport.;
-
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), mapCamera);
-        viewport.apply();
-
         mapBatch = new SpriteBatch();
 
         screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         screenBatch = new SpriteBatch();
+
+        this.mapRenderer = new MapRenderer(map);
+
+        mapCamera = new OrthographicCamera();
+
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), mapCamera);
+        viewport.apply();
+
+        viewport.getCamera().position.x -= Gdx.graphics.getWidth() / 2;
+        viewport.getCamera().position.y -= Gdx.graphics.getHeight() / 2;
 
         actionTrigger = new ActionTrigger()
         {
@@ -161,12 +160,6 @@ public class StrategyScreen implements Screen
         updateView();
 
         Rectangle clippingBoundsRender = Clipping.getClippingBounds(viewport);
-
-        Vector3 projectedOrigin = viewport.getCamera().project(new Vector3(clippingBoundsRender.x, clippingBoundsRender.y, viewport.getCamera().position.z));
-        Vector3 projectedCorner = viewport.getCamera().project(new Vector3(clippingBoundsRender.x + clippingBoundsRender.width, clippingBoundsRender.y + clippingBoundsRender.height, viewport.getCamera().position.z));
-
-        float width = projectedCorner.x - projectedOrigin.x;
-        float height = projectedCorner.y - projectedOrigin.y;
 
         clearScreen();
 

@@ -55,8 +55,8 @@ public class Clipping
 
         //Rectangle clipRect = Clipping.getClippingBounds(viewport);
 
-        final float WIDTH = 800;
-        final float HEIGHT = 600;
+        final float WIDTH = Gdx.graphics.getWidth();
+        final float HEIGHT = Gdx.graphics.getHeight();
 
         float x = camera.position.x;
         float y = camera.position.y;
