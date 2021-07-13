@@ -3,6 +3,7 @@ package org.thirdreality.horizonengine.core.game.environment;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.tools.render.Clipping;
@@ -67,8 +68,8 @@ public class MapRenderer
 
         Rectangle clippingBounds = Clipping.getClippingBounds(viewport);
 
-        HorizonEngine.info("Position: " + viewport.getCamera().position);
-        HorizonEngine.info("Clip: " + clippingBounds);
+        //HorizonEngine.info("Position: " + viewport.getCamera().unproject(new Vector3(viewport.getCamera().position)));
+        //HorizonEngine.info("Clip: " + clippingBounds);
 
         for(String key : getNearKeys(clippingBounds))
         {
@@ -76,13 +77,13 @@ public class MapRenderer
 
             Rectangle tileBounds = tile.getLODGroup().getLOD(0).getPolygon().getBoundingRectangle();
 
-            boolean condition = clippingBounds.overlaps(tileBounds);
+            boolean condition = !Clipping.isClippable(clippingBounds, tileBounds);
 
             if(condition)
             {
-                HorizonEngine.info("Tile: " + tileBounds);
+                //HorizonEngine.info("Tile: " + tileBounds);
 
-                System.out.println();
+                //System.out.println();
 
                 nearTiles.add(tile);
             }

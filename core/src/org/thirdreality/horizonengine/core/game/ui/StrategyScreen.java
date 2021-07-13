@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.*;
+import org.thirdreality.horizonengine.HorizonEngine;
 import org.thirdreality.horizonengine.core.game.environment.Map;
 import org.thirdreality.horizonengine.core.game.environment.MapRenderer;
 import org.thirdreality.horizonengine.core.game.object.action.ActionTrigger;
@@ -33,6 +35,9 @@ public class StrategyScreen implements Screen
 
         mapCamera = new OrthographicCamera();
         mapCamera.zoom = 1f;
+
+       // mapCamera.position = viewport.;
+
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), mapCamera);
         viewport.apply();
 
@@ -44,48 +49,44 @@ public class StrategyScreen implements Screen
         actionTrigger = new ActionTrigger()
         {
             @Override
-            public boolean keyDown(int keycode)
+            public boolean keyPressed()
             {
-                float distance = 50f;
+                float navigationSpeed = 150f;
 
-                switch(keycode)
+                float distance = navigationSpeed * Gdx.graphics.getDeltaTime();
+
+                if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
                 {
-                    case Input.Keys.LEFT:
-                    {
-                        mapCamera.position.x -= distance;
-
-                        updateView();
-
-                        break;
-                    }
-
-                    case Input.Keys.RIGHT:
-                    {
-                        mapCamera.position.x += distance;
-
-                        updateView();
-
-                        break;
-                    }
-
-                    case Input.Keys.UP:
-                    {
-                        mapCamera.position.y += distance;
-
-                        break;
-                    }
-
-                    case Input.Keys.DOWN:
-                    {
-                        mapCamera.position.y -= distance;
-
-                        break;
-                    }
+                    mapCamera.position.x += distance;
+                }
+                else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+                {
+                    mapCamera.position.x -= distance;
+                }
+                else if(Gdx.input.isKeyPressed(Input.Keys.UP))
+                {
+                    mapCamera.position.y += distance;
+                }
+                else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+                {
+                    mapCamera.position.y -= distance;
+                }
+                else
+                {
+                    return false;
                 }
 
-                return false;
-            }
+                System.out.println();
 
+                HorizonEngine.info("Rendering: " + mapCamera.position);
+
+                Rectangle clippingBounds = Clipping.getClippingBounds(viewport);
+                HorizonEngine.info("Clip: " + clippingBounds);
+
+                updateView();
+
+                return true;
+            }
         };
 
         Gdx.input.setInputProcessor(actionTrigger);
@@ -155,9 +156,17 @@ public class StrategyScreen implements Screen
             return;
         }
 
+        actionTrigger.keyPressed();
+
         updateView();
 
-        Rectangle clippingBoundsRender = Clipping.getClippingBoundsRender(viewport);
+        Rectangle clippingBoundsRender = Clipping.getClippingBounds(viewport);
+
+        Vector3 projectedOrigin = viewport.getCamera().project(new Vector3(clippingBoundsRender.x, clippingBoundsRender.y, viewport.getCamera().position.z));
+        Vector3 projectedCorner = viewport.getCamera().project(new Vector3(clippingBoundsRender.x + clippingBoundsRender.width, clippingBoundsRender.y + clippingBoundsRender.height, viewport.getCamera().position.z));
+
+        float width = projectedCorner.x - projectedOrigin.x;
+        float height = projectedCorner.y - projectedOrigin.y;
 
         clearScreen();
 

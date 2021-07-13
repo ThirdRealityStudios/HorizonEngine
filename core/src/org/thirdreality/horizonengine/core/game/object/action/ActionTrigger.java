@@ -3,8 +3,10 @@ package org.thirdreality.horizonengine.core.game.object.action;
 import com.badlogic.gdx.InputProcessor;
 
 // Responsible for all GameObjects to trigger the corresponding action.
-public class ActionTrigger implements InputProcessor
+public abstract class ActionTrigger implements InputProcessor
 {
+    public abstract boolean keyPressed();
+
     @Override
     public boolean keyDown(int keycode)
     {
